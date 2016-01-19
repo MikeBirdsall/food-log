@@ -14,36 +14,94 @@ def text_out(message):
 print """Content-Type: text/html\n
 <head>
     <meta name="viewport" content="width=320" />
+<style>
+form {
+    width:300px;
+}
+
+label {
+    display: inline-block;
+    text-align:left;
+}
+
+label.nutrit {
+    width:130px;
+    text-align:right;
+}
+
+input.nutrit {
+    display:inline-block;
+    width:70px;
+}
+
+label.inst {
+    width:70px;
+    text-align:right;
+}
+
+input:inst {
+    text-align:left;
+}
+
+input {
+    display:inline-block;
+    text-align:right;
+}
+fieldset {
+    background:#fff7db;
+}
+
+</style>
 </head>
+
 <body>
 
-<p><strong>Food Entry</strong></p>
-<form method="post" enctype="multipart/form-data"
-action="http://kirkbird.com/cgi-bin/form2.py">
-  <label>Enter Dish</label><br>
-  <input type="file" name="pic" accept="image/*"><br>
+<h1>Food Entry</h1>
+<form method="post" enctype="multipart/form-data" action="http://kirkbird.com/cgi-bin/food/form.py">
 
-  Description: (used as title for dish)<br> <textarea name="description"
-  rows="3" cols="35">
-  </textarea><br>
+  <input type="submit"><br>
 
-  Amount:<br> <input type="text" name="size size="35><br>
+  <fieldset style="width:270px">
+  <legend>Image Entry:</legend>
+  <input type="file" name="pic" accept="image/*"/><br>
+  </fieldset>
 
-  Cal:<input type="number" name="calories" max="3000"><br>
-  Carb:<input type="number" name="carbs" size="2" max="300">
-  Prot:<input type="number" name="protein" size="2" max="300">
-  Fat:<input type="number" name="fat" size="2" max="300"><br>
+  <fieldset style="width:270px">
+    <legend>Identifying Information:</legend>
 
-  Comment: (context/excuse/...)<br><input type="text" name="comment"
-  placeholder="Comment/Context/Excuse"><br>
+  Description: (used as title for dish)<br> 
+    <input type="text" name="description" placeholder="Title/Description/Identifier"/>
+    <br>
+  Comment:<br><input type="text" name="comment" placeholder="Comment/Context/Excuse">
+    <br>
+    Amount:<br> <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl">
+  </fieldset>
 
-  servings: <input type="number" name="servings" min="1" max="9" value="1">
+  <fieldset style="width:270px">
+  <legend>Nutrition:</legend>
+  <label class="nutrit" for="calories">Calories:</label>
+  <input class="nutrit" type="number" name="calories" id="calories" max="3000">
+  <label class="nutrit" for="carbs">Carbs(g):</label>
+  <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300"><br>
+  <label class="nutrit" for="prot">Protein(g):</label>
+  <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300"><br>
+  <label class="nutrit" for="fat">Fat(g):</label>
+  <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300">
+  </fieldset>
 
-  day: <input type="date" name="day"><br>
+  <fieldset style="width:270px">
+  <legend>Instance Information:</legend>
+  <label class="inst" for="servings">Servings:</label>
+  <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="1"><br>
 
-  time: <input type="time" name="time"><br>
+  <label class="inst" for="day">Day:</label>
+  <input class="inst" type="date" name="day" id="day"><br>
 
-  meal: <input list="meals" name="meal">
+  <label class="inst" for="time">Time:</label>
+  <input type="time" name="time"><br>
+
+  <label class="inst" for="meal">Meal:</label>
+  <input class="inst" list="meals" id="meal" name="meal">
     <datalist id="meals">
       <option value="Breakfast">
       <option value="Lunch">
@@ -51,6 +109,7 @@ action="http://kirkbird.com/cgi-bin/form2.py">
       <option value="Snack">
     </datalist>
   <br>
+  </fieldset>
   <input type="submit"><br>
 </form>
 """
@@ -92,3 +151,4 @@ text_out("File uploaded")
 #   Fat:<input type="number" name="fat" size="2" maxsize="3" max="300"><br>
 #  servings: <input type="range" name="servings" id="servingID" min="1" max="9" value="1" oninput="servingOutID.value=servingID.value">
 #  <output name="servingOutputName" id="servingOutID">1</output><br>
+#  Description: (used as title for dish)<br> <textarea name="description" rows="3" cols="35"> </textarea>
