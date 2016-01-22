@@ -11,7 +11,7 @@ from operator import attrgetter
 
 ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
-    'protein meal size')
+    'protein meal size id thumb_id')
 
 UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
 THUMB_DIR = UPLOAD_DIR + "thumbs/"
@@ -45,17 +45,12 @@ def main():
         items[upload_second] = fitem
         days[fitem.day].append(upload_second)
 
-    """
-    for day, item_list in sorted(days.iteritems()):
-        for item in sorted(item_list):
-            print day, items[item].time, items[item].meal, items[item].description
-    """
-
     print_header()
     print_body_start()
     for day, item_list in sorted(days.iteritems()):
         print_dayrow(day)
-        print_item_rows([value for key, value in items.items() if key in item_list])
+        print_item_rows([value for key, value in items.items()
+            if key in item_list])
     print_afterward()
 
     sys.exit()
@@ -68,8 +63,7 @@ def sorted_items_by_meal(item_rows):
     for meal in meals.values():
         meal.sort(key=attrgetter('time'))
 
-    z = sorted(meals.values(), key=lambda x: x[0].time)
-    return z
+    return sorted(meals.values(), key=lambda x: x[0].time)
 
 
 def ellipse_truncate(s, length):
@@ -78,16 +72,27 @@ def ellipse_truncate(s, length):
     else:
         return "No Description Yet"
 
+def thumb_url(dish):
+    if not dish.thumb_id:
+        return "No image"
+    else:
+        return '<a href="%s">%s</a>' % (THUMB_URL + dish.thumb_id + ".jpg", "Image")
+
 def print_meal(meal):
     width = 40
     desc = ellipse_truncate(meal[0].description, width)
+    link = thumb_url(meal[0])
+
     print """<tr>
     <th rowspan="%s">%s</th>
     <td>%s</td>
-    </tr>""" % (len(meal), meal[0].meal, desc)
+    <td>%s</td>
+    </tr>""" % (len(meal), meal[0].meal, desc, link)
     for dish in meal[1:]:
         desc = ellipse_truncate(dish.description, width)
-        print """<tr><td>%s</td></tr>""" % desc
+        link = thumb_url(dish)
+        print """<tr><td>%s</td><td>%s</td></tr>""" % (
+            desc, link)
 
 def print_item_rows(item_rows):
     """ Divide by meal """
@@ -130,7 +135,7 @@ def print_body_start():
 
 def print_dayrow(day):
     print """<tr>
-      <th colspan="2">%s</th>
+      <th colspan="3">%s</th>
       </tr>
       <tr>
         <th>Meal</th>

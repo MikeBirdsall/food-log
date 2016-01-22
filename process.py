@@ -31,9 +31,11 @@ DATA_DIR = UPLOAD_DIR + "byday/"
 
 Thumb_size = 400, 300
 
-class main():
+class main(object):
     def __init__(self):
         self.picdaytime = ""
+        self.ini_parser = None
+        self.gps_data = dict()
 
     def run(self):
         os.chdir(UPLOAD_DIR)
@@ -103,7 +105,6 @@ class main():
             if decoded.startswith('DateTime') and not self.picdaytime:
                 # Transform 'YYYY:MM:DD HH:MM:SS' to datetime
                 self.picdaytime = datetime.strptime(value, "%Y:%m:%d %H:%M:%S")
-                # self.picdaytime = datetime(*map(int, value.replace(':', ' ').split()))
             elif decoded == 'GPSInfo':
                 gps_data = dict()
                 for t in value:
@@ -142,11 +143,23 @@ class main():
         saved.set('edit', 'day', value=basename_day)
         saved.set('edit', 'time', value=basename_time)
 
+    def update_thumb_id(self, basename, img):
+        saved = self.ini_parser
+        if img:
+            thumb_id = basename
+        else:
+            thumb_id = ""
+
+        saved.set('edit', 'id', basename)
+        saved.set('edit', 'thumb_id', thumb_id)
+
     def update_meal(self):
         saved = self.ini_parser
         if saved.has_option('edit', 'meal') and saved.get('edit', 'meal'):
             return
-        if not saved.has_option('edit', 'time') or not saved.get('edit', 'time'):
+        if not saved.has_option('edit', 'time'):
+            return
+        if not saved.get('edit', 'time'):
             return
 
         mealtime = saved.get('edit', 'time')
@@ -202,7 +215,8 @@ class main():
         self.read_exif_data(img)
         self.update_datetime(basename)
         self.update_meal()
-        ini.seek(0,0)
+        self.update_thumb_id(basename, img)
+        ini.seek(0, 0)
         self.ini_parser.write(ini)
 
         # Create the thumbnail
@@ -225,79 +239,6 @@ class main():
         os.link(ini_dest, os.path.join(day_dir, ini.name))
 
         ini.close()
-
-
-
-
-
-'''
-for fname in files:
-
-    # Intention is to make this rerunnable, so original files are
-    # are placed into the archive directory. If you copy all the files
-    # back from the archive directory, delete all the files in the thumbs
-    # directory, and possibly empty the database (intelligently) you can
-    # rerun on everything. That will require keeping the .txt file with
-    # any edited changes. May want to keep original and edited data.
-    image = Image.open(fname)
-
-    newfile = tempfile.NamedTemporaryFile(suffix='.jpg', prefix='image_',
-        dir=THUMB_DIR, delete=False)
-
-'''
-
-'''
-    # Save thumbnail copy
-    thumb = image.copy()
-    thumb.thumbnail(Thumb_size, Image.ANTIALIAS)
-    thumb.save(newfile.name, 'JPEG')
-    newfile.close()
-    os.chmod(newfile.name, 0644)
-
-    # Collect and save database info
-        # From text file
-        #    Description
-        #    amount
-        #    cals
-        #    protein
-        #    fat
-        #    carbs
-        #    meal
-        # from exif
-        #   creation time
-        #   gps coordinates
-        # File name
-        #   fname = full name from browser
-        #   basename = os.path.splitext(fname)
-        #   newfile.name
-
-
-'''
-
-'''
-    path, basename = os.path.split(fname)
-    basename, ext = os.path.splitext(basename)
-    textname = os.extsep.join([basename, "txt"])
-
-    # Copy image and txt file to archive
-    shutil.move(fname, os.path.join(ARCHIVE_DIR, basename+ext))
-
-    textfull = os.path.join(UPLOAD_DIR, textname)
-    #if os.path.isfile(textname):
-        #shutil.move(textfull, os.path.join(ARCHIVE_DIR, textname))
-
-    try:
-        shutil.move(textfull, os.path.join(ARCHIVE_DIR, textname))
-    except IOError as e:
-        if e.errno != 2:
-            raise
-        else:
-            print "Skipping missing text file %s " % (textfull,)
-
-
-    # TODO: Deal with duplicate and missing filenames
-
-'''
 
 if __name__ == '__main__':
     main().run()
