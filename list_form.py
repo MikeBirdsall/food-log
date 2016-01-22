@@ -17,10 +17,12 @@ UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
 THUMB_DIR = UPLOAD_DIR + "thumbs/"
 ARCHIVE_DIR = UPLOAD_DIR + "archive/"
 DATA_DIR = UPLOAD_DIR + "byday/"
+THUMB_URL = "/and/images/thumbs/"
 #UPLOAD_DIR = "/home/mbirdsall/food/upload/"
 #THUMB_DIR = "/home/mbirdsall/food/thumbs/"
 #ARCHIVE_DIR = "/home/mbirdsall/food/archive/"
 #DATA_DIR = "/home/mbirdsall/food/byday"
+#THUMB_URL = "file:///home/mbirdsall/food/thumbs/"
 
 SECTION = 'edit'
 

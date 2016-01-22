@@ -100,7 +100,7 @@ class main(object):
         if not exif:
             return
         for tag, value in exif.items():
-            decoded = TAGS.get(tag, tag) # or get(tag, hex(tag))
+            decoded = TAGS.get(tag, hex(tag))
             # Put appropriate data into self
             if decoded.startswith('DateTime') and not self.picdaytime:
                 # Transform 'YYYY:MM:DD HH:MM:SS' to datetime
