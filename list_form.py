@@ -84,17 +84,19 @@ def print_meal(meal):
     width = 40
     desc = ellipse_truncate(meal[0].description, width)
     link = thumb_url(meal[0])
+    edit = "Edit"
 
     print """<tr>
     <th rowspan="%s">%s</th>
     <td>%s</td>
     <td>%s</td>
-    </tr>""" % (len(meal), meal[0].meal, desc, link)
+    <td>%s</td>
+    </tr>""" % (len(meal), meal[0].meal, desc, link, edit)
     for dish in meal[1:]:
         desc = ellipse_truncate(dish.description, width)
         link = thumb_url(dish)
-        print """<tr><td>%s</td><td>%s</td></tr>""" % (
-            desc, link)
+        print """<tr><td>%s</td><td>%s</td><td>%s</td></tr>""" % (
+            desc, link, edit)
 
 def print_item_rows(item_rows):
     """ Divide by meal """
@@ -137,18 +139,14 @@ def print_body_start():
 
 def print_dayrow(day):
     print """<tr>
-      <th colspan="3">%s</th>
+      <th colspan="4">%s</th>
       </tr>
       <tr>
         <th>Meal</th>
         <th>Item</th>
+        <th> </th>
+        <th>Edit?</th>
 """ % day
-
-def print_first_item_row(item_rows):
-    print """<tr>
-    <th rowspan="%s">%s</th>
-      <td>%s</td>
-    </th>""" % (len(item_rows), item_rows, item_rows)
 
 if __name__ == '__main__':
     main()
