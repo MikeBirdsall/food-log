@@ -13,14 +13,14 @@ ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
     'protein meal size')
 
-#UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
-#THUMB_DIR = UPLOAD_DIR + "thumbs/"
-#ARCHIVE_DIR = UPLOAD_DIR + "archive/"
-#DATA_DIR = UPLOAD_DIR + "byday/"
-UPLOAD_DIR = "/home/mbirdsall/food/upload/"
-THUMB_DIR = "/home/mbirdsall/food/thumbs/"
-ARCHIVE_DIR = "/home/mbirdsall/food/archive/"
-DATA_DIR = "/home/mbirdsall/food/byday"
+UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
+THUMB_DIR = UPLOAD_DIR + "thumbs/"
+ARCHIVE_DIR = UPLOAD_DIR + "archive/"
+DATA_DIR = UPLOAD_DIR + "byday/"
+#UPLOAD_DIR = "/home/mbirdsall/food/upload/"
+#THUMB_DIR = "/home/mbirdsall/food/thumbs/"
+#ARCHIVE_DIR = "/home/mbirdsall/food/archive/"
+#DATA_DIR = "/home/mbirdsall/food/byday"
 
 SECTION = 'edit'
 
