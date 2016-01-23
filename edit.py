@@ -23,6 +23,8 @@ THUMB_URL = "/and/images/thumbs/"
 SELF_URL = "http://localhost:8000/cgi-bin/edit.py"
 #SELF_URL = "http://kirkbird.com/cgi-bin/food/edit.py"
 
+update_fields = frozenset('description comment size calories number carbs '
+    'protein fat servings day time meal'.split())
 valid_fields = frozenset('cmd id description comment size calories number carbs '
     'protein fat servings day time meal'.split())
 
@@ -37,8 +39,13 @@ class main():
         self.head()
 
         self.data = self.get_form_data()
+
         self.parser = self.open_ini_file(self.data['id'])
+
+
+        """
         # Getting debug information to find out how to deal with no form or form
+        print "<p>%s</p>" % datetime.now().time()
         print "<p>%s</p>" % self.data
 
         # Show that it comes from CGI
@@ -53,17 +60,36 @@ class main():
 
         for field in sorted(os.environ):
             print "%s = %s<br/>" % (field, os.environ[field])
+        """
 
-        if 'submit' in self.data:
-            self.update(file)
+        status = self.update()
+
         self.body()
+        print status
+
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
         if thumb_id:
             if os.path.join(THUMB_DIR, thumb_id + ".ini"):
                 self.show_image(os.path.join(THUMB_URL, thumb_id + ".jpg"))
+
         self.tail()
            
+    def update(self):
+        status = "<p>Not yet updated</p>"
+        needed = update_fields.intersection(self.data)
+        if needed:
+            EDIT_SECTION = 'edit'
+            for field in needed:
+                self.parser.set(EDIT_SECTION, field, self.data[field])
+
+            self.ini.seek(0, 0)
+            self.parser.write(self.ini)
+            status = "<p>File updated at %s</p>" % datetime.now().time()
+
+        self.ini.close()
+        return status
+
     def show_image(self, image):
         print """<img src="%s" alt="Food">""" % image
 
@@ -155,13 +181,13 @@ class main():
         upload_second = datetime.strptime(id, "%Y%m%dT%H:%M:%S")
         ini_loc = os.path.join(DATA_DIR, id + '.ini')
         try:
-            ini = open(ini_loc, 'r+')
+            self.ini = open(ini_loc, 'r+')
         except IOError:
             print "Problem opening ini file"
             raise 
 
         parser = SafeConfigParser()
-        parser.readfp(ini)
+        parser.readfp(self.ini)
         return parser
         
     def head(self):
