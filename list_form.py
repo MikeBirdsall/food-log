@@ -49,7 +49,7 @@ def main():
 
     print_header()
     print_body_start()
-    for day, item_list in sorted(days.iteritems()):
+    for day, item_list in sorted(days.iteritems(), reverse=True):
         print_dayrow(day)
         print_item_rows([value for key, value in items.items()
             if key in item_list])
