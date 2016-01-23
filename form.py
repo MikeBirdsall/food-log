@@ -17,8 +17,9 @@ import cgitb; cgitb.enable()
 import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
+from my_info import UPLOAD_DIR
 
-UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images"
+script_name = os.environ.get('SCRIPT_NAME', '')
 
 class main():
     def __init__(self):
@@ -90,9 +91,12 @@ class main():
         self.parse_form_fields()
 
     def print_form(self):
-        print """    <h1>Food Entry</h1>\n    <form method="post" enctype="multipart/form-data" action="http://kirkbird.com/cgi-bin/food/form.py">
+        print """    <h1>Food Entry</h1>
+        <form method="post" enctype="multipart/form-data" action="%s">
         <input type="submit"><br>
+        """ % script_name
 
+        print """
         <fieldset style="width:270px">
         <legend>Image Entry:</legend>
         <input type="file" name="pic" accept="image/*"/><br>
