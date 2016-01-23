@@ -15,8 +15,8 @@ import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 
-ROOT_DIR = "/home/mbirdsall/food/"
-#ROOT_DIR = "/big/dom/xkirkbird/"
+#OOT_DIR = "/home/mbirdsall/food/"
+ROOT_DIR = "/big/dom/xkirkbird/"
 DATA_DIR = ROOT_DIR + "www/and/images/byday/"
 THUMB_DIR = ROOT_DIR + "www/and/images/thumbs"
 THUMB_URL = "/and/images/thumbs/"
