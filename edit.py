@@ -15,11 +15,13 @@ import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 
-#DATA_DIR = "/home/mbirdsall/food/byday"
-#THUMB_DIR = "/home/mbirdsall/food/thumbs/"
-DATA_DIR = "/big/dom/xkirkbird/www/and/images/byday/"
-THUMB_DIR = "/big/dom/xkirkbird/www/and/images/thumbs/"
+ROOT_DIR = "/home/mbirdsall/food/"
+#ROOT_DIR = "/big/dom/xkirkbird/"
+DATA_DIR = ROOT_DIR + "www/and/images/byday/"
+THUMB_DIR = ROOT_DIR + "www/and/images/thumbs"
 THUMB_URL = "/and/images/thumbs/"
+SELF_URL = "http://localhost:8000/cgi-bin/edit.py"
+#SELF_URL = "http://kirkbird.com/cgi-bin/food/edit.py"
 
 valid_fields = frozenset('cmd id description comment size calories number carbs '
     'protein fat servings day time meal'.split())
@@ -36,6 +38,22 @@ class main():
 
         self.data = self.get_form_data()
         self.parser = self.open_ini_file(self.data['id'])
+        # Getting debug information to find out how to deal with no form or form
+        print "<p>%s</p>" % self.data
+
+        # Show that it comes from CGI
+        if 'GATEWAY_INTERFACE' in os.environ:
+            print '<p>CGI - %s</p>' % os.environ['GATEWAY_INTERFACE']
+        else:
+            print "Not CGI. CLI?"
+
+        fs = cgi.FieldStorage()
+        for key in fs.keys():
+            print "%s - %s<br/>" % (key, fs[key].value)
+
+        for field in sorted(os.environ):
+            print "%s = %s<br/>" % (field, os.environ[field])
+
         if 'submit' in self.data:
             self.update(file)
         self.body()
@@ -65,9 +83,10 @@ class main():
 
     def print_form(self):
         print """    <h1>Food Entry</h1>
-           <form method="post" enctype="multipart/form-data" action="http://kirkbird.com/cgi-bin/food/edit.py">
-        <input type="submit"><br>
+           <form method="post" enctype="multipart/form-data" action="%s">
+        <input type="submit"><br> """ % SELF_URL
 
+        print """
         <input type="hidden" name="id" value={id}>
         <fieldset style="width:270px"><legend>Identifying Information:</legend>
           Description:<br> 
@@ -145,28 +164,6 @@ class main():
         parser.readfp(ini)
         return parser
         
-
-
-
-        if 'command' in fs.keys():
-            command = fs[key].value
-
-
-
-        
-        # Show that it comes from CGI
-        if 'GATEWAY_INTERFACE' in os.environ:
-            print 'CGI - %s' % os.environ['GATEWAY_INTERFACE']
-        else:
-            print "Not CGI. CLI?"
-
-        # Show the Field Storage vaiables
-        for key in fs.keys():
-            print "%s - %s" % (key, fs[key].value)
-
-        for field in sorted(os.environ):
-            print "%s = %s" % (field, os.environ[field])
-
     def head(self):
         print """Content-Type: text/html\n\n<html>\n    <head>
         <meta name="viewport" content="width=320" />\n"""
