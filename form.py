@@ -18,7 +18,7 @@ import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 
-UPLOAD_DIR = "/big/dom/xkirkbird/www/and/test"
+UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images"
 
 class main():
     def __init__(self):
