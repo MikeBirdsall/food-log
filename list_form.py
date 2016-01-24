@@ -94,7 +94,7 @@ def print_meal(meal):
     dish = meal[0]
     desc = ellipse_truncate(dish.description)
     link = thumb_url(dish)
-    edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.thumb_id)
+    edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.id)
 
     print """<tr>
     <th rowspan="%s">%s</th>
@@ -103,9 +103,13 @@ def print_meal(meal):
     <td>%s</td>
     </tr>""" % (len(meal), meal[0].meal, desc, link, edit)
     for dish in meal[1:]:
+        edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.id)
         desc = ellipse_truncate(dish.description)
         link = thumb_url(dish)
-        print """<tr><td>%s</td><td>%s</td><td>%s</td></tr>""" % (
+        print """<tr><td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            </tr>""" % (
             desc, link, edit)
 
 def print_item_rows(item_rows):
