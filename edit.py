@@ -14,14 +14,9 @@ import cgitb; cgitb.enable()
 import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
+from my_info import DATA_DIR, THUMB_DIR, THUMB_URL
 
-#OOT_DIR = "/home/mbirdsall/food/"
-ROOT_DIR = "/big/dom/xkirkbird/"
-DATA_DIR = ROOT_DIR + "www/and/images/byday/"
-THUMB_DIR = ROOT_DIR + "www/and/images/thumbs"
-THUMB_URL = "/and/images/thumbs/"
-SELF_URL = "http://localhost:8000/cgi-bin/edit.py"
-#SELF_URL = "http://kirkbird.com/cgi-bin/food/edit.py"
+script_name = os.environ.get('SCRIPT_NAME', '')
 
 update_fields = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
@@ -110,7 +105,7 @@ class main():
     def print_form(self):
         print """    <h1>Food Entry</h1>
            <form method="post" enctype="multipart/form-data" action="%s">
-        <input type="submit"><br> """ % SELF_URL
+        <input type="submit"><br> """ % script_name
 
         print """
         <input type="hidden" name="id" value={id}>

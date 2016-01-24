@@ -18,16 +18,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from ConfigParser import SafeConfigParser
 from datetime import datetime, time
-
-
-#UPLOAD_DIR = "/home/mbirdsall/food/upload/"
-#THUMB_DIR = "/home/mbirdsall/food/thumbs/"
-#ARCHIVE_DIR = "/home/mbirdsall/food/archive/"
-#DATA_DIR = "/home/mbirdsall/food/byday"
-UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
-THUMB_DIR = UPLOAD_DIR + "thumbs/"
-ARCHIVE_DIR = UPLOAD_DIR + "archive/"
-DATA_DIR = UPLOAD_DIR + "byday/"
+from my_info import UPLOAD_DIR, THUMB_DIR, ARCHIVE_DIR, DATA_DIR
 
 Thumb_size = 400, 300
 

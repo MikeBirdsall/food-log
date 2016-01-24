@@ -8,21 +8,11 @@ from glob import glob
 from ConfigParser import SafeConfigParser
 from collections import defaultdict, namedtuple
 from operator import attrgetter
+from my_info import DATA_DIR, THUMB_URL
 
 ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
     'protein meal size id thumb_id')
-
-UPLOAD_DIR = "/big/dom/xkirkbird/www/and/images/"
-THUMB_DIR = UPLOAD_DIR + "thumbs/"
-ARCHIVE_DIR = UPLOAD_DIR + "archive/"
-DATA_DIR = UPLOAD_DIR + "byday/"
-THUMB_URL = "/and/images/thumbs/"
-#UPLOAD_DIR = "/home/mbirdsall/food/upload/"
-#THUMB_DIR = "/home/mbirdsall/food/thumbs/"
-#ARCHIVE_DIR = "/home/mbirdsall/food/archive/"
-#DATA_DIR = "/home/mbirdsall/food/byday"
-#THUMB_URL = "file:///home/mbirdsall/food/thumbs/"
 
 SECTION = 'edit'
 
