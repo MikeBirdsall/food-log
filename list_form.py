@@ -9,6 +9,7 @@ from ConfigParser import SafeConfigParser
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 from my_info import DATA_DIR, THUMB_URL
+from datetime import datetime
 
 ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
@@ -16,6 +17,19 @@ ITEM = namedtuple('item',
 
 SECTION = 'edit'
 
+# The edit link depends on the cgi-bin organization
+if 'GATEWAY_INTERFACE' in os.environ:
+    EDIT_URL = os.environ.get('SCRIPT_NAME', '')
+    EDIT_URL = os.path.join(os.path.dirname(EDIT_URL), "edit.py")
+else:
+    # this is a bit of a hack to get the relative URL
+    # based on it being in the same directory as this script
+    # and the url staring with "/cgi-bin"
+    # Doesn't work in wing
+
+    EDIT_URL = os.path.abspath(os.path.dirname(sys.argv[0]))
+    EDIT_URL = EDIT_URL.partition('/cgi-bin')[1:] + ("edit.py",)
+    EDIT_URL = os.path.join(*EDIT_URL)
 
 def main():
     """ Generate full food listing html """
@@ -48,6 +62,7 @@ def main():
     sys.exit()
 
 def sorted_items_by_meal(item_rows):
+    """ Returns all items in the same meal, sorted by time """
     meals = defaultdict(list)
     for item in item_rows:
         meals[item.meal].append(item)
@@ -58,23 +73,26 @@ def sorted_items_by_meal(item_rows):
     return sorted(meals.values(), key=lambda x: x[0].time)
 
 
-def ellipse_truncate(s, length):
-    if s:
-        return (s[:length] + "&hellip;") if len(s) > length+2 else s
-    else:
-        return "No Description Yet"
+def ellipse_truncate(text, length=40):
+    """ Return canonical form of description to fit in length """
+    result = text or "No Description Yet"
+    return (result[:length-1] + "&hellip;") if len(result) > length else result
 
-def thumb_url(dish):
+def thumb_url(dish, placeholder="No image"):
+    """ Return Link to thumbnail image or placeholder if it doesn't exist """
     if not dish.thumb_id:
-        return "No image"
-    else:
-        return '<a href="%s">%s</a>' % (THUMB_URL + dish.thumb_id + ".jpg", "Image")
+        return placeholder
+    return '<a href="%s">%s</a>' % (THUMB_URL + dish.thumb_id + ".jpg", "Image")
 
 def print_meal(meal):
-    width = 40
-    desc = ellipse_truncate(meal[0].description, width)
-    link = thumb_url(meal[0])
-    edit = "Edit"
+    """ Print html for all the table rows for a meal
+
+        The rows are printed such that the meal name spans all rows
+    """
+    dish = meal[0]
+    desc = ellipse_truncate(dish.description)
+    link = thumb_url(dish)
+    edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.thumb_id)
 
     print """<tr>
     <th rowspan="%s">%s</th>
@@ -83,7 +101,7 @@ def print_meal(meal):
     <td>%s</td>
     </tr>""" % (len(meal), meal[0].meal, desc, link, edit)
     for dish in meal[1:]:
-        desc = ellipse_truncate(dish.description, width)
+        desc = ellipse_truncate(dish.description)
         link = thumb_url(dish)
         print """<tr><td>%s</td><td>%s</td><td>%s</td></tr>""" % (
             desc, link, edit)
@@ -97,11 +115,13 @@ def print_item_rows(item_rows):
         print_meal(meal)
 
 def print_afterward():
+    """ Constant part at end of html """
     print """</table>
     </body>
     </html>"""
 
 def print_header():
+    """ Print the html for the <head/> """
     print """<html>
     <head>
       <title>Food Items</title>
@@ -122,12 +142,19 @@ def print_header():
     """
 
 def print_body_start():
+    """ Print html for constant part at start of body
+
+        Could be improved by templating to allow the full string, with variable
+        part filled in and the whole thing printed
+
+    """
     print """<body>
     <h1>MGB Food Log</h1>
     <table>
     """
 
 def print_dayrow(day):
+    """ Print html row with date, spanning the table """
     print """<tr>
       <th colspan="4">%s</th>
       </tr>
@@ -136,7 +163,7 @@ def print_dayrow(day):
         <th>Item</th>
         <th> </th>
         <th>Edit?</th>
-""" % day
+""" % datetime.strptime(day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
 
 if __name__ == '__main__':
     main()

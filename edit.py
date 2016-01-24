@@ -1,61 +1,44 @@
 #!/usr/bin/python
-""" Program to edit a food item 
+""" Program to edit a food item
 
 This cgi-bin program is one of a group of programs to help me create and
 maintain a record of everything I eat. This one writes and populates an html
 form page which allows the food item fields be edited
 
 Other programs will input new data, prepare output web pages, and to managed
-the date in valious ways. 
+the date in valious ways.
 
 """
 import cgi
 import cgitb; cgitb.enable()
-import os, sys
+import os
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from my_info import DATA_DIR, THUMB_DIR, THUMB_URL
 
-script_name = os.environ.get('SCRIPT_NAME', '')
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
-update_fields = frozenset('description comment size calories number carbs '
+UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
-valid_fields = frozenset('cmd id description comment size calories number carbs '
-    'protein fat servings day time meal'.split())
+VALID_FIELDS = UPDATE_FIELDS.union('id'.split())
+EDIT_SECTION = 'edit'
 
-class main():
+class main(object):
+    """ Main program do create and handle form to edit food items """
     def __init__(self):
         self.old_data = dict()
-        pass
+        self.parser = None
+        self.data = dict()
+        self.ini = None     # file object
 
     def process(self):
-        """ Update file from form or update form from file depending on state """
+        """ Update file from form or vice versa depending on state """
 
         self.head()
 
         self.data = self.get_form_data()
 
         self.parser = self.open_ini_file(self.data['id'])
-
-
-        """
-        # Getting debug information to find out how to deal with no form or form
-        print "<p>%s</p>" % datetime.now().time()
-        print "<p>%s</p>" % self.data
-
-        # Show that it comes from CGI
-        if 'GATEWAY_INTERFACE' in os.environ:
-            print '<p>CGI - %s</p>' % os.environ['GATEWAY_INTERFACE']
-        else:
-            print "Not CGI. CLI?"
-
-        fs = cgi.FieldStorage()
-        for key in fs.keys():
-            print "%s - %s<br/>" % (key, fs[key].value)
-
-        for field in sorted(os.environ):
-            print "%s = %s<br/>" % (field, os.environ[field])
-        """
 
         status = self.update()
 
@@ -69,12 +52,12 @@ class main():
                 self.show_image(os.path.join(THUMB_URL, thumb_id + ".jpg"))
 
         self.tail()
-           
+
     def update(self):
+        """ Update fields in ini file if any fields from form and close file """
         status = "<p>Not yet updated</p>"
-        needed = update_fields.intersection(self.data)
+        needed = UPDATE_FIELDS.intersection(self.data)
         if needed:
-            EDIT_SECTION = 'edit'
             for field in needed:
                 self.parser.set(EDIT_SECTION, field, self.data[field])
 
@@ -86,9 +69,11 @@ class main():
         return status
 
     def show_image(self, image):
+        """ Emit html for an image link """
         print """<img src="%s" alt="Food">""" % image
 
     def tail(self):
+        """ Emit html for constant trailing parts """
         print """</body></html>"""
 
     def load_data(self):
@@ -98,23 +83,23 @@ class main():
     def body(self):
         print """<body>"""
 
-        data = self.load_data()
+        self.load_data()
 
         self.print_form()
 
     def print_form(self):
         print """    <h1>Food Entry</h1>
-           <form method="post" enctype="multipart/form-data" action="%s">
-        <input type="submit"><br> """ % script_name
+           <form method="post" action="%s">
+        <input type="submit"><br> """ % SCRIPT_NAME
 
         print """
         <input type="hidden" name="id" value={id}>
         <fieldset style="width:270px"><legend>Identifying Information:</legend>
-          Description:<br> 
+          Description:<br>
           <input type="text" name="description" placeholder="Title" value="{description}">
           <br>Comment:<br>
           <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
-          Amount:<br> 
+          Amount:<br>
           <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
         </fieldset>
 
@@ -125,7 +110,7 @@ class main():
         <label class="nutrit" for="carbs">Carbs(g):</label>
         <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}"><br>
         <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" 
+        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300"
            value="{protein}"><br>
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}">
@@ -162,29 +147,28 @@ class main():
 
         # Need at least "id" form field
         if not fs.keys():
-            raise RuntimeError, "No Input"
+            raise RuntimeError("No Input")
 
         # Don't allow extra fields - protection against misspelling
-        invalid_fields = set(fs.keys()).difference(valid_fields)
+        invalid_fields = set(fs.keys()).difference(VALID_FIELDS)
         if invalid_fields:
-            raise RuntimeError, "Bad field names %s" % invalid_fields
+            raise RuntimeError("Bad field names %s" % invalid_fields)
 
         return dict((x, fs.getfirst(x)) for x in fs)
 
-    def open_ini_file(self, id):
+    def open_ini_file(self, id_):
         # Check id is valid format and file exists and readable
-        upload_second = datetime.strptime(id, "%Y%m%dT%H:%M:%S")
-        ini_loc = os.path.join(DATA_DIR, id + '.ini')
+        ini_loc = os.path.join(DATA_DIR, id_ + '.ini')
         try:
             self.ini = open(ini_loc, 'r+')
         except IOError:
             print "Problem opening ini file"
-            raise 
+            raise
 
         parser = SafeConfigParser()
         parser.readfp(self.ini)
         return parser
-        
+
     def head(self):
         print """Content-Type: text/html\n\n<html>\n    <head>
         <meta name="viewport" content="width=320" />\n"""
