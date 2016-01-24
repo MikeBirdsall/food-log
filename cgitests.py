@@ -24,11 +24,11 @@ class main():
             print path, "<br/>"
         print "</p>"
 
-        print "<p>%s</p>" % datetime.now().time()
+        print "<p>Time = %s</p>" % datetime.now().time()
 
         fs = cgi.FieldStorage()
 
-        print "<p>%s</p>" % dict((x, fs.getfirst(x)) for x in fs)
+        print "<p>Form Fields: %s</p>" % dict((x, fs.getfirst(x)) for x in fs)
 
 
         # Show if it comes from CGI
@@ -37,6 +37,7 @@ class main():
         else:
             print "Not CGI. CLI?"
 
+        print "<p>Environment Values</p>"
         for field in sorted(os.environ):
             print "%s = %s<br/>" % (field, os.environ[field])
 
