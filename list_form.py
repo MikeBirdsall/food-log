@@ -157,6 +157,9 @@ def print_body_start():
     """
     print """<body>
     <h1>MGB Food Log</h1>
+    <form method==get">
+        <button formaction="/and/images/pages/menu.html">Food Menu</button>
+    </form>
     <table>
     """
 
@@ -169,7 +172,7 @@ def print_dayrow(day):
         <th>Meal</th>
         <th>Item</th>
         <th> </th>
-        <th>Edit?</th>
+        <th> </th>
 """ % datetime.strptime(day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
 
 if __name__ == '__main__':
