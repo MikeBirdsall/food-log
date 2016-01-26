@@ -89,7 +89,11 @@ class main(object):
 
     def print_form(self):
         print """    <h1>Food Entry</h1>
-           <form method="post" action="%s">
+            <form method==get">
+                <button formaction="/and/images/pages/index.html">Food Menu</button>
+                <button formaction="/and/images/pages/list.html">List All Meals</button>
+            </form>
+            <form method="post" action="%s">
         <input type="submit"><br> """ % SCRIPT_NAME
 
         print """
