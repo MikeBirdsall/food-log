@@ -176,7 +176,7 @@ class main(object):
 
     def head(self):
         print """Content-Type: text/html\n\n<html>\n    <head>
-        <meta name="viewport" content="width=320" />\n"""
+        <meta name="viewport" content="width=device=width, initial-scale=1" />\n"""
         self.css()
         print """ </head>
             """
