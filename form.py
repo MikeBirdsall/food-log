@@ -119,13 +119,14 @@ class main():
         <fieldset style="width:270px">
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories" max="3000">
+        <input class="nutrit" type="number" name="calories" id="calories"
+        max="3000" step="5">
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="0.1"><br>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1"><br>
         <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="0.1"><br>
+        <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1"><br>
         <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.1">
+        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.5">
         </fieldset>
 
         <fieldset style="width:270px">
