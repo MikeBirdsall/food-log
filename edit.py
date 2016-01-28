@@ -112,12 +112,12 @@ class main(object):
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories" max="3000" value="{calories}">
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}"><br>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="0.1"><br>
         <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300"
+        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="0.1"
            value="{protein}"><br>
         <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}">
+        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.1">
         </fieldset>
 
         <fieldset style="width:270px">
