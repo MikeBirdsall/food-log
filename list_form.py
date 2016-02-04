@@ -130,7 +130,7 @@ def print_header():
     """ Print the html for the <head/> """
     print """<html>
     <head>
-    <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Food Items</title>
         <style>
           table {
