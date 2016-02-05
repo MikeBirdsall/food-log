@@ -106,23 +106,24 @@ class main(object):
     def update_datetime(self, basename):
         """ Use multiple possibilities to default date/time """
 
+        # Use date or time from ini file preferentially, but if either is not
+        # set, fill in from exif
         # datetime is set (in this priority) from the edit section of the ini,
         # from the exif date and time in the image, or from the filename
         # chosen at upload
 
         saved = self.ini_parser
-        if saved.has_option('edit', 'day') and saved.get('edit', 'day'):
-            return
-
-        if saved.has_option('edit', 'time') and saved.get('edit', 'time'):
-            return
 
         if self.picdaytime:
             picday = self.picdaytime.date().strftime("%Y-%m-%d")
             pictime = self.picdaytime.time().strftime("%H:%M")
 
-            saved.set('edit', 'day', value=picday)
-            saved.set('edit', 'time', value=pictime)
+
+            if not saved.has_option('edit', 'day') or not saved.get('edit', 'day'):
+                saved.set('edit', 'day', value=picday)
+
+            if not saved.has_option('edit', 'time') or not saved.get('edit', 'time'):
+                saved.set('edit', 'time', value=pictime)
             return
 
         if not basename:
