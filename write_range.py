@@ -205,7 +205,7 @@ def get_dates(args):
         print "Creating last week"
         # Get previous Wednesday (config this later)
         today = date.today()
-        start_date = today - timedelta(days=(1 + (today.weekday() + 3) % 7))
+        start_date = today - timedelta(days=(8 + (today.weekday() + 3) % 7))
         end_date = start_date + timedelta(days=6)
         return start_date, end_date
     else:

@@ -195,7 +195,8 @@ class main():
 
         self.picfile_name = self.fileitem.filename
 
-        fout = file(os.path.join(UPLOAD_DIR, self.bname+".jpg"), 'wb')
+        # We don't know what kine of image file it is but we don't need to
+        fout = file(os.path.join(UPLOAD_DIR, self.bname+".image"), 'wb')
 
         while True:
             chunk = self.fileitem.file.read(100000)
