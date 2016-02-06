@@ -108,7 +108,7 @@ class main():
         <fieldset style="width:270px">
             <legend>Identifying Information:</legend>
 
-        Description: (used as title for dish)<br> 
+        Description: (used as title for dish)<br>
             <input type="text" name="description" placeholder="Title/Description/Identifier"/>
             <br>
         Comment:<br><input type="text" name="comment" placeholder="Comment/Context/Excuse">
@@ -185,7 +185,7 @@ class main():
             return
         self.fileitem = self.form[self.FORM_FIELD]
 
-        if not self.fileitem.file: 
+        if not self.fileitem.file:
             self.text_out("Bad form field name pic not file")
             return
 
@@ -221,7 +221,7 @@ class main():
 
         with open(os.path.join(UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
             output.write(outfile)
-    
+
 
 if __name__ == '__main__':
     main()
