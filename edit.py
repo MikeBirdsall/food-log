@@ -29,7 +29,7 @@ class main(object):
         self.old_data = dict()
         self.parser = None
         self.data = dict()
-        self.ini = None     # file object
+        self.ini_filename = ""
 
     def process(self):
         """ Update file from form or vice versa depending on state """
@@ -37,8 +37,9 @@ class main(object):
         self.head()
 
         self.data = self.get_form_data()
+        self.ini_filename = os.path.join(DATA_DIR, self.data['id']+'.ini')
 
-        self.parser = self.open_ini_file(self.data['id'])
+        self.parser = self.open_ini_file()
 
         status = self.update()
 
@@ -61,11 +62,10 @@ class main(object):
             for field in needed:
                 self.parser.set(EDIT_SECTION, field, self.data[field])
 
-            self.ini.seek(0, 0)
-            self.parser.write(self.ini)
+            with open(self.ini_filename, 'w') as inifile:
+                self.parser.write(inifile)
             status = "<p>File updated at %s</p>" % datetime.now().time()
 
-        self.ini.close()
         return status
 
     def show_image(self, image):
@@ -161,17 +161,12 @@ class main(object):
 
         return dict((x, fs.getfirst(x)) for x in fs)
 
-    def open_ini_file(self, id_):
-        # Check id is valid format and file exists and readable
-        ini_loc = os.path.join(DATA_DIR, id_ + '.ini')
-        try:
-            self.ini = open(ini_loc, 'r+')
-        except IOError:
-            print "Problem opening ini file"
-            raise
+    def open_ini_file(self):
 
         parser = SafeConfigParser()
-        parser.readfp(self.ini)
+        with open(self.ini_filename, 'r') as inifile:
+            parser.readfp(inifile)
+
         return parser
 
     def head(self):
