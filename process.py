@@ -52,12 +52,19 @@ class main(object):
                 self.ini_parser.readfp(inifile)
         except IOError:
             self.ini_parser.add_section('upload')
-            self.ini_parser.add_section('edit')
             for field in ('description', 'comment', 'size', 'servings',
                     'calories', 'carbs', 'protein', 'fat', 'day', 'time',
-                    'meal'):
+                    'meal', 'image_file'):
                 self.ini_parser.set('upload', field, "")
-                self.ini_parser.set('edit', field, "")
+
+        if ('edit') not in self.ini_parser.sections():
+            self.ini_parser.add_section('edit')
+            for field in self.ini_parser.options('upload'):
+                if field == 'image_file':
+                    continue
+                self.ini_parser.set('edit', field,
+                    value=self.ini_parser.get('upload', field))
+
 
     def get_basenames(self):
         # There are files grouped by their basename without extension.

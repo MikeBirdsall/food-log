@@ -202,7 +202,6 @@ def ellipse_truncate(text, length=40):
 
 def get_dates(args):
     if args.last_week:
-        print "Creating last week"
         # Get previous Wednesday (config this later)
         today = date.today()
         start_date = today - timedelta(days=(8 + (today.weekday() + 3) % 7))
