@@ -200,7 +200,8 @@ class main(object):
 
         shutil.move(self.ini_name, DATA_DIR)
         # Now put a link to the same file in a directory for the day
-        day_dir = os.path.join(DATA_DIR, self.ini_parser.get('edit', 'day'))
+        if self.ini_parser.get('edit', 'day'):
+        day_dir = os.path.join(DATA_DIR, self.ini_parser.get('edit', 'day') or "date-unknown")
         if not os.path.exists(day_dir):
             os.makedirs(day_dir)
         os.link(os.path.join(DATA_DIR, self.ini_name),
