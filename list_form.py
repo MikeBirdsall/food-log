@@ -165,6 +165,10 @@ def print_body_start():
 
 def print_dayrow(day):
     """ Print html row with date, spanning the table """
+    if day:
+        daystring = datetime.strptime(day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
+    else:
+        daystring = "Unknown"
     print """<tr>
       <th colspan="4">%s</th>
       </tr>
@@ -173,7 +177,7 @@ def print_dayrow(day):
         <th>Item</th>
         <th> </th>
         <th> </th>
-""" % datetime.strptime(day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
+""" % daystring
 
 if __name__ == '__main__':
     main()
