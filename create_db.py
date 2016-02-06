@@ -29,7 +29,6 @@ class ConstructDatabase(object):
 
     def populate_tables(self):
         for file_ in glob(os.path.join(self.dir_path, "*.ini")):
-            print "Processing file %s" % file_
             self.insert_in_db(self.extract_from_ini(file_))
 
     def insert_in_db(self, dict_):
