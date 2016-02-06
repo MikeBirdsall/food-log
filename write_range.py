@@ -147,10 +147,10 @@ class ConstructWebPage(object):
         cals = carbs = fat = protein = (0, "")
         for meal in meals:
             for dish in meal:
-                cals = add_with_none(cals, dish.calories)
-                carbs = add_with_none(carbs, dish.carbs)
-                fat = add_with_none(fat, dish.fat)
-                protein = add_with_none(protein, dish.protein)
+                cals = add_with_none(cals, dish.calories, dish.servings)
+                carbs = add_with_none(carbs, dish.carbs, dish.servings)
+                fat = add_with_none(fat, dish.fat, dish.servings)
+                protein = add_with_none(protein, dish.protein, dish.servings)
 
         print TOTAL_TEMPLATE % (
             ''.join(map(str, cals)),
@@ -217,11 +217,11 @@ def get_dates(args):
 
 
 
-def add_with_none(now, new):
+def add_with_none(now, new, servings):
     if new is None:
         return (now[0], "+?")
     else:
-        return (now[0] + new, now[1])
+        return (now[0] + (new * servings), now[1])
 
 def main():
     """ Commandline program to create food diary dataabase from ini files """

@@ -15,6 +15,61 @@ ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
     'protein meal size id thumb_id')
 
+HEADER_TEMPLATE = """<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Food Items</title>
+        <style>
+          table {
+            background:#fff7db;
+          }
+          table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+          }
+          th, td {
+            padding: 5px;
+            white-space: nowrap;
+          }
+        </style>
+      </head> """
+    
+BODY_START_TEMPLATE = """<body>
+    <h1>MGB Food Log</h1>
+    <form method="get">
+        <button formaction="/and/images/pages/menu.html">Food Menu</button>
+    </form>
+    <table>
+    """
+
+AFTERWARD_TEMPLATE = """    </table>
+    recomputed on %s
+  </body>
+</html>"""
+
+
+MEAL_HEADER = """<tr>
+    <th rowspan="%s">%s</th>
+    <td>%s</td>
+    <td>%s</td>
+    <td>%s</td>
+    </tr>""" 
+
+DISH_HEADER = """<tr><td>%s</td>
+    <td>%s</td>
+    <td>%s</td>
+    </tr>""" 
+
+DAY_HEADER =  """<tr>
+  <th colspan="4">%s</th>
+  </tr>
+  <tr>
+    <th>Meal</th>
+    <th>Item</th>
+    <th> </th>
+    <th> </th>
+""" 
+
 SECTION = 'edit'
 
 # The edit link depends on the cgi-bin organization
@@ -53,13 +108,13 @@ def main():
         items[upload_second] = fitem
         days[fitem.day].append(upload_second)
 
-    print_header()
-    print_body_start()
+    print HEADER_TEMPLATE
+    print BODY_START_TEMPLATE
     for day, item_list in sorted(days.iteritems(), reverse=True):
         print_dayrow(day)
         print_item_rows([value for key, value in items.items()
             if key in item_list])
-    print_afterward()
+    print AFTERWARD_TEMPLATE % datetime.now()
 
     sys.exit()
 
@@ -96,21 +151,12 @@ def print_meal(meal):
     link = thumb_url(dish)
     edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.id)
 
-    print """<tr>
-    <th rowspan="%s">%s</th>
-    <td>%s</td>
-    <td>%s</td>
-    <td>%s</td>
-    </tr>""" % (len(meal), meal[0].meal, desc, link, edit)
+    print MEAL_HEADER % (len(meal), meal[0].meal, desc, link, edit)
     for dish in meal[1:]:
         edit = "<a href=%s?id=%s>Edit</a>" % (EDIT_URL, dish.id)
         desc = ellipse_truncate(dish.description)
         link = thumb_url(dish)
-        print """<tr><td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            </tr>""" % (
-            desc, link, edit)
+        print DISH_HEADER % (desc, link, edit)
 
 def print_item_rows(item_rows):
     """ Divide by meal """
@@ -120,59 +166,13 @@ def print_item_rows(item_rows):
     for meal in meals:
         print_meal(meal)
 
-def print_afterward():
-    """ Constant part at end of html """
-    print """</table>
-    </body>
-    </html>"""
-
-def print_header():
-    """ Print the html for the <head/> """
-    print """<html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Food Items</title>
-        <style>
-          table {
-            background:#fff7db;
-          }
-          table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-          }
-          th, td {
-            padding: 5px;
-            white-space: nowrap;
-          }
-        </style>
-      </head>
-    """
-
-def print_body_start():
-    """ Print html for constant part at start of body
-
-        Could be improved by templating to allow the full string, with variable
-        <form method="get">
-        <button formaction="/and/images/pages/menu.html">Food Menu</button>
-    </form>
-    <table>
-    """
-
 def print_dayrow(day):
     """ Print html row with date, spanning the table """
     if day:
         daystring = datetime.strptime(day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
     else:
         daystring = "Unknown"
-    print """<tr>
-      <th colspan="4">%s</th>
-      </tr>
-      <tr>
-        <th>Meal</th>
-        <th>Item</th>
-        <th> </th>
-        <th> </th>
-""" % daystring
+    print DAY_HEADER % daystring
 
 if __name__ == '__main__':
     main()
