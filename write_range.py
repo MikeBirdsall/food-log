@@ -47,6 +47,9 @@ HEADER_TEMPLATE = """<html>
 BODY_START_TEMPLATE = """  <body>
     <h1>MGB Food</h1>
     <h2>%s - %s</h2>
+    <form method="get">
+        <button formaction="/and/images/pages/menu.html">Food Menu</button>
+    </form>
     <table>"""
 
 AFTERWARD_TEMPLATE = """    </table>

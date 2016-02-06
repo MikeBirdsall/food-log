@@ -92,7 +92,7 @@ class main():
 
     def print_form(self):
         print """    <h1>Food Entry</h1>
-        <form method==get">
+        <form method="get">
             <button formaction="/and/images/pages/list.html">List all meals</button>
         </form>
         <form method="post" enctype="multipart/form-data" action="%s">
@@ -152,7 +152,7 @@ class main():
         </fieldset>
         <input type="submit"><br>
         </form>
-        <form method==get">
+        <form method="get">
             <button formaction="/and/images/pages/list.html">List all meals</button>
             <button formaction="/and/images/pages/menu.html">Food Menu</button>
         </form>

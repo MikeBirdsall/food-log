@@ -152,12 +152,7 @@ def print_body_start():
     """ Print html for constant part at start of body
 
         Could be improved by templating to allow the full string, with variable
-        part filled in and the whole thing printed
-
-    """
-    print """<body>
-    <h1>MGB Food Log</h1>
-    <form method==get">
+        <form method="get">
         <button formaction="/and/images/pages/menu.html">Food Menu</button>
     </form>
     <table>
