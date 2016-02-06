@@ -20,6 +20,7 @@ from operator import attrgetter
 import argparse
 import sqlite3
 from my_info import THUMB_URL
+import cgitb; cgitb.enable()
 
 ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
@@ -53,6 +54,7 @@ BODY_START_TEMPLATE = """  <body>
     <table>"""
 
 AFTERWARD_TEMPLATE = """    </table>
+    recomputed on %s 
   </body>
 </html>"""
 
@@ -106,7 +108,7 @@ class ConstructWebPage(object):
         print HEADER_TEMPLATE % (self.start_date, self.end_date)
         print BODY_START_TEMPLATE % (self.start_date, self.end_date)
         self.print_rows()
-        print AFTERWARD_TEMPLATE
+        print AFTERWARD_TEMPLATE % datetime.now()
 
     def sorted_items_by_meal(self, item_rows):
         """ Returns all items in the same meal, sorted by time """
