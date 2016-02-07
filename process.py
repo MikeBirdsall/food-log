@@ -184,6 +184,8 @@ class main(object):
             thumbfile_name = os.path.join(THUMB_DIR, basename+".jpg")
             thumb = img.copy()
             thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
+            if thumb.mode != 'RGB':
+                thumb = thumb.convert('RGB')
             thumb.save(thumbfile_name, "JPEG") # Thumbnails may be overwritten
             os.chmod(thumbfile_name, 0644) # Make it servable to browser
             shutil.move(img.filename, ARCHIVE_DIR) # Move into archive directory without overwriting
