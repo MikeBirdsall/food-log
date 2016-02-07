@@ -33,7 +33,7 @@ HEADER_TEMPLATE = """<html>
           }
         </style>
       </head> """
-    
+
 BODY_START_TEMPLATE = """<body>
     <h1>MGB Food Log</h1>
     <form method="get">
@@ -53,14 +53,14 @@ MEAL_HEADER = """<tr>
     <td>%s</td>
     <td>%s</td>
     <td>%s</td>
-    </tr>""" 
+    </tr>"""
 
 DISH_HEADER = """<tr><td>%s</td>
     <td>%s</td>
     <td>%s</td>
-    </tr>""" 
+    </tr>"""
 
-DAY_HEADER =  """<tr>
+DAY_HEADER = """<tr>
   <th colspan="4">%s</th>
   </tr>
   <tr>
@@ -68,7 +68,7 @@ DAY_HEADER =  """<tr>
     <th>Item</th>
     <th> </th>
     <th> </th>
-""" 
+"""
 
 SECTION = 'edit'
 
@@ -83,7 +83,7 @@ else:
     # Doesn't work in wing
 
     EDIT_URL = os.path.abspath(sys.argv[0])  # Get the full pathname
-    EDIT_URL = EDIT_URL.partition('/cgi-bin')[1:] # Get parts staring with /cgi-bin
+    EDIT_URL = EDIT_URL.partition('/cgi-bin')[1:] # URL starts with cgi-bin
     EDIT_URL = "".join(EDIT_URL) # put it back together
     EDIT_URL = os.path.dirname(EDIT_URL) # pull off current script name
     EDIT_URL = os.path.join(EDIT_URL, 'edit.py') # add on new script name

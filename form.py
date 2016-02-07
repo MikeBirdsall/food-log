@@ -19,118 +19,90 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from my_info import UPLOAD_DIR
 
-script_name = os.environ.get('SCRIPT_NAME', '')
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
-class main():
-    def __init__(self):
-        self.fileitem = None
-        self.status = ""
-        self.picfile_name = None
+UPLOAD_SECTION = "upload"
+HEAD_TEMPLATE = """Content-Type: text/html\n\n<html>
+  <head>
+    <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <style>
+      form {
+        width:300px;
+      }
 
-        self.head()
-        self.body()
-        self.tail()
+      label {
+        display: inline-block;
+        text-align:left;
+      }
 
-    def tail(self):
-        print """    <p>%s</p>\n    </body>\n</html>
-        """ % (self.status,)
+      label.nutrit {
+         width:130px;
+         text-align:right;
+      }
 
-    def text_out(self, message):
-        self.status = message
+      input.nutrit {
+        display:inline-block;
+        width:70px;
+      }
 
-    def head(self):
-        print """Content-Type: text/html\n\n<html>\n    <head>
-        <meta name="viewport" content="width=device=width, initial-scale=1" />\n"""
-        self.css()
-        print """ </head>
-            """
+      label.inst {
+        width:70px;
+        text-align:right;
+      }
 
-    def css(self):
-        print """        <style>
-            form {
-                width:300px;
-            }
+      input:inst {
+        text-align:left;
+      }
 
-            label {
-                display: inline-block;
-                text-align:left;
-            }
+      input {
+        display:inline-block;
+        text-align:right;
+      }
+      fieldset {
+        background:#fff7db;
+      }
+    </style>
+  </head>
+"""
 
-            label.nutrit {
-                width:130px;
-                text-align:right;
-            }
+TAIL_TEMPLATE = """    <p>%s</p>
+  </body>\n</html>
+"""
 
-            input.nutrit {
-                display:inline-block;
-                width:70px;
-            }
-
-            label.inst {
-                width:70px;
-                text-align:right;
-            }
-
-            input:inst {
-                text-align:left;
-            }
-
-            input {
-                display:inline-block;
-                text-align:right;
-            }
-            fieldset {
-                background:#fff7db;
-            }
-        </style>"""
-
-    def body(self):
-        print """<body>"""
-
-        self.print_form()
-        self.parse_form_fields()
-
-    def print_form(self):
-        print """    <h1>Food Entry</h1>
-        <form method="get">
-            <button formaction="/and/images/pages/list.html">List all meals</button>
-        </form>
-        <form method="post" enctype="multipart/form-data" action="%s">
-        <input type="submit"><br>
-        """ % script_name
-
-        print """
-        <fieldset style="width:270px">
+FORM_TEMPLATE = """    <h1>Food Entry</h1>
+    <form method="get">
+      <button formaction="/and/images/pages/list.html">List all meals</button>
+    </form>
+    <form method="post" enctype="multipart/form-data" action="%s">
+      <input type="submit"><br>
+      <fieldset style="width:270px">
         <legend>Image Entry:</legend>
         <input type="file" name="pic" accept="image/*"/><br>
-        </fieldset>
+      </fieldset>
 
-        <fieldset style="width:270px">
-            <legend>Identifying Information:</legend>
-
+      <fieldset style="width:270px">
+        <legend>Identifying Information:</legend>
         Description: (used as title for dish)<br>
-            <input type="text" name="description" placeholder="Title/Description/Identifier"/>
-            <br>
-        Comment:<br><input type="text" name="comment" placeholder="Comment/Context/Excuse">
-            <br>
-            Amount:<br> <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl">
-        </fieldset>
+      <input type="text" name="description" placeholder="Title/Description/Identifier"/><br>
+        Comment:<br><input type="text" name="comment" placeholder="Comment/Context/Excuse"><br>
+        Amount:<br> <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl">
+      </fieldset>
 
-        <fieldset style="width:270px">
+      <fieldset style="width:270px">
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories"
-        max="3000" step="5">
+        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step="5">
         <label class="nutrit" for="carbs">Carbs(g):</label>
         <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1"><br>
         <label class="nutrit" for="prot">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1"><br>
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.5">
-        </fieldset>
+      </fieldset>
 
-        <fieldset style="width:270px">
+      <fieldset style="width:270px">
         <legend>Instance Information:</legend>
+
         <label class="inst" for="servings">Servings:</label>
         <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="1"><br>
 
@@ -142,24 +114,41 @@ class main():
 
         <label class="inst" for="meal">Meal:</label>
         <input class="inst" list="meals" id="meal" name="meal">
-            <datalist id="meals">
-            <option value="Breakfast">
-            <option value="Lunch">
-            <option value="Supper">
-            <option value="Snack">
-            </datalist>
-        <br>
-        </fieldset>
-        <input type="submit"><br>
-        </form>
-        <form method="get">
-            <button formaction="/and/images/pages/list.html">List all meals</button>
-            <button formaction="/and/images/pages/menu.html">Food Menu</button>
-        </form>
-        """
 
-    # Meal Selections should be changed to be based on table
-    # Meal selections could be radio buttons (perhaps too hard on phone
+        <datalist id="meals">
+          <option value="Breakfast">
+          <option value="Lunch">
+          <option value="Supper">
+          <option value="Snack">
+        </datalist><br>
+      </fieldset>
+      <input type="submit"><br>
+    </form>
+
+    <form method="get">
+      <button formaction="/and/images/pages/list.html">List all meals</button>
+      <button formaction="/and/images/pages/menu.html">Food Menu</button>
+    </form>
+"""
+
+class main(object):
+    def __init__(self):
+        self.fileitem = None
+        self.status = ""
+        self.picfile_name = None
+
+        print HEAD_TEMPLATE
+        self.body()
+        print TAIL_TEMPLATE % (self.status,)
+
+    def text_out(self, message):
+        self.status = message
+
+    def body(self):
+        print """  <body>"""
+
+        print FORM_TEMPLATE % SCRIPT_NAME
+        self.parse_form_fields()
 
     def parse_form_fields(self):
         self.get_form_fields()
@@ -200,16 +189,17 @@ class main():
 
         while True:
             chunk = self.fileitem.file.read(100000)
-            if not chunk: break
+            if not chunk:
+                break
             fout.write(chunk)
         fout.close()
 
     def handle_text(self):
-        UPLOAD_SECTION = "upload"
         output = SafeConfigParser()
         output.add_section(UPLOAD_SECTION)
 
-        data = dict((x,self.form.getfirst(x)) for x in self.form if x != self.FORM_FIELD)
+        data = dict((x, self.form.getfirst(x))
+            for x in self.form if x != self.FORM_FIELD)
 
         for key in data.keys():
             output.set(UPLOAD_SECTION, key, data[key])
@@ -219,7 +209,8 @@ class main():
         for key in data.keys():
             output.set("edit", key, data[key])
 
-        with open(os.path.join(UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
+        with open(
+                os.path.join(UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
             output.write(outfile)
 
 

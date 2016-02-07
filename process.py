@@ -20,7 +20,7 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime, time
 from my_info import UPLOAD_DIR, THUMB_DIR, ARCHIVE_DIR, DATA_DIR
 
-Thumb_size = 400, 300
+THUMB_SIZE = 400, 300
 
 class main(object):
     def __init__(self):
@@ -79,18 +79,6 @@ class main(object):
                 os.path.split(x)[1]
                 )[0] for x in files)
 
-    def read_ini_data(self, ini):
-        """ Get data out of the ini file """
-        self.ini_parser = SafeConfigParser()
-        self.ini_parser.readfp(ini)
-        if ('edit') not in self.ini_parser.sections():
-            self.ini_parser.add_section('edit')
-            for field in self.ini_parser.options('upload'):
-                if field == 'image_file':
-                    continue
-                self.ini_parser.set('edit', field,
-                    value=self.ini_parser.get('upload', field))
-
     def read_exif_data(self, img):
         self.picdaytime = None
         try:
@@ -127,7 +115,8 @@ class main(object):
             default_datetime = self.picdaytime
         else:
             try:
-                default_datetime = datetime.strptime(basename, "%Y%m%dT%H:%M:%S")
+                default_datetime = datetime.strptime(basename,
+                    "%Y%m%dT%H:%M:%S")
             except ValueError:
                 # No datetime we can set
                 return
@@ -194,7 +183,7 @@ class main(object):
             self.read_exif_data(img)
             thumbfile_name = os.path.join(THUMB_DIR, basename+".jpg")
             thumb = img.copy()
-            thumb.thumbnail(Thumb_size, Image.ANTIALIAS)
+            thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
             thumb.save(thumbfile_name, "JPEG") # Thumbnails may be overwritten
             os.chmod(thumbfile_name, 0644) # Make it servable to browser
             shutil.move(img.filename, ARCHIVE_DIR) # Move into archive directory without overwriting

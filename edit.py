@@ -23,6 +23,109 @@ UPDATE_FIELDS = frozenset('description comment size calories number carbs '
 VALID_FIELDS = UPDATE_FIELDS.union('id'.split())
 EDIT_SECTION = 'edit'
 
+FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
+    <form method="get">
+        <button formaction="/and/images/pages/index.html">Food Menu</button>
+        <button formaction="/and/images/pages/list.html">List All Meals</button>
+    </form>
+    <form method="post" action="%s">
+    <input type="submit"><br>
+"""
+
+EDIT_BODY_TEMPLATE = """       <input type="hidden" name="id" value={id}>
+  <fieldset style="width:270px"><legend>Identifying Information:</legend>
+  Description:<br>
+  <input type="text" name="description" placeholder="Title" value="{description}">
+      <br>Comment:<br>
+      <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
+      Amount:<br>
+      <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
+    </fieldset>
+
+    <fieldset style="width:270px">
+    <legend>Nutrition:</legend>
+    <label class="nutrit" for="calories">Calories:</label>
+    <input class="nutrit" type="number" name="calories" id="calories"
+    max="3000" step ="5" value="{calories}">
+    <label class="nutrit" for="carbs">Carbs(g):</label>
+    <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1"><br>
+    <label class="nutrit" for="protein">Protein(g):</label>
+    <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
+       value="{protein}"><br>
+    <label class="nutrit" for="fat">Fat(g):</label>
+    <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
+    </fieldset>
+
+    <fieldset style="width:270px">
+    <legend>Instance Information:</legend>
+    <label class="inst" for="servings">Servings:</label>
+    <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
+
+    <label class="inst" for="day">Day:</label>
+    <input class="inst" type="date" name="day" id="day" value="{day}"><br>
+
+    <label class="inst" for="time">Time:</label>
+    <input type="time" name="time" value="{time}"><br>
+
+    <label class="inst" for="meal">Meal:</label>
+    <input class="inst" list="meals" id="meal" name="meal" value="{meal}">
+        <datalist id="meals">
+        <option value="Breakfast">
+        <option value="Lunch">
+        <option value="Supper">
+        <option value="Snack">
+        </datalist>
+    <br>
+    </fieldset>
+    <input type="submit"><br>
+    </form>
+"""
+
+
+CSS_TEMPLATE = """        <style>
+    form {
+        width:300px;
+    }
+
+    label {
+        display: inline-block;
+        text-align:left;
+    }
+
+    label.nutrit {
+        width:130px;
+        text-align:right;
+    }
+
+    input.nutrit {
+        display:inline-block;
+        width:70px;
+    }
+
+    label.inst {
+        width:70px;
+        text-align:right;
+    }
+
+    input:inst {
+        text-align:left;
+    }
+
+    input {
+        display:inline-block;
+        text-align:right;
+    }
+    fieldset {
+        background:#fff7db;
+    }
+</style>"""
+
+HEADER_TEMPLATE = """Content-Type: text/html
+  <html>
+    <head>
+    <meta name="viewport" content="width=device=width, initial-scale=1" />
+"""
+
 class main(object):
     """ Main program do create and handle form to edit food items """
     def __init__(self):
@@ -88,63 +191,10 @@ class main(object):
         self.print_form()
 
     def print_form(self):
-        print """    <h1>Food Entry</h1>
-            <form method="get">
-                <button formaction="/and/images/pages/index.html">Food Menu</button>
-                <button formaction="/and/images/pages/list.html">List All Meals</button>
-            </form>
-            <form method="post" action="%s">
-        <input type="submit"><br> """ % SCRIPT_NAME
+        print FORM_TOP_TEMPLATE % SCRIPT_NAME
 
-        print """
-        <input type="hidden" name="id" value={id}>
-        <fieldset style="width:270px"><legend>Identifying Information:</legend>
-          Description:<br>
-          <input type="text" name="description" placeholder="Title" value="{description}">
-          <br>Comment:<br>
-          <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
-          Amount:<br>
-          <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
-        </fieldset>
+        print EDIT_BODY_TEMPLATE.format(**self.old_data)
 
-        <fieldset style="width:270px">
-        <legend>Nutrition:</legend>
-        <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories"
-        max="3000" step ="5" value="{calories}">
-        <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1"><br>
-        <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
-           value="{protein}"><br>
-        <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-        </fieldset>
-
-        <fieldset style="width:270px">
-        <legend>Instance Information:</legend>
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
-
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day" value="{day}"><br>
-
-        <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" value="{time}"><br>
-
-        <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal" value="{meal}">
-            <datalist id="meals">
-            <option value="Breakfast">
-            <option value="Lunch">
-            <option value="Supper">
-            <option value="Snack">
-            </datalist>
-        <br>
-        </fieldset>
-        <input type="submit"><br>
-        </form>
-        """.format(**self.old_data)
 
     def get_form_data(self):
 
@@ -170,50 +220,11 @@ class main(object):
         return parser
 
     def head(self):
-        print """Content-Type: text/html\n\n<html>\n    <head>
-        <meta name="viewport" content="width=device=width, initial-scale=1" />\n"""
-        self.css()
+        print HEADER_TEMPLATE
+        print CSS_TEMPLATE
         print """ </head>
             """
 
-    def css(self):
-        print """        <style>
-            form {
-                width:300px;
-            }
-
-            label {
-                display: inline-block;
-                text-align:left;
-            }
-
-            label.nutrit {
-                width:130px;
-                text-align:right;
-            }
-
-            input.nutrit {
-                display:inline-block;
-                width:70px;
-            }
-
-            label.inst {
-                width:70px;
-                text-align:right;
-            }
-
-            input:inst {
-                text-align:left;
-            }
-
-            input {
-                display:inline-block;
-                text-align:right;
-            }
-            fieldset {
-                background:#fff7db;
-            }
-        </style>"""
 
 
 if __name__ == '__main__':
