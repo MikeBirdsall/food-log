@@ -64,6 +64,7 @@ FIRST_IN_MEAL_TEMPLATE = """      <tr><th rowspan="%s">%s</th>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
+        <td>%s</td>
       </tr>"""
 
 OTHERS_IN_MEAL_TEMPLATE = """      <tr>
@@ -72,14 +73,16 @@ OTHERS_IN_MEAL_TEMPLATE = """      <tr>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
+        <td>%s</td>
       </tr>"""
 
 DAY_HEADER_TEMPLATE = """      <tr>
-        <th colspan="6">%s</th>
+        <th colspan="7">%s</th>
       </tr>
       <tr>
         <th>Meal</th>
         <th>Item</th>
+        <th>Servings</th>
         <th>Cals</th>
         <th>Carbs</th>
         <th>Fat</th>
@@ -87,7 +90,7 @@ DAY_HEADER_TEMPLATE = """      <tr>
       </tr>"""
 
 TOTAL_TEMPLATE = """      <tr>
-        <th colspan="2">Total</th>
+        <th colspan="3">Total</th>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
@@ -128,6 +131,7 @@ class ConstructWebPage(object):
             len(meal),
             dish.meal,
             thumb_url(dish, desc),
+            blank_null(dish.servings),
             blank_null(dish.calories),
             blank_null(dish.carbs),
             blank_null(dish.fat),
@@ -137,6 +141,7 @@ class ConstructWebPage(object):
             desc = ellipse_truncate(dish.description)
             print OTHERS_IN_MEAL_TEMPLATE % (
                 thumb_url(dish, desc),
+                blank_null(dish.servings),
                 blank_null(dish.calories),
                 blank_null(dish.carbs),
                 blank_null(dish.fat),
