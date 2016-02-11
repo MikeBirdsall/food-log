@@ -217,8 +217,6 @@ def get_dates(args):
         # Get previous Wednesday (config this later)
         today = date.today()
         start_date = today - timedelta(days=(7 + ((today.weekday() - 3) % 7)))
-        print "<h3>today.weekday(): %s <h3>" % today.weekday()
-        print "<h3>start_date %s <h3>" % start_date
         end_date = start_date + timedelta(days=6)
         return start_date, end_date
     else:
