@@ -173,7 +173,7 @@ class main(object):
         self.form = cgi.FieldStorage()
 
     def handle_image(self):
-        if 'pic' not in self.form:
+        if self.FORM_FIELD not in self.form:
             self.text_out("Not yet submitted")
             return
         self.fileitem = self.form[self.FORM_FIELD]
