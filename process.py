@@ -18,7 +18,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from ConfigParser import SafeConfigParser
 from datetime import datetime, time
-from my_info import UPLOAD_DIR, THUMB_DIR, ARCHIVE_DIR, DATA_DIR
+from my_info import config_path
 
 THUMB_SIZE = 400, 300
 
@@ -29,17 +29,23 @@ class main(object):
         self.gps_data = dict()
         self.ini_name = ""
 
+        config = config_path()
+        self.UPLOAD_DIR = config.dir('UPLOAD_DIR')
+        self.THUMB_DIR = config.dir('THUMB_DIR')
+        self.ARCHIVE_DIR = config.dir('ARCHIVE_DIR')
+        self.DATA_DIR = config.dir('DATA_DIR')
+
     def run(self):
-        os.chdir(UPLOAD_DIR)
+        os.chdir(self.UPLOAD_DIR)
 
-        if not os.path.exists(THUMB_DIR):
-            os.makedirs(THUMB_DIR)
+        if not os.path.exists(self.THUMB_DIR):
+            os.makedirs(self.THUMB_DIR)
 
-        if not os.path.exists(ARCHIVE_DIR):
-            os.makedirs(ARCHIVE_DIR)
+        if not os.path.exists(self.ARCHIVE_DIR):
+            os.makedirs(self.ARCHIVE_DIR)
 
-        if not os.path.exists(DATA_DIR):
-            os.makedirs(DATA_DIR)
+        if not os.path.exists(self.DATA_DIR):
+            os.makedirs(self.DATA_DIR)
 
         for basename in sorted(self.get_basenames()):
             self.ini_name = basename+".ini"
@@ -181,14 +187,14 @@ class main(object):
             img = None
         else:
             self.read_exif_data(img)
-            thumbfile_name = os.path.join(THUMB_DIR, basename+".jpg")
+            thumbfile_name = os.path.join(self.THUMB_DIR, basename+".jpg")
             thumb = img.copy()
             thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
             if thumb.mode != 'RGB':
                 thumb = thumb.convert('RGB')
             thumb.save(thumbfile_name, "JPEG") # Thumbnails may be overwritten
             os.chmod(thumbfile_name, 0644) # Make it servable to browser
-            shutil.move(img.filename, ARCHIVE_DIR) # Move into archive directory without overwriting
+            shutil.move(img.filename, self.ARCHIVE_DIR) # Move into archive directory without overwriting
 
         self.update_datetime(basename)
         self.update_meal()
@@ -196,12 +202,12 @@ class main(object):
         with open(self.ini_name, 'w') as inifile:
             self.ini_parser.write(inifile)
 
-        shutil.move(self.ini_name, DATA_DIR)
+        shutil.move(self.ini_name, self.DATA_DIR)
         # Now put a link to the same file in a directory for the day
-        day_dir = os.path.join(DATA_DIR, self.ini_parser.get('edit', 'day') or "date-unknown")
+        day_dir = os.path.join(self.DATA_DIR, self.ini_parser.get('edit', 'day') or "date-unknown")
         if not os.path.exists(day_dir):
             os.makedirs(day_dir)
-        os.link(os.path.join(DATA_DIR, self.ini_name),
+        os.link(os.path.join(self.DATA_DIR, self.ini_name),
             os.path.join(day_dir, self.ini_name))
 
 if __name__ == '__main__':

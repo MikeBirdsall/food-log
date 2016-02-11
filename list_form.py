@@ -8,7 +8,7 @@ from glob import glob
 from ConfigParser import SafeConfigParser
 from collections import defaultdict, namedtuple
 from operator import attrgetter
-from my_info import DATA_DIR, THUMB_URL
+from my_info import config_path
 from datetime import datetime
 
 ITEM = namedtuple('item',
@@ -37,7 +37,7 @@ HEADER_TEMPLATE = """<html>
 BODY_START_TEMPLATE = """<body>
     <h1>MGB Food Log</h1>
     <form method="get">
-        <button formaction="/and/images/pages/menu.html">Food Menu</button>
+        <button formaction="/and/images/pages/index.html">Food Menu</button>
     </form>
     <table>
     """
@@ -72,6 +72,8 @@ DAY_HEADER = """<tr>
 
 SECTION = 'edit'
 
+THUMB_URL = ""
+
 # The edit link depends on the cgi-bin organization
 if 'GATEWAY_INTERFACE' in os.environ:
     EDIT_URL = os.environ.get('SCRIPT_NAME', '')
@@ -91,6 +93,10 @@ else:
 def main():
     """ Generate full food listing html """
 
+    global THUMB_URL
+    config = config_path()
+    DATA_DIR = config.dir('DATA_DIR')
+    THUMB_URL = config.dir('THUMB_URL')
     # Gather all the info
     os.chdir(DATA_DIR)
 

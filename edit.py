@@ -14,7 +14,7 @@ import cgitb; cgitb.enable()
 import os
 from ConfigParser import SafeConfigParser
 from datetime import datetime
-from my_info import DATA_DIR, THUMB_DIR, THUMB_URL
+from my_info import config_path
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -134,6 +134,10 @@ class main(object):
         self.parser = None
         self.data = dict()
         self.ini_filename = ""
+        config = config_path()
+        self.DATA_DIR = config.dir('DATA_DIR')
+        self.THUMB_DIR = config.dir('THUMB_DIR')
+        self.THUMB_URL = config.dir('THUMB_URL')
 
     def process(self):
         """ Update file from form or vice versa depending on state """
@@ -141,7 +145,7 @@ class main(object):
         self.head()
 
         self.data = self.get_form_data()
-        self.ini_filename = os.path.join(DATA_DIR, self.data['id']+'.ini')
+        self.ini_filename = os.path.join(self.DATA_DIR, self.data['id']+'.ini')
 
         self.parser = self.open_ini_file()
 
@@ -153,8 +157,8 @@ class main(object):
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
         if thumb_id:
-            if os.path.join(THUMB_DIR, thumb_id + ".ini"):
-                self.show_image(os.path.join(THUMB_URL, thumb_id + ".jpg"))
+            if os.path.join(self.THUMB_DIR, thumb_id + ".ini"):
+                self.show_image(os.path.join(self.THUMB_URL, thumb_id + ".jpg"))
 
         self.tail()
 
