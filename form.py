@@ -17,7 +17,7 @@ import cgitb; cgitb.enable()
 import os, sys
 from ConfigParser import SafeConfigParser
 from datetime import datetime
-from my_info import UPLOAD_DIR
+from my_info import config_path
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -133,6 +133,7 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
 
 class main(object):
     def __init__(self):
+        self.UPLOAD_DIR = config_path().dir('UPLOAD_DIR')
         self.fileitem = None
         self.status = ""
         self.picfile_name = None
@@ -185,7 +186,7 @@ class main(object):
         self.picfile_name = self.fileitem.filename
 
         # We don't know what kine of image file it is but we don't need to
-        fout = file(os.path.join(UPLOAD_DIR, self.bname+".image"), 'wb')
+        fout = file(os.path.join(self.UPLOAD_DIR, self.bname+".image"), 'wb')
 
         while True:
             chunk = self.fileitem.file.read(100000)
@@ -210,7 +211,7 @@ class main(object):
             output.set("edit", key, data[key])
 
         with open(
-                os.path.join(UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
+                os.path.join(self.UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
             output.write(outfile)
 
 

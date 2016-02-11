@@ -19,8 +19,10 @@ from collections import defaultdict, namedtuple
 from operator import attrgetter
 import argparse
 import sqlite3
-from my_info import THUMB_URL
+from my_info import config_path
 import cgitb; cgitb.enable()
+
+THUMB_URL = config_path().dir("THUMB_URL")
 
 ITEM = namedtuple('item',
     'comment carbs description servings calories fat day time '
