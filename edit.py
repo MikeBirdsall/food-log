@@ -121,6 +121,7 @@ CSS_TEMPLATE = """        <style>
 </style>"""
 
 HEADER_TEMPLATE = """Content-Type: text/html
+
   <html>
     <head>
     <meta name="viewport" content="width=device=width, initial-scale=1" />
