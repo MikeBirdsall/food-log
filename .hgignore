@@ -1,4 +1,6 @@
 syntax: glob
 *.pyc
 *.orig
+*.wpr
+*.wpu
 foodlog.cfg
