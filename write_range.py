@@ -115,63 +115,6 @@ class ConstructWebPage(object):
         self.print_rows()
         print AFTERWARD_TEMPLATE % datetime.now()
 
-    def sorted_items_by_meal(self, item_rows):
-        """ Returns all items in the same meal, sorted by time """
-        meals = defaultdict(list)
-        for item in item_rows:
-            meals[item.meal].append(item)
-
-        for meal in meals.values():
-            meal.sort(key=attrgetter('time'))
-
-        return sorted(meals.values(), key=lambda x:x[0].time)
-
-    def print_meal(self, meal):
-        dish = meal[0]
-        desc = ellipse_truncate(dish.description)
-        print FIRST_IN_MEAL_TEMPLATE % (
-            len(meal),
-            dish.meal,
-            thumb_url(dish, desc),
-            blank_null(dish.servings),
-            blank_null(dish.calories),
-            blank_null(dish.carbs),
-            blank_null(dish.fat),
-            blank_null(dish.protein))
-
-        for dish in meal[1:]:
-            desc = ellipse_truncate(dish.description)
-            print OTHERS_IN_MEAL_TEMPLATE % (
-                thumb_url(dish, desc),
-                blank_null(dish.servings),
-                blank_null(dish.calories),
-                blank_null(dish.carbs),
-                blank_null(dish.fat),
-                blank_null(dish.protein))
-
-    def print_total(self, meals):
-        """ Print total row for entire day"""
-        cals = carbs = fat = protein = (0, "")
-        for meal in meals:
-            for dish in meal:
-                cals = add_with_none(cals, dish.calories, dish.servings)
-                carbs = add_with_none(carbs, dish.carbs, dish.servings)
-                fat = add_with_none(fat, dish.fat, dish.servings)
-                protein = add_with_none(protein, dish.protein, dish.servings)
-
-        print TOTAL_TEMPLATE % (
-            ''.join(map(str, cals)),
-            ''.join(map(str, carbs)),
-            ''.join(map(str, fat)),
-            ''.join(map(str, protein)))
-
-    def print_item_rows(self, item_rows):
-
-        meals = self.sorted_items_by_meal(item_rows)
-        for meal in meals:
-            self.print_meal(meal)
-        self.print_total(meals)
-
     def print_rows(self):
         # Open the database,
         items = dict()
@@ -193,8 +136,66 @@ class ConstructWebPage(object):
             for day, item_list in sorted(days.iteritems()):
                 print DAY_HEADER_TEMPLATE % datetime.strptime(
                     day, "%Y-%m-%d").strftime("%A %Y-%m-%d")
-                self.print_item_rows([value for key, value in items.items()
+                print_item_rows([value for key, value in items.items()
                     if key in item_list])
+
+def sorted_items_by_meal(item_rows):
+    """ Returns all items in the same meal, sorted by time """
+    meals = defaultdict(list)
+    for item in item_rows:
+        meals[item.meal].append(item)
+
+    for meal in meals.values():
+        meal.sort(key=attrgetter('time'))
+
+    return sorted(meals.values(), key=lambda x:x[0].time)
+
+def print_item_rows(item_rows):
+
+    meals = sorted_items_by_meal(item_rows)
+    for meal in meals:
+        print_meal(meal)
+    print_total(meals)
+
+def print_meal(meal):
+    dish = meal[0]
+    desc = ellipse_truncate(dish.description)
+    print FIRST_IN_MEAL_TEMPLATE % (
+        len(meal),
+        dish.meal,
+        thumb_url(dish, desc),
+        blank_null(dish.servings),
+        blank_null(dish.calories),
+        blank_null(dish.carbs),
+        blank_null(dish.fat),
+        blank_null(dish.protein))
+
+    for dish in meal[1:]:
+        desc = ellipse_truncate(dish.description)
+        print OTHERS_IN_MEAL_TEMPLATE % (
+            thumb_url(dish, desc),
+            blank_null(dish.servings),
+            blank_null(dish.calories),
+            blank_null(dish.carbs),
+            blank_null(dish.fat),
+            blank_null(dish.protein))
+
+def print_total(meals):
+    """ Print total row for entire day"""
+    cals = carbs = fat = protein = (0, "")
+    for meal in meals:
+        for dish in meal:
+            cals = add_with_none(cals, dish.calories, dish.servings)
+            carbs = add_with_none(carbs, dish.carbs, dish.servings)
+            fat = add_with_none(fat, dish.fat, dish.servings)
+            protein = add_with_none(protein, dish.protein, dish.servings)
+
+# pylint:disable=W0141
+    print TOTAL_TEMPLATE % (
+        ''.join(map(str, cals)),
+        ''.join(map(str, carbs)),
+        ''.join(map(str, fat)),
+        ''.join(map(str, protein)))
 
 def thumb_url(dish, label):
     """ Return Link to thumbnail image or placeholder if it doesn't exist """
