@@ -15,6 +15,7 @@ the data in various forms.
 import cgi
 import cgitb; cgitb.enable()
 import os, sys
+import sqlite3
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from my_info import config_path
@@ -133,7 +134,9 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
 
 class main(object):
     def __init__(self):
-        self.UPLOAD_DIR = config_path().dir('UPLOAD_DIR')
+        config = config_path()
+        self.UPLOAD_DIR = config.dir('UPLOAD_DIR')
+        self.DB_FILE = config.dir('DB_FILE')
         self.fileitem = None
         self.status = ""
         self.picfile_name = None
@@ -214,6 +217,28 @@ class main(object):
                 os.path.join(self.UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
             output.write(outfile)
 
+        self.insert_in_db(self.extract_from_ini(output))
+
+    def insert_in_db(self, dict_):
+        fields = [x for x in dict_ if dict_[x] != ""]
+        with sqlite3.connect(self.DB_FILE) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            if not fields:
+                cursor.execute("insert into course default values")
+            else:
+                cursor.execute(
+                    "INSERT INTO course (%s)" % ", ".join(fields) +
+                    "VALUES (%s)" % ", ".join("?" * len(fields)),
+                    tuple([dict_[x] for x in fields]))
+
+    def extract_from_ini(self, parser):
+        combined = dict(("orig_"+x[0], x[1])
+            for x in parser.items("upload"))
+        combined['image_file'] = combined.pop('orig_image_file')
+        combined.update(dict(parser.items("edit")))
+        combined['ini_id'] = self.bname
+        return combined
 
 if __name__ == '__main__':
     main()
