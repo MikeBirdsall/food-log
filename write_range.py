@@ -24,9 +24,8 @@ import cgitb; cgitb.enable()
 
 THUMB_URL = config_path().dir("THUMB_URL")
 
-ITEM = namedtuple('item',
-    'comment carbs description servings calories fat day time '
-    'protein meal size thumb_id')
+ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
+    'time protein meal size thumb_id')
 
 HEADER_TEMPLATE = """<html>
   <head>
@@ -56,7 +55,7 @@ BODY_START_TEMPLATE = """  <body>
     <table>"""
 
 AFTERWARD_TEMPLATE = """    </table>
-    recomputed on %s 
+    recomputed on %s
   </body>
 </html>"""
 
@@ -129,7 +128,7 @@ class ConstructWebPage(object):
                 (self.start_date, self.end_date))
 
             for course in cursor.fetchall():
-                fitem = ITEM(**course)
+                fitem = ITEM(**course) # pylint:disable=W0142
                 items[fitem.day, fitem.time] = fitem
                 days[fitem.day].append((fitem.day, fitem.time))
 
@@ -241,7 +240,7 @@ def main():
     parser.add_argument("--end_date", type=date, default=date.max)
     args = parser.parse_args()
     date_range = get_dates(args)
-    ConstructWebPage(args.sqlite_file).output(*date_range)
+    ConstructWebPage(args.sqlite_file).output(*date_range) # pylint:disable=W0142
 
 if __name__ == '__main__':
     main()

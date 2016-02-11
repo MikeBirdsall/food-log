@@ -214,7 +214,8 @@ class main(object):
             output.set("edit", key, data[key])
 
         with open(
-                os.path.join(self.UPLOAD_DIR, self.bname + ".ini"), 'wb') as outfile:
+                os.path.join(self.UPLOAD_DIR, self.bname + ".ini"),
+                    'wb') as outfile:
             output.write(outfile)
 
         self.insert_in_db(self.extract_from_ini(output))
