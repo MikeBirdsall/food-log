@@ -12,16 +12,24 @@ the date in valious ways.
 import cgi
 import cgitb; cgitb.enable()
 import os
+import string
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 from my_info import config_path
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
+VALID_NAME_CHARS = "-_.%s%s%s" % (string.letters, string.digits,
+    string.whitespace)
+
+TEMPLATE_REQUIRED = frozenset('description calories fat protein carbs'.split())
+TEMPLATE_FIELDS = frozenset('description comment calories fat protein carbs '
+    'size'.split())
 UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
-VALID_FIELDS = UPDATE_FIELDS.union('id'.split())
+VALID_FIELDS = UPDATE_FIELDS.union('id action'.split())
 EDIT_SECTION = 'edit'
+TEMPLATE_SECTION = 'template'
 
 FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
     <form method="get">
@@ -29,7 +37,8 @@ FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
         <button formaction="/and/images/pages/list.html">List All Meals</button>
     </form>
     <form method="post" action="%s">
-    <input type="submit"><br>
+      <input type="submit" value="Update" name="action"><br>
+      <input type="submit" value="Make Template" name="action"><br>
 """
 
 EDIT_BODY_TEMPLATE = """       <input type="hidden" name="id" value={id}>
@@ -77,7 +86,8 @@ EDIT_BODY_TEMPLATE = """       <input type="hidden" name="id" value={id}>
         </datalist>
     <br>
     </fieldset>
-    <input type="submit"><br>
+      <input type="submit" value="Update" name="action"><br>
+      <input type="submit" value="Make Template" name="action"><br>
     </form>
 """
 
@@ -138,6 +148,7 @@ class main(object):
         self.DATA_DIR = config.dir('DATA_DIR')
         self.THUMB_DIR = config.dir('THUMB_DIR')
         self.THUMB_URL = config.dir('THUMB_URL')
+        self.TEMPLATE_DIR = config.dir('TEMPLATE_DIR')
 
     def process(self):
         """ Update file from form or vice versa depending on state """
@@ -149,7 +160,14 @@ class main(object):
 
         self.parser = self.open_ini_file()
 
-        status = self.update()
+        if 'action' not in self.data:
+            status = "Ready to Edit"
+        elif self.data['action'] == 'Update':
+            status = self.update()
+        elif self.data['action'] == 'Make Template':
+            status = self.make_template()
+        else:
+            status = "Invalid button"
 
         self.body()
         print status
@@ -161,6 +179,39 @@ class main(object):
                 self.show_image(os.path.join(self.THUMB_URL, thumb_id + ".jpg"))
 
         self.tail()
+
+    def make_template(self):
+        """ Create a template file and database entry """
+
+        # We have to make description safe for filename
+        if 'description' not in self.data:
+            return "Need a description"
+        basename = self.data['description']
+        basename = ''.join(c for c in basename if c in VALID_NAME_CHARS)
+        basename = '_'.join(basename.split())
+        basename = basename[:30]
+        template_filename = os.path.join(self.TEMPLATE_DIR, basename+'.ini')
+        # Check if file already created
+        if os.path.exists(template_filename):
+            return "<h3>Template %s already exists. </h3>" % basename
+
+
+        needed = TEMPLATE_FIELDS.intersection(self.data)
+        missing = TEMPLATE_REQUIRED.difference(self.data)
+        if missing:
+            return "<h3>Template must have %s filled in.</h3>" % ', '.join(missing)
+        # use a new parser
+        new_template = SafeConfigParser()
+        new_template.add_section(TEMPLATE_SECTION)
+        if needed:
+            for field in needed:
+                new_template.set(TEMPLATE_SECTION, field, self.data[field])
+
+            with open(template_filename, 'w') as tfile:
+                new_template.write(tfile)
+            status = "<h3>Template %s created at %s</h3>" % (basename, datetime.now().time())
+
+        return status
 
     def update(self):
         """ Update fields in ini file if any fields from form and close file """
