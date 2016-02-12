@@ -28,3 +28,14 @@ create table course(
     ini_id             text,
     thumb_id           text
 );
+
+create table template(
+    id                 integer primary key autoincrement not null,
+    description        text,
+    comment            text,
+    calories           decimal,
+    fat                decimal,
+    protein            decimal,
+    carbs              decimal,
+    size               text
+);
