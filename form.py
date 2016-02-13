@@ -72,9 +72,11 @@ TAIL_TEMPLATE = """    <p>%s</p>
 
 FORM_TEMPLATE = """    <h1>Food Entry</h1>
     <form method="get">
-      <button formaction="/and/images/pages/list.html">List all meals</button>
+      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <button formaction="{MENU_URL}">Food Menu</button>
     </form>
-    <form method="post" enctype="multipart/form-data" action="%s">
+    <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
       <input type="submit"><br>
       <fieldset style="width:270px">
         <legend>Image Entry:</legend>
@@ -127,14 +129,16 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
     </form>
 
     <form method="get">
-      <button formaction="/and/images/pages/list.html">List all meals</button>
-      <button formaction="/and/images/pages/menu.html">Food Menu</button>
+      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <button formaction="{MENU_URL}">Food Menu</button>
     </form>
 """
 
 class main(object):
     def __init__(self):
         config = config_path()
+        self.MENU_URL = config.dir('MENU_URL')
         self.UPLOAD_DIR = config.dir('UPLOAD_DIR')
         self.DB_FILE = config.dir('DB_FILE')
         self.fileitem = None
@@ -151,7 +155,7 @@ class main(object):
     def body(self):
         print """  <body>"""
 
-        print FORM_TEMPLATE % SCRIPT_NAME
+        print FORM_TEMPLATE.format(SCRIPT_NAME=SCRIPT_NAME, MENU_URL=self.MENU_URL)
         self.parse_form_fields()
 
     def parse_form_fields(self):

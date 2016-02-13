@@ -2,9 +2,7 @@
 
 """
 
-import sys, os
-import cgi
-import cgitb; cgitb.enable()
+from my_info import config_path
 
 TEMPLATE = """\
 Content-Type: text/html
@@ -47,7 +45,8 @@ Content-Type: text/html
   <body>
     <h1>Food Entry</h1>
     <form method="get">
-      <button formaction="/and/images/pages/list.html">List all meals</button>
+      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
       <input type="submit"><br>
@@ -102,32 +101,32 @@ Content-Type: text/html
     </form>
 
     <form method="get">
-      <button formaction="/and/images/pages/list.html">List all meals</button>
-      <button formaction="/and/images/pages/menu.html">Food Menu</button>
+      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <p>{status}</p>
   </body>\n</html>
 """
 
-SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
+FIELDS = 'description comment size calories carbs fat protein'.split()
 
-fields = 'description comment size calories carbs fat protein'.split()
-
-class entryform(object):
+class EntryForm(object):
+    """ Create an entry form HTML page with possible defaults values """
 
     def __init__(self):
-        self.status = ""
-        self.page = ""
+        self.status = ""  # String containing error message if needed
+        self.page = ""    # String with the HTML page
 
     def create_form(self, defaults, script, status=""):
         values = dict()
-        for x in fields:
-            if x in defaults.keys() and defaults[x] is not None:
-                values[x] = "value=%s" % defaults[x]
+        for field in FIELDS:
+            if field in defaults.keys() and defaults[field] is not None:
+                values[field] = "value=%s" % defaults[field]
             else:
-                values[x] = ""
+                values[field] = ""
         values['status'] = status
         values['script'] = script
+        values['MENU_URL'] = config_path().dir('MENU_URL')
         self.page = TEMPLATE.format(**values)
 
 

@@ -17,6 +17,12 @@ from ConfigParser import SafeConfigParser
 from datetime import datetime
 from my_info import config_path
 
+config = config_path()
+MENU_URL = config.dir('MENU_URL')
+DATA_DIR = config.dir('DATA_DIR')
+THUMB_DIR = config.dir('THUMB_DIR')
+THUMB_URL = config.dir('THUMB_URL')
+TEMPLATE_DIR = config.dir('TEMPLATE_DIR')
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 VALID_NAME_CHARS = "-_.%s%s%s" % (string.letters, string.digits,
@@ -33,10 +39,9 @@ TEMPLATE_SECTION = 'template'
 
 FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
     <form method="get">
-        <button formaction="/and/images/pages/index.html">Food Menu</button>
-        <button formaction="/and/images/pages/list.html">List All Meals</button>
+        <button formaction="{MENU_URL}">Food Menu</button>
     </form>
-    <form method="post" action="%s">
+    <form method="post" action="{SCRIPT_NAME}">
       <input type="submit" value="Update" name="action"><br>
       <input type="submit" value="Make Template" name="action"><br>
 """
@@ -247,7 +252,7 @@ class main(object):
         self.print_form()
 
     def print_form(self):
-        print FORM_TOP_TEMPLATE % SCRIPT_NAME
+        print FORM_TOP_TEMPLATE.format(MENU_URL=MENU_URL, SCRIPT_NAME=SCRIPT_NAME)
 
         print EDIT_BODY_TEMPLATE.format(**self.old_data)
 

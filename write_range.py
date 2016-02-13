@@ -22,12 +22,15 @@ import sqlite3
 from my_info import config_path
 import cgitb; cgitb.enable()
 
-THUMB_URL = config_path().dir("THUMB_URL")
+config = config_path()
+THUMB_URL = config.dir("THUMB_URL")
+MENU_URL = config.dir("MENU_URL")
 
 ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
     'time protein meal size thumb_id')
 
-HEADER_TEMPLATE = """<html>
+HEADER_TEMPLATE = """\
+<html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Food Record %s - %s</title>
@@ -46,20 +49,26 @@ HEADER_TEMPLATE = """<html>
     </style>
   </head>"""
 
-BODY_START_TEMPLATE = """  <body>
+BODY_START_TEMPLATE = """\
+  <body>
     <h1>MGB Food</h1>
     <h2>%s - %s</h2>
     <form method="get">
-        <button formaction="/and/images/pages/index.html">Food Menu</button>
+        <button formaction="%s/index.html">Food Menu</button>
     </form>
     <table>"""
 
-AFTERWARD_TEMPLATE = """    </table>
+AFTERWARD_TEMPLATE = """\
+    </table>
+    <form method="get">
+        <button formaction="%s/index.html">Food Menu</button>
+    </form>
     recomputed on %s
   </body>
 </html>"""
 
-FIRST_IN_MEAL_TEMPLATE = """      <tr><th rowspan="%s">%s</th>
+FIRST_IN_MEAL_TEMPLATE = """\
+        <tr><th rowspan="%s">%s</th>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
@@ -68,7 +77,8 @@ FIRST_IN_MEAL_TEMPLATE = """      <tr><th rowspan="%s">%s</th>
         <td>%s</td>
       </tr>"""
 
-OTHERS_IN_MEAL_TEMPLATE = """      <tr>
+OTHERS_IN_MEAL_TEMPLATE = """\
+      <tr>
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
@@ -77,7 +87,8 @@ OTHERS_IN_MEAL_TEMPLATE = """      <tr>
         <td>%s</td>
       </tr>"""
 
-DAY_HEADER_TEMPLATE = """      <tr>
+DAY_HEADER_TEMPLATE = """\
+      <tr>
         <th colspan="7">%s</th>
       </tr>
       <tr>
@@ -90,7 +101,8 @@ DAY_HEADER_TEMPLATE = """      <tr>
         <th>Protein</th>
       </tr>"""
 
-TOTAL_TEMPLATE = """      <tr>
+TOTAL_TEMPLATE = """\
+      <tr>
         <th colspan="3">Total</th>
         <td>%s</td>
         <td>%s</td>
@@ -110,9 +122,9 @@ class ConstructWebPage(object):
         self.end_date = end_date
 
         print HEADER_TEMPLATE % (self.start_date, self.end_date)
-        print BODY_START_TEMPLATE % (self.start_date, self.end_date)
+        print BODY_START_TEMPLATE % (self.start_date, self.end_date, MENU_URL)
         self.print_rows()
-        print AFTERWARD_TEMPLATE % datetime.now()
+        print AFTERWARD_TEMPLATE % (MENU_URL, datetime.now())
 
     def print_rows(self):
         # Open the database,

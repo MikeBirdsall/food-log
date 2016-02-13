@@ -13,7 +13,7 @@ import cgitb; cgitb.enable()
 import os, sys
 import sqlite3
 from my_info import config_path
-from entry_form import entryform
+from entry_form import EntryForm
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
@@ -81,7 +81,7 @@ class copy_template(object):
             cursor.execute('select * from template where id = ?', (template_id, ))
             row = cursor.fetchone()
 
-        form = entryform()
+        form = EntryForm()
         form.create_form(row, script=SCRIPT_NAME)
         if form.status:
             return form.status
