@@ -49,7 +49,7 @@ Content-Type: text/html
     <form method="get">
       <button formaction="/and/images/pages/list.html">List all meals</button>
     </form>
-    <form method="post" enctype="multipart/form-data" action={script}">
+    <form method="post" enctype="multipart/form-data" action="{script}">
       <input type="submit"><br>
       <fieldset style="width:270px">
         <legend>Image Entry:</legend>

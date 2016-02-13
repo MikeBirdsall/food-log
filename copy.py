@@ -15,6 +15,9 @@ import sqlite3
 from my_info import config_path
 from entry_form import entryform
 
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
+SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
+
 HEAD_TEMPLATE = """\
 Content-Type: text/html
 
@@ -79,7 +82,7 @@ class copy_template(object):
             row = cursor.fetchone()
 
         form = entryform()
-        form.create_form(row, script="/cgi-bin/form.py")
+        form.create_form(row, script=SCRIPT_NAME)
         if form.status:
             return form.status
         print form.page
