@@ -121,7 +121,7 @@ class EntryForm(object):
         values = dict()
         for field in FIELDS:
             if field in defaults.keys() and defaults[field] is not None:
-                values[field] = "value=%s" % defaults[field]
+                values[field] = """value="%s" """ % defaults[field]
             else:
                 values[field] = ""
         values['status'] = status
