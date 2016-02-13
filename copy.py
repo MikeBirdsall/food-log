@@ -18,6 +18,7 @@ from entry_form import EntryForm
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
 
+
 HEAD_TEMPLATE = """\
 Content-Type: text/html
 
@@ -33,16 +34,18 @@ Content-Type: text/html
       }
     </style>
   </head>
-  <body>\
+  <body> \
 """
 
-ROW_TEMPLATE = """\
-      <button name="choice" type="submit" value=%s>%s</button><br/>\
-"""
 
 FORM_HEAD_TEMPLATE = """\
     <h1>Choose Template</h1>
-    <form method="get">\
+    <form method="get">
+      <button formaction="{MENU_URL}/index.html">Back to Food Menu</button><br/><br/>\
+"""
+
+ROW_TEMPLATE = """\
+      <button name="choice" type="submit" value=%s>%s</button><br/><br/>\
 """
 
 FORM_TAIL_TEMPLATE = """\
@@ -54,9 +57,11 @@ TAIL_TEMPLATE = """\
 </html>\
 """
 
-DB_FILE = config_path().dir('DB_FILE')
+config = config_path()
+DB_FILE = config.dir('DB_FILE')
+MENU_URL = config.dir('MENU_URL')
 
-class copy_template(object):
+class CopyTemplate(object):
     def __init__(self):
         self.form = cgi.FieldStorage()
 
@@ -78,9 +83,12 @@ class copy_template(object):
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute('select * from template where id = ?', (template_id, ))
+            cursor.execute('select * from template where id = ?',
+                (template_id, ))
             row = cursor.fetchone()
 
+        if not row:
+            return "No Template for id %s" % template_id
         form = EntryForm()
         form.create_form(row, script=SCRIPT_NAME)
         if form.status:
@@ -89,7 +97,7 @@ class copy_template(object):
 
     def create_selection(self):
         print HEAD_TEMPLATE
-        print FORM_HEAD_TEMPLATE
+        print FORM_HEAD_TEMPLATE.format(MENU_URL=MENU_URL)
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
@@ -99,4 +107,4 @@ class copy_template(object):
         print TAIL_TEMPLATE
 
 if __name__ == '__main__':
-    copy_template().run()
+    CopyTemplate().run()

@@ -96,72 +96,68 @@ EDIT_BODY_TEMPLATE = """       <input type="hidden" name="id" value={id}>
     </form>
 """
 
-
-CSS_TEMPLATE = """        <style>
-    form {
-        width:300px;
-    }
-
-    label {
-        display: inline-block;
-        text-align:left;
-    }
-
-    label.nutrit {
-        width:130px;
-        text-align:right;
-    }
-
-    input.nutrit {
-        display:inline-block;
-        width:70px;
-    }
-
-    label.inst {
-        width:70px;
-        text-align:right;
-    }
-
-    input:inst {
-        text-align:left;
-    }
-
-    input {
-        display:inline-block;
-        text-align:right;
-    }
-    fieldset {
-        background:#fff7db;
-    }
-</style>"""
+IMAGE_TEMPLATE = """\
+    <img src="%s" alt="Food">\
+"""
 
 HEADER_TEMPLATE = """Content-Type: text/html
 
-  <html>
-    <head>
+<html>
+  <head>
     <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <style>
+      form {
+          width:300px;
+      }
+      label {
+          display: inline-block;
+          text-align:left;
+      }
+      label.nutrit {
+          width:130px;
+          text-align:right;
+      }
+      input.nutrit {
+          display:inline-block;
+          width:70px;
+      }
+      label.inst {
+          width:70px;
+          text-align:right;
+      }
+      input:inst {
+          text-align:left;
+      }
+      input {
+          display:inline-block;
+          text-align:right;
+      }
+      fieldset {
+          background:#fff7db;
+      }
+    </style>
+  </head>\
 """
 
-class main(object):
+TAIL_TEMPLATE = """\
+  </body>
+</html>\
+"""
+class EditCourse(object):
     """ Main program do create and handle form to edit food items """
     def __init__(self):
         self.old_data = dict()
         self.parser = None
         self.data = dict()
         self.ini_filename = ""
-        config = config_path()
-        self.DATA_DIR = config.dir('DATA_DIR')
-        self.THUMB_DIR = config.dir('THUMB_DIR')
-        self.THUMB_URL = config.dir('THUMB_URL')
-        self.TEMPLATE_DIR = config.dir('TEMPLATE_DIR')
 
     def process(self):
         """ Update file from form or vice versa depending on state """
 
-        self.head()
+        print HEADER_TEMPLATE
 
         self.data = self.get_form_data()
-        self.ini_filename = os.path.join(self.DATA_DIR, self.data['id']+'.ini')
+        self.ini_filename = os.path.join(DATA_DIR, self.data['id']+'.ini')
 
         self.parser = self.open_ini_file()
 
@@ -180,10 +176,10 @@ class main(object):
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
         if thumb_id:
-            if os.path.join(self.THUMB_DIR, thumb_id + ".ini"):
-                self.show_image(os.path.join(self.THUMB_URL, thumb_id + ".jpg"))
+            if os.path.join(THUMB_DIR, thumb_id + ".ini"):
+                self.show_image(os.path.join(THUMB_URL, thumb_id + ".jpg"))
 
-        self.tail()
+        print TAIL_TEMPLATE
 
     def make_template(self):
         """ Create a template file and database entry """
@@ -195,7 +191,7 @@ class main(object):
         basename = ''.join(c for c in basename if c in VALID_NAME_CHARS)
         basename = '_'.join(basename.split())
         basename = basename[:30]
-        template_filename = os.path.join(self.TEMPLATE_DIR, basename+'.ini')
+        template_filename = os.path.join(TEMPLATE_DIR, basename+'.ini')
         # Check if file already created
         if os.path.exists(template_filename):
             return "<h3>Template %s already exists. </h3>" % basename
@@ -234,11 +230,7 @@ class main(object):
 
     def show_image(self, image):
         """ Emit html for an image link """
-        print """<img src="%s" alt="Food">""" % image
-
-    def tail(self):
-        """ Emit html for constant trailing parts """
-        print """</body></html>"""
+        print IMAGE_TEMPLATE % image
 
     def load_data(self):
         for option in self.parser.options('edit'):
@@ -280,14 +272,7 @@ class main(object):
 
         return parser
 
-    def head(self):
-        print HEADER_TEMPLATE
-        print CSS_TEMPLATE
-        print """ </head>
-            """
-
-
 
 if __name__ == '__main__':
-    main().process()
+    EditCourse().process()
 

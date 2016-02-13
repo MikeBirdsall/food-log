@@ -176,20 +176,20 @@ def print_meal(meal):
         dish.meal,
         thumb_url(dish, desc),
         blank_null(dish.servings),
-        blank_null(dish.calories),
-        blank_null(dish.carbs),
-        blank_null(dish.fat),
-        blank_null(dish.protein))
+        blank_null(dish.calories, dish.servings),
+        blank_null(dish.carbs, dish.servings),
+        blank_null(dish.fat, dish.servings),
+        blank_null(dish.protein, dish.servings))
 
     for dish in meal[1:]:
         desc = ellipse_truncate(dish.description)
         print OTHERS_IN_MEAL_TEMPLATE % (
             thumb_url(dish, desc),
             blank_null(dish.servings),
-            blank_null(dish.calories),
-            blank_null(dish.carbs),
-            blank_null(dish.fat),
-            blank_null(dish.protein))
+            blank_null(dish.calories, dish.servings),
+            blank_null(dish.carbs, dish.servings),
+            blank_null(dish.fat, dish.servings),
+            blank_null(dish.protein, dish.servings))
 
 def print_total(meals):
     """ Print total row for entire day"""
@@ -214,10 +214,10 @@ def thumb_url(dish, label):
         return label
     return '<a href="%s">%s</a>' % (THUMB_URL + dish.thumb_id + ".jpg", label)
 
-def blank_null(val):
+def blank_null(val, servings=1):
     if val is None:
         return ""
-    return val
+    return val * servings
 
 def ellipse_truncate(text, length=40):
     """ Return canonical form of description to fit in length """
