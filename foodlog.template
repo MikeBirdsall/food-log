@@ -6,3 +6,4 @@ THUMB_URL: /and/images/thumbs/
 UPLOAD_DIR: %(ROOT_DIR)s/www/and/images/
 ARCHIVE_DIR: %(UPLOAD_DIR)s/archive/
 DB_FILE: %(DATA_DIR)s/current.sqlite
+template_dir: %(ROOT_DIR)s/www/and/images/templates
