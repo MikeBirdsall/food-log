@@ -223,17 +223,33 @@ def ellipse_truncate(text, length=40):
     result = text or "No Description Yet"
     return (result[:length-1] + "&hellip;") if len(result) > length else result
 
+def week_range(num_weeks, firstweekday=3):
+    """ Return the range num_weeks ago
+
+        Figure out the week where num_weeks == 0 is this week (contains today)
+        and week == 1 is last week, and so on. Weeks are defined by start_day
+        using the datetime.weekday(), so if start_day == 0, the week starts on
+        Monday or if start_day == 3, the week starts on Thursday.
+
+    """
+
+    today = date.today()
+    new_week_day = (today.weekday() - firstweekday) % 7
+    weekstart = today - timedelta(days=new_week_day)
+    first_day_of_week = weekstart - timedelta(days=num_weeks*7)
+    last_day_of_week = min(today, first_day_of_week + timedelta(days=6))
+    return first_day_of_week, last_day_of_week
+
 def get_dates(args):
-    if args.last_week:
-        # Get previous Wednesday (config this later)
-        today = date.today()
-        start_date = today - timedelta(days=(7 + ((today.weekday() - 3) % 7)))
-        end_date = start_date + timedelta(days=6)
-        return start_date, end_date
+    if args.now:
+        return week_range(0)
+    elif args.last_week:
+        return week_range(1)
+    elif args.previous is not None:
+        print args.previous
+        return week_range(args.previous)
     else:
         return args.start_date, args.end_date
-
-
 
 def add_with_none(now, new, servings):
     if new is None:
@@ -245,10 +261,14 @@ def main():
     """ Commandline program to create food diary dataabase from ini files """
     parser = argparse.ArgumentParser()
     parser.add_argument("sqlite_file", type=str, help="database file")
-    parser.add_argument("--last_week", "-w", action='store_true')
+    dategroup = parser.add_mutually_exclusive_group()
+    dategroup.add_argument("--now", "--current", "-n", action="store_true")
+    dategroup.add_argument("--previous", "-p", type=int, choices=xrange(20))
+    dategroup.add_argument("--last_week", "-w", action='store_true')
     parser.add_argument("--start_date",
         type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(), default=date.min)
-    parser.add_argument("--end_date", type=date, default=date.max)
+    parser.add_argument("--end_date", default=date.max,
+        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
     args = parser.parse_args()
     date_range = get_dates(args)
     ConstructWebPage(args.sqlite_file).output(*date_range) # pylint:disable=W0142
