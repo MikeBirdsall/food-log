@@ -20,6 +20,7 @@ python create_db.py $temp_loc /big/dom/xkirkbird/www/and/test/byday/  /big/dom/x
 (cd /big/dom/xkirkbird/www/and/test/byday/ && mv current.sqlite previous.sqlite && mv $temp_loc current.sqlite)
 
 # Tasks to create various reports from the database
-python write_range.py -w /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/this_week.html
+python write_range.py -w /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/last_week.html
 python write_range.py --start_date '2016-01-01' /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/all_weeks.html
+python write_range.py --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/this_week.html
 
