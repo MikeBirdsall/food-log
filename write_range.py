@@ -24,7 +24,6 @@ import cgitb; cgitb.enable()
 
 config = config_path()
 THUMB_URL = config.dir("THUMB_URL")
-MENU_URL = config.dir("MENU_URL")
 
 ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
     'time protein meal size thumb_id')
@@ -54,14 +53,14 @@ BODY_START_TEMPLATE = """\
     <h1>MGB Food</h1>
     <h2>%s - %s</h2>
     <form method="get">
-        <button formaction="%s/index.html">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     <table>"""
 
 AFTERWARD_TEMPLATE = """\
     </table>
     <form method="get">
-        <button formaction="%s/index.html">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     recomputed on %s
   </body>
@@ -122,9 +121,9 @@ class ConstructWebPage(object):
         self.end_date = end_date
 
         print HEADER_TEMPLATE % (self.start_date, self.end_date)
-        print BODY_START_TEMPLATE % (self.start_date, self.end_date, MENU_URL)
+        print BODY_START_TEMPLATE % (self.start_date, self.end_date)
         self.print_rows()
-        print AFTERWARD_TEMPLATE % (MENU_URL, datetime.now())
+        print AFTERWARD_TEMPLATE % (datetime.now())
 
     def print_rows(self):
         # Open the database,

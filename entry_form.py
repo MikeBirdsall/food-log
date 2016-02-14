@@ -45,8 +45,8 @@ Content-Type: text/html
   <body>
     <h1>Food Entry</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
-      <button formaction="{MENU_URL}">Food Menu</button>
+      <button formaction="list.html">List all meals</button>
+      <button formaction="index.html">Food Menu</button>
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
       <input type="submit"><br>
@@ -101,8 +101,8 @@ Content-Type: text/html
     </form>
 
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
-      <button formaction="{MENU_URL}">Food Menu</button>
+      <button formaction="list.html">List all meals</button>
+      <button formaction="index.html">Food Menu</button>
     </form>
     <p>{status}</p>
   </body>\n</html>
@@ -126,7 +126,6 @@ class EntryForm(object):
                 values[field] = ""
         values['status'] = status
         values['script'] = script
-        values['MENU_URL'] = config_path().dir('MENU_URL')
         self.page = TEMPLATE.format(**values)
 
 

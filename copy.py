@@ -41,7 +41,7 @@ Content-Type: text/html
 FORM_HEAD_TEMPLATE = """\
     <h1>Choose Template</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/index.html">Back to Food Menu</button><br/><br/>\
+      <button formaction="index.html">Back to Food Menu</button><br/><br/>\
 """
 
 ROW_TEMPLATE = """\
@@ -59,7 +59,6 @@ TAIL_TEMPLATE = """\
 
 config = config_path()
 DB_FILE = config.dir('DB_FILE')
-MENU_URL = config.dir('MENU_URL')
 
 class CopyTemplate(object):
     def __init__(self):
@@ -97,7 +96,7 @@ class CopyTemplate(object):
 
     def create_selection(self):
         print HEAD_TEMPLATE
-        print FORM_HEAD_TEMPLATE.format(MENU_URL=MENU_URL)
+        print FORM_HEAD_TEMPLATE
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()

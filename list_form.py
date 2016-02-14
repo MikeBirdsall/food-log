@@ -37,7 +37,7 @@ HEADER_TEMPLATE = """<html>
 BODY_START_TEMPLATE = """<body>
     <h1>MGB Food Log</h1>
     <form method="get">
-        <button formaction="{MENU_URL}/index.html">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     <table>
     """
@@ -75,7 +75,6 @@ SECTION = 'edit'
 config = config_path()
 DATA_DIR = config.dir('DATA_DIR')
 THUMB_URL = config.dir('THUMB_URL')
-MENU_URL = config.dir('MENU_URL')
 
 # The edit link depends on the cgi-bin organization
 if 'GATEWAY_INTERFACE' in os.environ:
@@ -114,7 +113,7 @@ def main():
         days[fitem.day].append(upload_second)
 
     print HEADER_TEMPLATE
-    print BODY_START_TEMPLATE.format(MENU_URL=MENU_URL)
+    print BODY_START_TEMPLATE
     for day, item_list in sorted(days.iteritems(), reverse=True):
         print_dayrow(day)
         print_item_rows([value for key, value in items.items()

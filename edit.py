@@ -18,7 +18,6 @@ from datetime import datetime
 from my_info import config_path
 
 config = config_path()
-MENU_URL = config.dir('MENU_URL')
 DATA_DIR = config.dir('DATA_DIR')
 THUMB_DIR = config.dir('THUMB_DIR')
 THUMB_URL = config.dir('THUMB_URL')
@@ -39,7 +38,7 @@ TEMPLATE_SECTION = 'template'
 
 FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
       <input type="submit" value="Update" name="action"><br>
@@ -244,7 +243,7 @@ class EditCourse(object):
         self.print_form()
 
     def print_form(self):
-        print FORM_TOP_TEMPLATE.format(MENU_URL=MENU_URL, SCRIPT_NAME=SCRIPT_NAME)
+        print FORM_TOP_TEMPLATE.format(SCRIPT_NAME=SCRIPT_NAME)
 
         print EDIT_BODY_TEMPLATE.format(**self.old_data)
 
