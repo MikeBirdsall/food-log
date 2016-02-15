@@ -190,9 +190,10 @@ class ConstructWebPage(object):
         for key, value in kwargs.iteritems():
             answer[key] = value
         answer['dish'] = self.detail_or_edit_url(dish)
-        for field in "servings calories carbs fat protein".split():
+        for field in "calories carbs fat protein".split():
             answer[field] = safe_by_servings(getattr(dish, field, None),
                 dish.servings)
+        answer['servings] = safe_by_servings(dish.servings)
 
         return answer
 
