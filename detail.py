@@ -39,9 +39,6 @@ TEMPLATE_SECTION = 'template'
 
 FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
-    </form>
-    <form method="get">
 """
 
 EDIT_BODY_TEMPLATE = """\
