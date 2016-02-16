@@ -14,16 +14,14 @@
 
 """
 
-from datetime import date, datetime, timedelta
 from collections import defaultdict, namedtuple
 from operator import attrgetter
+from my_info import config_path
+from datetime import date, datetime, timedelta
 import argparse
 import sqlite3
-from my_info import config_path
 import cgitb; cgitb.enable()
 
-config = config_path()
-THUMB_URL = config.dir("THUMB_URL")
 
 ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
     'time protein meal size thumb_id')
@@ -109,6 +107,10 @@ TOTAL_TEMPLATE = """\
         <td>%s</td>
       </tr>
 """
+
+config = config_path()
+THUMB_URL = config.dir("THUMB_URL")
+
 class ConstructWebPage(object):
 
     def __init__(self, database):

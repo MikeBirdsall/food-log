@@ -43,12 +43,14 @@
 
 """
 
+import os
 from collections import defaultdict, namedtuple
 from operator import attrgetter
 #from my_info import config_path
 from datetime import date, datetime, timedelta
 import argparse
 import sqlite3
+from tempfile import NamedTemporaryFile
 
 
 ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
@@ -143,14 +145,27 @@ class ConstructWebPage(object):
         self.cgi = cgi
         self.start_date = None
         self.end_date = None
+        self.page_content = []
 
-    def output(self, start_date, end_date):
+    def output(self, start_date, end_date, output_file):
         self.start_date = start_date
         self.end_date = end_date
 
-        print HEAD_TEMPLATE.format(start=start_date, end=end_date)
+        self.page_content.append(HEAD_TEMPLATE.format(start=start_date,
+            end=end_date))
         self.print_rows()
-        print AFTERWARD_TEMPLATE % (datetime.now())
+        self.page_content.append(AFTERWARD_TEMPLATE % (datetime.now()))
+
+        if output_file:
+            with NamedTemporaryFile(delete=False) as temp:
+                for chunk in self.page_content:
+                    temp.write(chunk)
+            os.rename(temp.name, output_file)
+        else:
+            for chunk in self.page_content:
+                print chunk
+
+
 
     def print_rows(self):
         # Open the database,
@@ -173,7 +188,7 @@ class ConstructWebPage(object):
             for day, item_list in sorted(days.iteritems()):
                 meal_date = datetime.strptime(day, "%Y-%m-%d").strftime(
                     "%A %Y-%m-%d")
-                print DAY_HEADER_TEMPLATE.format(date=meal_date)
+                self.page_content.append(DAY_HEADER_TEMPLATE.format(date=meal_date))
                 self.print_item_rows([value for key, value in items.items()
                     if key in item_list])
 
@@ -193,7 +208,7 @@ class ConstructWebPage(object):
         for field in "calories carbs fat protein".split():
             answer[field] = safe_by_servings(getattr(dish, field, None),
                 dish.servings)
-        answer['servings] = safe_by_servings(dish.servings)
+        answer['servings'] = safe_by_servings(dish.servings)
 
         return answer
 
@@ -213,32 +228,33 @@ class ConstructWebPage(object):
         meals = self.sorted_items_by_meal(item_rows)
         for meal in meals:
             self.print_meal(meal)
-        print_total(meals)
+        self.print_total(meals)
 
 
     def print_meal(self, meal):
         dish = meal[0]
-        print FIRST_IN_MEAL_TEMPLATE.format(
-            **self.course_dict(dish, meal=dish.meal, courses=len(meal)))
+        self.page_content.append(FIRST_IN_MEAL_TEMPLATE.format(
+            **self.course_dict(dish, meal=dish.meal, courses=len(meal))))
         for dish in meal[1:]:
-            print OTHERS_IN_MEAL_TEMPLATE.format(**self.course_dict(dish))
+            self.page_content.append(OTHERS_IN_MEAL_TEMPLATE.format(**self.course_dict(dish)))
 
-def print_total(meals):
-    """ Print total row for entire day"""
-    cals = carbs = fat = protein = (0, "")
-    for meal in meals:
-        for dish in meal:
-            cals = add_with_none(cals, dish.calories, dish.servings)
-            carbs = add_with_none(carbs, dish.carbs, dish.servings)
-            fat = add_with_none(fat, dish.fat, dish.servings)
-            protein = add_with_none(protein, dish.protein, dish.servings)
+    def print_total(self, meals):
+        """ Print total row for entire day"""
+        cals = carbs = fat = protein = (0, "")
+        for meal in meals:
+            for dish in meal:
+                cals = add_with_none(cals, dish.calories, dish.servings)
+                carbs = add_with_none(carbs, dish.carbs, dish.servings)
+                fat = add_with_none(fat, dish.fat, dish.servings)
+                protein = add_with_none(protein, dish.protein, dish.servings)
 
-# pylint:disable=W0141
-    print TOTAL_TEMPLATE % (
-        ''.join(map(str, cals)),
-        ''.join(map(str, carbs)),
-        ''.join(map(str, fat)),
-        ''.join(map(str, protein)))
+    # pylint:disable=W0141
+        self.page_content.append(
+            TOTAL_TEMPLATE % (
+            ''.join(map(str, cals)),
+            ''.join(map(str, carbs)),
+            ''.join(map(str, fat)),
+            ''.join(map(str, protein))))
 
 
 def safe_by_servings(val, servings=1):
@@ -274,10 +290,13 @@ def get_dates(args):
     elif args.last_week:
         return week_range(1)
     elif args.previous is not None:
-        print args.previous
         return week_range(args.previous)
     else:
-        return args.start_date, args.end_date
+        return (
+            args.start_date or
+                # First day of previous month
+                (date.today().replace(day=1) - timedelta(days=1)).replace(day=1),
+            args.end_date or date.today())
 
 def add_with_none(now, new, servings):
     if new is None:
@@ -285,31 +304,43 @@ def add_with_none(now, new, servings):
     else:
         return (now[0] + (new * servings), now[1])
 
-def main():
+def get_args():
     """ Commandline program to create food diary dataabase from ini files """
     parser = argparse.ArgumentParser()
+
     parser.add_argument("sqlite_file", type=str, help="database file")
+    parser.add_argument("--cgi", required=True)
+    parser.add_argument("--output", "-o",
+        help="Atomic output to this file or use stdout")
+
     editgroup = parser.add_mutually_exclusive_group()
     editgroup.add_argument("--edit", action="store_false", dest="readonly")
     editgroup.add_argument("--readonly", action="store_true")
+
     dategroup = parser.add_mutually_exclusive_group()
     dategroup.add_argument("--now", "--current", "-n", action="store_true")
-    dategroup.add_argument("--previous", "-p", type=int, choices=xrange(20))
-    dategroup.add_argument("--last_week", "-w", action='store_true')
-    parser.add_argument("--cgi", required=True)
-    parser.add_argument("--start_date",
-        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(), default=date.min)
-    parser.add_argument("--end_date", default=date.max,
+    dategroup.add_argument("--previous", "-p", type=int, choices=xrange(10))
+    dategroup.add_argument("--last-week", "-w", action='store_true')
+    parser.add_argument("--start-date", "--start_date",
         type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
-    args = parser.parse_args()
-    if not args.readonly and not args.cgi:
-        parser.print_help()
+    parser.add_argument("--end-date", "--end_date",
+        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
 
+    args = parser.parse_args()
+
+    if (args.start_date or args.end_date) and (args.now or args.previous or
+            args.last_week):
+        parser.error("""Options --now, --previous, or --last_week incompatible
+            with --start-date or --end-date""")
+    return args
+
+def main():
+
+    args = get_args()
     start_date, stop_date = get_dates(args)
 
-
     ConstructWebPage(args.sqlite_file, args.readonly, args.cgi).output(
-        start_date, stop_date)
+        start_date, stop_date, args.output)
 
 if __name__ == '__main__':
     main()
