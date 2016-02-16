@@ -157,7 +157,9 @@ class ConstructWebPage(object):
         self.page_content.append(AFTERWARD_TEMPLATE % (datetime.now()))
 
         if output_file:
-            with NamedTemporaryFile(delete=False) as temp:
+            with NamedTemporaryFile(
+                    dir=os.path.dirname(os.path.abspath(output_file)),
+                    delete=False) as temp:
                 for chunk in self.page_content:
                     temp.write(chunk)
             os.rename(temp.name, output_file)
