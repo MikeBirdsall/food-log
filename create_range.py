@@ -162,6 +162,7 @@ class ConstructWebPage(object):
                     delete=False) as temp:
                 for chunk in self.page_content:
                     temp.write(chunk)
+            os.chmod(temp.name, 0644)
             os.rename(temp.name, output_file)
         else:
             for chunk in self.page_content:
