@@ -25,7 +25,7 @@ Content-Type: text/html
 <html>
   <head>
     <title>Create course from template</title>
-    <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       button {
         max-width: 320px;

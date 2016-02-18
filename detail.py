@@ -1,9 +1,9 @@
 #!/usr/bin/python
-""" Program to edit a food item
+""" Program to display the details of a food item
 
 This cgi-bin program is one of a group of programs to help me create and
 maintain a record of everything I eat. This one writes and populates an html
-form page which allows the food item fields be edited
+form page which allows the dietician to view the details of a food item.
 
 Other programs will input new data, prepare output web pages, and to managed
 the date in valious ways.
@@ -43,7 +43,7 @@ FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
 
 EDIT_BODY_TEMPLATE = """\
       <input type="hidden" name="id" value={id}>
-      <fieldset style="width:270px"><legend>Identifying Information:</legend>
+      <fieldset style="max-width:270px" disabled><legend>Identifying Information:</legend>
         Description:<br>
         <input type="text" name="description" placeholder="Title" value="{description}">
         <br>Comment:<br>
@@ -52,7 +52,7 @@ EDIT_BODY_TEMPLATE = """\
         <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
       </fieldset>
 
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px" disabled>
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
@@ -66,7 +66,7 @@ EDIT_BODY_TEMPLATE = """\
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
       </fieldset>
 
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px" disabled>
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
         <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
@@ -98,7 +98,7 @@ HEADER_TEMPLATE = """Content-Type: text/html
 
 <html>
   <head>
-    <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {
           width:300px;
@@ -155,7 +155,7 @@ class EditCourse(object):
 
         self.parser = self.open_ini_file()
 
-        status = "Detail of Record"
+        status = "Detail of Food Item<br/>"
 
         self.body()
         print status

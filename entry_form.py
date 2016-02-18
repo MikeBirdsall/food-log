@@ -9,7 +9,7 @@ Content-Type: text/html
 
 <html>
   <head>
-    <meta name="viewport" content="width=device=width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {{
         width:300px;
@@ -50,12 +50,12 @@ Content-Type: text/html
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
       <input type="submit"><br>
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px">
         <legend>Image Entry:</legend>
         <input type="file" name="pic" accept="image/*"/><br>
       </fieldset>
 
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px">
         <legend>Identifying Information:</legend>
         Description: (used as title for dish)<br>
       <input type="text" name="description" {description} placeholder="Title/Description/Identifier"/><br>
@@ -63,7 +63,7 @@ Content-Type: text/html
         Amount:<br> <input type="text" name="size" {size} placeholder="Like 2 cups or 12 oz or large bowl">
       </fieldset>
 
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px">
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" {calories} id="calories" max="3000" step="5">
@@ -75,7 +75,7 @@ Content-Type: text/html
         <input class="nutrit" type="number" name="fat" id="fat" {fat} size="2" max="300" step="0.5">
       </fieldset>
 
-      <fieldset style="width:270px">
+      <fieldset style="max-width:270px">
         <legend>Instance Information:</legend>
 
         <label class="inst" for="servings">Servings:</label>
