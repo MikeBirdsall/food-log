@@ -19,7 +19,7 @@ python create_db.py $temp_loc /big/dom/xkirkbird/www/and/test/byday/  /big/dom/x
 python create_range.py --edit --cgi '/cgi-bin/ft/' /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/list.html
 
 # Tasks to create various reports from the database
-python write_range.py -w /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/last_week.html
-python write_range.py --start_date '2016-01-01' /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/all_weeks.html
-python write_range.py --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite > /big/dom/xkirkbird/www/and/test/pages/this_week.html
+python create_range.py --cgi '/cgi-bin/ft/' -w --edit /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/last_week.html
+python create_range.py --edit --cgi '/cgi-bin/ft/' --start_date '2016-01-01' /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/all_weeks.html
+python create_range.py --edit --cgi '/cgi-bin/ft/' --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/this_week.html
 
