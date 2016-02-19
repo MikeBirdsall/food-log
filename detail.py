@@ -43,7 +43,7 @@ FORM_TOP_TEMPLATE = """    <h1>Food Entry</h1>
 
 EDIT_BODY_TEMPLATE = """\
       <input type="hidden" name="id" value={id}>
-      <fieldset style="max-width:270px" disabled><legend>Identifying Information:</legend>
+      <fieldset style="max-width:360px" disabled><legend>Identifying Information:</legend>
         Description:<br>
         <input type="text" name="description" placeholder="Title" value="{description}">
         <br>Comment:<br>
@@ -52,7 +52,7 @@ EDIT_BODY_TEMPLATE = """\
         <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
       </fieldset>
 
-      <fieldset style="max-width:270px" disabled>
+      <fieldset style="max-width:360px" disabled>
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
@@ -66,7 +66,7 @@ EDIT_BODY_TEMPLATE = """\
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
       </fieldset>
 
-      <fieldset style="max-width:270px" disabled>
+      <fieldset style="max-width:360px" disabled>
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
         <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
@@ -101,7 +101,7 @@ HEADER_TEMPLATE = """Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {
-          width:300px;
+          width:360px;
       }
       label {
           display: inline-block;

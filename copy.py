@@ -28,7 +28,7 @@ Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       button {
-        max-width: 320px;
+        max-width: 540;
         width: 100%;
         background:#db8c47;
       }

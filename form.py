@@ -28,37 +28,36 @@ HEAD_TEMPLATE = """Content-Type: text/html\n\n<html>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {
-        width:300px;
+        max-width:360px;
       }
 
       label {
-        display: inline-block;
-        text-align:left;
-      }
-
-      label.nutrit {
-         width:130px;
-         text-align:right;
-      }
-
-      input.nutrit {
-        display:inline-block;
-        width:70px;
-      }
-
-      label.inst {
-        width:70px;
-        text-align:right;
-      }
-
-      input:inst {
+        display: block;
         text-align:left;
       }
 
       input {
-        display:inline-block;
-        text-align:right;
+        display:block;
       }
+
+      label.nutrit {
+         display: block;
+         text-align:left;
+      }
+
+      input.nutrit {
+        display:block;
+      }
+
+      label.inst {
+        text-align:left;
+      }
+
+      input:inst {
+        display:block;
+        text-align:left;
+      }
+
       fieldset {
         background:#fff7db;
       }
@@ -78,42 +77,51 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
     </form>
     <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
       <input type="submit"><br>
-      <fieldset style="max-width:270px">
+      <fieldset style="max-width:360px">
         <legend>Image Entry:</legend>
-        <input type="file" name="pic" accept="image/*"/><br>
+        <input type="file" name="pic" accept="image/*"/>
       </fieldset>
 
-      <fieldset style="max-width:270px">
+      <fieldset style="max-width:360px">
         <legend>Identifying Information:</legend>
-        Description: (used as title for dish)<br>
-      <input type="text" name="description" placeholder="Title/Description/Identifier"/><br>
-        Comment:<br><input type="text" name="comment" placeholder="Comment/Context/Excuse"><br>
-        Amount:<br> <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl">
+        <label>Description: (used as title for dish)<br>
+            <input type="text" name="description" placeholder="Title/Description/Identifier"/>
+        </label>
+        <label>Comment:
+            <input type="text" name="comment" placeholder="Comment/Context/Excuse"/>
+        </label>
+        <label>Amount:
+            <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl"/>
+        </label>
       </fieldset>
 
-      <fieldset style="max-width:270px">
+      <fieldset style="max-width:360px">
         <legend>Nutrition:</legend>
-        <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step="5">
-        <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1"><br>
-        <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1"><br>
-        <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.5">
+        <label class="nutrit">Calories:
+            <input class="nutrit" type="number" id="calories" max="3000" step="5">
+        </label>
+        <label class="nutrit">Carbs(g):
+            <input class="nutrit" type="number" id="carbs" size="2" max="300" step="1">
+        </label>
+        <label class="nutrit">Protein(g):
+            <input class="nutrit" type="number" id="prot" size="2" max="300" step="1">
+        </label>
+        <label class="nutrit">Fat(g):
+            <input class="nutrit" type="number" id="fat" size="2" max="300" step="0.5">
+        </label>
       </fieldset>
 
-      <fieldset style="max-width:270px">
+      <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
 
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="1"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="1" step="0.1">
 
         <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day"><br>
+        <input class="inst" type="date" name="day" id="day">
 
         <label class="inst" for="time">Time:</label>
-        <input type="time" name="time"><br>
+        <input type="time" name="time">
 
         <label class="inst" for="meal">Meal:</label>
         <input class="inst" list="meals" id="meal" name="meal">
@@ -123,9 +131,9 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
           <option value="Lunch">
           <option value="Supper">
           <option value="Snack">
-        </datalist><br>
+        </datalist>
       </fieldset>
-      <input type="submit"><br>
+      <input type="submit">
     </form>
 
     <form method="get">
