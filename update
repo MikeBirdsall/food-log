@@ -16,16 +16,16 @@ python create_db.py $temp_loc /big/dom/xkirkbird/www/and/test/byday/  /big/dom/x
 
 (cd /big/dom/xkirkbird/www/and/test/byday/ && mv current.sqlite previous.sqlite && mv $temp_loc current.sqlite)
 
-python create_range.py --edit --cgi '/cgi-bin/ft/' /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/list.html
+python create_range.py --title "Full Edit Reversed" --edit --reverse --cgi '/cgi-bin/ft/' /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/list.html
 
 # Tasks to create various reports from the database
-python create_range.py --cgi '/cgi-bin/ft/' -w --edit /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/last_week.html
-python create_range.py --edit --cgi '/cgi-bin/ft/' --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/this_week.html
+python create_range.py --title "Edit Last Week" --cgi '/cgi-bin/ft/' -w --edit /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/last_week.html
+python create_range.py --title "Edit This Week" --edit --cgi '/cgi-bin/ft/' --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/this_week.html
 
 
-python create_range.py --cgi '/cgi-bin/ft/' /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/list_diet.html
+python create_range.py --title "Full List" --cgi '/cgi-bin/ft/' --reverse /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/list_diet.html
 
 # Tasks to create various reports from the database
-python create_range.py --cgi '/cgi-bin/ft/' -w /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/last_week_diet.html
-python create_range.py --cgi '/cgi-bin/ft/' --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/this_week_diet.html
+python create_range.py --title "Meals from Last Week"  --cgi '/cgi-bin/ft/' -w /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/last_week_diet.html
+python create_range.py --title "Meals this week"  --cgi '/cgi-bin/ft/' --now /big/dom/xkirkbird/www/and/test/byday/current.sqlite -o /big/dom/xkirkbird/www/and/test/pages/this_week_diet.html
 

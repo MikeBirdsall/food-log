@@ -76,7 +76,7 @@ HEAD_TEMPLATE = """\
     </style>
   </head>
   <body>
-    <h1>MGB Food</h1>
+    <h1>{title}</h1>
     <h2>{start} - {end}</h2>
     <form method="get">
         <button formaction="index.html">Food Menu</button>
@@ -147,12 +147,13 @@ class ConstructWebPage(object):
         self.end_date = None
         self.page_content = []
 
-    def output(self, start_date, end_date, output_file):
+    def output(self, start_date, end_date, output_file, reverse, title):
+        self.reverse = reverse
         self.start_date = start_date
         self.end_date = end_date
 
         self.page_content.append(HEAD_TEMPLATE.format(start=start_date,
-            end=end_date))
+            end=end_date, title=title))
         self.print_rows()
         self.page_content.append(AFTERWARD_TEMPLATE % (datetime.now()))
 
@@ -188,7 +189,7 @@ class ConstructWebPage(object):
                 items[fitem.day, fitem.time] = fitem
                 days[fitem.day].append((fitem.day, fitem.time))
 
-            for day, item_list in sorted(days.iteritems()):
+            for day, item_list in sorted(days.iteritems(), reverse=self.reverse):
                 meal_date = datetime.strptime(day, "%Y-%m-%d").strftime(
                     "%A %Y-%m-%d")
                 self.page_content.append(DAY_HEADER_TEMPLATE.format(date=meal_date))
@@ -313,6 +314,8 @@ def get_args():
 
     parser.add_argument("sqlite_file", type=str, help="database file")
     parser.add_argument("--cgi", required=True)
+    parser.add_argument("--title", "-t")
+    parser.add_argument("--reverse", "-r", action="store_true")
     parser.add_argument("--output", "-o",
         help="Atomic output to this file or use stdout")
 
@@ -343,7 +346,7 @@ def main():
     start_date, stop_date = get_dates(args)
 
     ConstructWebPage(args.sqlite_file, args.readonly, args.cgi).output(
-        start_date, stop_date, args.output)
+        start_date, stop_date, args.output, args.reverse, args.title)
 
 if __name__ == '__main__':
     main()
