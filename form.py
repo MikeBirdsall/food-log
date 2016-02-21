@@ -98,33 +98,37 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
       <fieldset style="max-width:360px">
         <legend>Nutrition:</legend>
         <label class="nutrit">Calories:
-            <input class="nutrit" type="number" id="calories" max="3000" step="5">
+            <input class="nutrit" type="number" name="calories" max="3000" step="5">
         </label>
         <label class="nutrit">Carbs(g):
-            <input class="nutrit" type="number" id="carbs" size="2" max="300" step="1">
+            <input class="nutrit" type="number" name="carbs" size="2" max="300" step="1">
         </label>
         <label class="nutrit">Protein(g):
-            <input class="nutrit" type="number" id="prot" size="2" max="300" step="1">
+            <input class="nutrit" type="number" name="prot" size="2" max="300" step="1">
         </label>
         <label class="nutrit">Fat(g):
-            <input class="nutrit" type="number" id="fat" size="2" max="300" step="0.5">
+            <input class="nutrit" type="number" name="fat" size="2" max="300" step="0.5">
         </label>
       </fieldset>
 
       <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
 
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="1" step="0.1">
+        <label class="inst">Servings:
+            <input class="inst" type="number" name="servings" min="1" max="9" value="1" step="0.1">
+        </label>
 
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day">
+        <label class="inst">Day:
+            <input class="inst" type="date" name="day">
+        </label>
 
-        <label class="inst" for="time">Time:</label>
-        <input type="time" name="time">
+        <label class="inst">Time:
+            <input type="time" name="time">
+        </label>
 
-        <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal">
+        <label class="inst">Meal:
+            <input class="inst" list="meals" name="meal">
+        </label>
 
         <datalist id="meals">
           <option value="Breakfast">
