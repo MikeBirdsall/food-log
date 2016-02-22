@@ -104,7 +104,7 @@ FORM_TEMPLATE = """    <h1>Food Entry</h1>
             <input class="nutrit" type="number" name="carbs" size="2" max="300" step="1">
         </label>
         <label class="nutrit">Protein(g):
-            <input class="nutrit" type="number" name="prot" size="2" max="300" step="1">
+            <input class="nutrit" type="number" name="protein" size="2" max="300" step="1">
         </label>
         <label class="nutrit">Fat(g):
             <input class="nutrit" type="number" name="fat" size="2" max="300" step="0.5">
