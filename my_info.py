@@ -22,6 +22,17 @@ class config_path(object):
         return self.config.get('paths', which)
 
 if __name__ == '__main__':
+    if 'GATEWAY_INTERFACE' in os.environ:
+        print """Content-Type: text/plain\n\n"""
+        print "argv[0]", sys.argv[0]
+        print "empty path", os.path.dirname("")
+        print "-", os.path.join(os.path.dirname(""), "foodlog.cfg")
+
+
+        for x in sorted(os.environ.keys()):
+            print x, os.environ.get(x, "Unset")
+        print
+
     z = config_path()
     for x in ('ROOT_DIR DATA_DIR THUMB_DIR THUMB_URL UPLOAD_DIR '
              ' ARCHIVE_DIR').split():
