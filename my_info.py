@@ -10,7 +10,7 @@ class config_path(object):
 
 
     def config_file(self):
-        if 'GATEWAY_INTERFACE' in os.environ:
+        if 'GATEWAY_INTERFACE' in os.environ and 'SCRIPT_FILENAME' in os.environ:
             script_path = os.environ.get('SCRIPT_FILENAME', '')
         else:
             # Allow it to be run from command-line, as well
@@ -34,6 +34,8 @@ if __name__ == '__main__':
         print
 
     z = config_path()
-    for x in ('ROOT_DIR DATA_DIR THUMB_DIR THUMB_URL UPLOAD_DIR '
-             ' ARCHIVE_DIR').split():
-        print x, z.dir(x)
+
+    if 'GATEWAY_INTERFACE' in os.environ:
+        for x in ('ROOT_DIR DATA_DIR THUMB_DIR THUMB_URL UPLOAD_DIR '
+                 ' ARCHIVE_DIR').split():
+            print x, z.dir(x)
