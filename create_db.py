@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 """ Create database from ini files
 
-    Create an sqlite3 database from the ini files in a directory.
-    Invoked by ./create_db.py <db-name> <directory-path>
+    I started out using ini files as the first input and primary backup method
+    for the data. I'm changing that to be more database centric, with the
+    backup being done by a file containing a log of the sql statements used to
+    update the database. This version will create the database, but also save
+    a copy of the sql used to create it. 
 
 """
 import os
