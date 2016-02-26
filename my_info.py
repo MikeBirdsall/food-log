@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from  ConfigParser import ConfigParser
 import os, sys
 
@@ -9,7 +10,7 @@ class config_path(object):
 
 
     def config_file(self):
-        if 'GATEWAS_INTERFACE' in os.environ:
+        if 'GATEWAY_INTERFACE' in os.environ:
             script_path = os.environ.get('SCRIPT_FILENAME', '')
         else:
             # Allow it to be run from command-line, as well
