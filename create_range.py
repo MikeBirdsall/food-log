@@ -53,7 +53,7 @@ import sqlite3
 from tempfile import NamedTemporaryFile
 
 
-ITEM = namedtuple('item', 'comment carbs description servings calories fat day '
+ITEM = namedtuple('item', 'id comment carbs description servings calories fat day '
     'time protein meal size ini_id thumb_id')
 
 HEAD_TEMPLATE = """\
@@ -163,13 +163,13 @@ class ConstructWebPage(object):
                     delete=False) as temp:
                 for chunk in self.page_content:
                     temp.write(chunk)
+            if os.stat(temp.name).st_size == 0:
+                raise RuntimeError('File created is empty')
             os.chmod(temp.name, 0644)
             os.rename(temp.name, output_file)
         else:
             for chunk in self.page_content:
                 print chunk
-
-
 
     def print_rows(self):
         # Open the database,
@@ -178,7 +178,7 @@ class ConstructWebPage(object):
         with sqlite3.connect(self.database) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute('''select description, comment, servings, calories,
+            cursor.execute('''select id, description, comment, servings, calories,
                 fat, protein, carbs, day, time, meal, size, ini_id, thumb_id
                 from course
                 where day between ? and ? order by day, time''',
@@ -202,7 +202,7 @@ class ConstructWebPage(object):
         label = ellipse_truncate(dish.description)
         script = "detail.py" if self.readonly else "edit.py"
         return "<a href={loc}{script}?id={id}>{label}</a>".format(
-            loc=self.cgi, script=script, label=label, id=dish.ini_id)
+            loc=self.cgi, script=script, label=label, id=dish.id)
 
     def course_dict(self, dish, **kwargs):
         answer = dict()

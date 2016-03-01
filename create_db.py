@@ -5,7 +5,7 @@
     for the data. I'm changing that to be more database centric, with the
     backup being done by a file containing a log of the sql statements used to
     update the database. This version will create the database, but also save
-    a copy of the sql used to create it. 
+    a copy of the sql used to create it.
 
 """
 import os
@@ -13,18 +13,25 @@ from glob import glob
 import argparse
 from ConfigParser import SafeConfigParser
 import sqlite3
+from my_info import config_path
 
 class ConstructDatabase(object):
 
-    def __init__(self, sqlite_file):
+    def __init__(self, args):
+        config = config_path()
+        sqlite_file = args.sqlite_file or config.dir("DB_FILE")
+        log_file = args.log_file or config.dir("DB_LOG")
+        self.default_ini_files = list((config.dir("DATA_DIR"), config.dir("TEMPLATE_DIR")))
+
         if os.path.exists(sqlite_file):
             open(sqlite_file, 'w').close()
         self.conn = sqlite3.connect(sqlite_file)
         self.cursor = self.conn.cursor()
-        self.dir_path = None
+        self.log_file = open(log_file, 'w')
+        self.dir_paths = None
 
     def process(self, dir_paths):
-        self.dir_paths = dir_paths
+        self.dir_paths = dir_paths or self.default_ini_files
         self.create_tables()
         self.populate_tables()
         self.conn.commit()
@@ -42,13 +49,17 @@ class ConstructDatabase(object):
         """ Insert database row build from dict """
         kind, dict_ = record
         fields = [x for x in dict_ if dict_[x] != ""]
+        vals = ['"'+dict_[x]+'"' for x in fields]
         if not fields:
-            self.cursor.execute("insert into %s default values" % kind)
+            line = "insert into %s default values" % kind
         else:
-            self.cursor.execute(
-                "INSERT INTO %s (%s)" % (kind, ", ".join(fields)) +
-                "VALUES (%s)" % ", ".join("?" * len(fields)),
-                tuple([dict_[x] for x in fields]))
+            line = "INSERT INTO %s (%s) VALUES (%s)" % (
+                kind, ", ".join(fields), ", ". join(vals))
+        self.output_with_log(line)
+
+    def output_with_log(self, line):
+        self.cursor.execute(line)
+        print >> self.log_file, line + ";"
 
     def extract_from_ini(self, file_):
         """ Return dict of field values from ini file """
@@ -72,14 +83,16 @@ class ConstructDatabase(object):
         with open('tables.sql', 'r') as f:
             schema = f.read()
         self.conn.executescript(schema)
+        print >> self.log_file, schema
 
 def main():
-    """ Commandline program to create food diary dataabase from ini files """
+    """ Commandline program to create food diary database from ini files """
     parser = argparse.ArgumentParser(description="create sqlite file from ini files")
-    parser.add_argument("sqlite_file", type=str, help="output database file")
-    parser.add_argument("input_paths", type=str, nargs="+", help="path to ini files")
+    parser.add_argument("input_paths", type=str, nargs="*", help="path to ini files")
+    parser.add_argument("--sqlite_file", '-d', type=str, help="output database file")
+    parser.add_argument("--log_file", '-l', type=str, help="output sql log file")
     args = parser.parse_args()
-    ConstructDatabase(args.sqlite_file).process(args.input_paths)
+    ConstructDatabase(args).process(args.input_paths)
 
 if __name__ == '__main__':
     main()

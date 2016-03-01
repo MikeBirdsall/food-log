@@ -36,6 +36,7 @@ class main(object):
         self.DATA_DIR = config.dir('DATA_DIR')
 
     def run(self):
+        """ Read out pertinent image exif data - in this case datetime """
         os.chdir(self.UPLOAD_DIR)
 
         if not os.path.exists(self.THUMB_DIR):
