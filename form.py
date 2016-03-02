@@ -311,15 +311,10 @@ class EntryForm(object):
 
         return answer
 
-    def output_with_log(self, cursor, line):
-        """ Update database and database log """
-        cursor.execute(line)
-        print >> self.log_file, line + ";"
-
     def insert_in_db(self, dict_):
         """ Insert a course record with columns and values defined by dict_ """
         fields = [x for x in dict_ if dict_[x] != ""]
-        vals = ['"'+dict_[x]+'"' for x in fields]
+        vals = [dict_[x] for x in fields]
 
         with sqlite3.connect(self.db_file) as conn:
             conn.row_factory = sqlite3.Row
@@ -327,11 +322,13 @@ class EntryForm(object):
             # How do I get the line and yet avoid sql injection?
             if not fields:
                 line = "insert into course default values"
+                cursor.execute(line)
+                print >> self.log_file, dict(command=line)
             else:
                 line = "INSERT INTO course (%s) VALUES (%s)" % (
-                    ", ".join(fields), ", ".join(vals))
-
-            self.output_with_log(cursor, line)
+                    ", ".join(fields), ", ".join("?" for x in vals))
+                cursor.execute(line, vals)
+                print >> self.log_file, dict(command=line, args=vals)
 
 def read_exif_data(img):
     """ Read out pertinent image exif data - in this case datetime """

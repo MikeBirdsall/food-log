@@ -35,10 +35,6 @@ Content-Type: text/html
     </style>
   </head>
   <body> \
-"""
-
-
-FORM_HEAD_TEMPLATE = """\
     <h1>Choose Template</h1>
     <form method="get">
       <button formaction="{MENU_URL}/index.html">Back to Food Menu</button><br/><br/>\
@@ -50,9 +46,6 @@ ROW_TEMPLATE = """\
 
 FORM_TAIL_TEMPLATE = """\
     </form>\
-"""
-
-TAIL_TEMPLATE = """\
   </body>
 </html>\
 """
@@ -96,15 +89,13 @@ class CopyTemplate(object):
         print form.page
 
     def create_selection(self):
-        print HEAD_TEMPLATE
-        print FORM_HEAD_TEMPLATE.format(MENU_URL=MENU_URL)
+        print HEAD_TEMPLATE.format(MENU_URL=MENU_URL)
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             for row in cursor.execute('select * from template'):
                 self.emit_button(row)
         print FORM_TAIL_TEMPLATE
-        print TAIL_TEMPLATE
 
 if __name__ == '__main__':
     CopyTemplate().run()

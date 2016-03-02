@@ -14,7 +14,6 @@ import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sqlite3
-from datetime import datetime
 from my_info import config_path
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
@@ -138,30 +137,24 @@ class EditCourse(object):
         self.thumb_url = config.dir('THUMB_URL')
         self.template_dir = config.dir('TEMPLATE_DIR')
         self.db_file = config.dir('DB_FILE')
-        self.log_filename = config.dir('DB_LOG')
 
     def process(self):
         """ If form filled, update database. In either case (re)draw form """
 
         self.data = self.get_form_data()
-        with open(self.log_filename, "a") as self.log_file:
-            with sqlite3.connect(self.db_file) as conn:
-                conn.row_factory = sqlite3.Row
-                self.cursor = conn.cursor()
+        with sqlite3.connect(self.db_file) as conn:
+            conn.row_factory = sqlite3.Row
+            self.cursor = conn.cursor()
 
-                tmp = self.load_record()
-                self.old_data = {key: "" if tmp[key] is None
-                    else str(tmp[key]) for key in tmp}
-                self.process_data()
+            tmp = self.load_record()
+            self.old_data = {key: "" if tmp[key] is None
+                else str(tmp[key]) for key in tmp}
+            self.process_data()
 
     def process_data(self):
 
         if 'action' not in self.data:
             status = "Ready to Edit"
-        elif self.data['action'] == 'Update':
-            status = self.update()
-        elif self.data['action'] == 'Make Template':
-            status = self.make_template()
         else:
             status = "Invalid button %s" % self.data['action']
 
@@ -181,56 +174,6 @@ class EditCourse(object):
                 **self.old_data
         )
 
-    def make_template(self):
-        """ Create a template database entry """
-
-        missing = TEMPLATE_REQUIRED.difference(self.data)
-        if missing:
-            return ("<h3>Template must have %s filled in.</h3>" %
-                ', '.join(missing))
-
-        # Write a database entry
-        xline = """insert into template
-            (description, comment, calories, fat, protein, carbs, size)
-            values (?, ?, ?, ?, ?, ?, ?)"""
-        xparms = tuple(self.data[x] for x in """description comment calories
-            fat protein carbs size""".split())
-
-        self.cursor.execute(xline, xparms)
-
-        lline = """insert into template
-            (description, comment, calories, fat, protein, carbs, size)
-            values ("%s", "%s", "%s", "%s", "%s", "%s", "%s")"""
-        print >> self.log_file, lline % xparms
-
-        return "<h3>Template created at %s</h3>" % (datetime.now().time())
-
-
-    def update(self):
-        """ Update fields in database and write mysql in log """
-        status = "<p>Not yet updated</p>"
-        needed = UPDATE_FIELDS.intersection(self.data)
-        needed = [key for key in needed if self.old_data[key] != self.data[key]]
-        if needed:
-            xparms = tuple(str(self.data[x]) for x in needed)
-            lparms = tuple('"' + str(self.data[x]) + '"' for x in needed)
-            xupdates = ', '.join("%s = ?" % x for x in needed)
-            lupdates = ', '.join("%s = %%s" % x for x in needed)
-
-            xline = "UPDATE course set %s where id = %s" % (xupdates, self.data['id'])
-            lline = "UPDATE course set %s where id = %s;" % (lupdates, self.data['id'])
-
-            # Want to self.cursor.execute(xline, *needed stuff)
-            # Want to print lline % * needed stuff
-            print >> self.log_file, lline % tuple(lparms)
-            self.cursor.execute(xline, xparms)
-
-            # Update the data to reflect changes
-            self.old_data.update({k: self.data.get(k) for k in needed})
-
-            status = "<p>File updated at %s</p>" % datetime.now().time()
-
-        return status
 
     def load_record(self):
         if 'id' in self.data:

@@ -49,17 +49,14 @@ class ConstructDatabase(object):
         """ Insert database row build from dict """
         kind, dict_ = record
         fields = [x for x in dict_ if dict_[x] != ""]
-        vals = ['"'+dict_[x]+'"' for x in fields]
-        if not fields:
-            line = "insert into %s default values" % kind
+        if fields:
+            vals = [dict_[x] for x in fields]
+            line = "INSERT INTO %s (%s) VALUES(%s)" % (
+                kind, ", ".join(fields), ", ".join("?" for x in fields))
+            self.cursor.execute(line, parms)
+            print >> self.log_file, dict(command=line, args=parms)
         else:
-            line = "INSERT INTO %s (%s) VALUES (%s)" % (
-                kind, ", ".join(fields), ", ". join(vals))
-        self.output_with_log(line)
-
-    def output_with_log(self, line):
-        self.cursor.execute(line)
-        print >> self.log_file, line + ";"
+            raise RuntimeError('no fields in record: %s', dict_)
 
     def extract_from_ini(self, file_):
         """ Return dict of field values from ini file """

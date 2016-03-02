@@ -202,11 +202,7 @@ class EditCourse(object):
             fat protein carbs size""".split())
 
         self.cursor.execute(xline, xparms)
-
-        lline = """insert into template
-            (description, comment, calories, fat, protein, carbs, size)
-            values ("%s", "%s", "%s", "%s", "%s", "%s", "%s")"""
-        print >> self.log_file, lline % xparms
+        print >> self.log_file, {command=xline, args=xparms}
 
         return "<h3>Template created at %s</h3>" % (datetime.now().time())
 
@@ -218,17 +214,14 @@ class EditCourse(object):
         needed = [key for key in needed if self.old_data[key] != self.data[key]]
         if needed:
             xparms = tuple(str(self.data[x]) for x in needed)
-            lparms = tuple('"' + str(self.data[x]) + '"' for x in needed)
             xupdates = ', '.join("%s = ?" % x for x in needed)
-            lupdates = ', '.join("%s = %%s" % x for x in needed)
 
             xline = "UPDATE course set %s where id = %s" % (xupdates, self.data['id'])
-            lline = "UPDATE course set %s where id = %s;" % (lupdates, self.data['id'])
 
             # Want to self.cursor.execute(xline, *needed stuff)
             # Want to print lline % * needed stuff
-            print >> self.log_file, lline % tuple(lparms)
             self.cursor.execute(xline, xparms)
+            print >> self.log_file {command=xline, args=xparms}
 
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})
