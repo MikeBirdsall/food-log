@@ -202,7 +202,7 @@ class EditCourse(object):
             fat protein carbs size""".split())
 
         self.cursor.execute(xline, xparms)
-        print >> self.log_file, {command=xline, args=xparms}
+        print >> self.log_file, dict(command=xline, args=xparms)
 
         return "<h3>Template created at %s</h3>" % (datetime.now().time())
 
@@ -221,7 +221,7 @@ class EditCourse(object):
             # Want to self.cursor.execute(xline, *needed stuff)
             # Want to print lline % * needed stuff
             self.cursor.execute(xline, xparms)
-            print >> self.log_file {command=xline, args=xparms}
+            print >> self.log_file, dict(command=xline, args=xparms)
 
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})

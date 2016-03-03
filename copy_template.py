@@ -27,11 +27,11 @@ Content-Type: text/html
     <title>Create course from template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      button {
+      button {{
         max-width: 540;
         width: 100%;
         background:#db8c47;
-      }
+      }}
     </style>
   </head>
   <body> \

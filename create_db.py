@@ -53,8 +53,8 @@ class ConstructDatabase(object):
             vals = [dict_[x] for x in fields]
             line = "INSERT INTO %s (%s) VALUES(%s)" % (
                 kind, ", ".join(fields), ", ".join("?" for x in fields))
-            self.cursor.execute(line, parms)
-            print >> self.log_file, dict(command=line, args=parms)
+            self.cursor.execute(line, vals)
+            print >> self.log_file, dict(command=line, args=vals)
         else:
             raise RuntimeError('no fields in record: %s', dict_)
 
