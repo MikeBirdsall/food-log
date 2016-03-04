@@ -163,11 +163,10 @@ class EntryForm(object):
         self.thumb_dir = config.dir("THUMB_DIR")
         self.archive_dir = config.dir("ARCHIVE_DIR")
         self.fileitem = None
-        self.status = ""
-        self.picfile_name = None
+        self.log_file = None
+        self.form = cgi.FieldStorage()
 
     def process(self):
-        self.form = cgi.FieldStorage()
         with open(self.log_filename, "a") as self.log_file:
             if self.form.keys():
                 status = self.handle_filled_form()
@@ -319,7 +318,6 @@ class EntryForm(object):
         with sqlite3.connect(self.db_file) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            # How do I get the line and yet avoid sql injection?
             if not fields:
                 line = "insert into course default values"
                 cursor.execute(line)

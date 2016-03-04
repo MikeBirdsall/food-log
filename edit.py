@@ -132,18 +132,15 @@ class EditCourse(object):
     """ Main program do create and handle form to edit food items """
     def __init__(self):
         self.old_data = dict()
-        self.parser = None
         self.data = dict()
-        self.ini_filename = ""
 
         config = config_path()
         self.menu_url = config.dir('MENU_URL')
-        self.data_dir = config.dir('DATA_DIR')
-        self.thumb_dir = config.dir('THUMB_DIR')
         self.thumb_url = config.dir('THUMB_URL')
-        self.template_dir = config.dir('TEMPLATE_DIR')
         self.db_file = config.dir('DB_FILE')
         self.log_filename = config.dir('DB_LOG')
+        self.log_file = None
+        self.cursor = None
 
     def process(self):
         """ If form filled, update database. In either case (re)draw form """
@@ -198,8 +195,8 @@ class EditCourse(object):
         xline = """insert into template
             (description, comment, calories, fat, protein, carbs, size)
             values (?, ?, ?, ?, ?, ?, ?)"""
-        xparms = tuple(self.data[x] for x in """description comment calories
-            fat protein carbs size""".split())
+        xparms = tuple(self.data.get(x, '') for x in """description comment
+            calories fat protein carbs size""".split())
 
         self.cursor.execute(xline, xparms)
         print >> self.log_file, dict(command=xline, args=xparms)
@@ -213,15 +210,16 @@ class EditCourse(object):
         needed = UPDATE_FIELDS.intersection(self.data)
         needed = [key for key in needed if self.old_data[key] != self.data[key]]
         if needed:
-            xparms = tuple(str(self.data[x]) for x in needed)
-            xupdates = ', '.join("%s = ?" % x for x in needed)
+            args = tuple(str(self.data[x]) for x in needed)
+            updates = ', '.join("%s = ?" % x for x in needed)
 
-            xline = "UPDATE course set %s where id = %s" % (xupdates, self.data['id'])
+            line = "UPDATE course set %s where id = %s" % (updates,
+                self.data['id'])
 
             # Want to self.cursor.execute(xline, *needed stuff)
             # Want to print lline % * needed stuff
-            self.cursor.execute(xline, xparms)
-            print >> self.log_file, dict(command=xline, args=xparms)
+            self.cursor.execute(line, args)
+            print >> self.log_file, dict(command=line, args=args)
 
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})
@@ -232,9 +230,11 @@ class EditCourse(object):
 
     def load_record(self):
         if 'id' in self.data:
-            self.cursor.execute('SELECT * from course where id = ?', (self.data['id'],))
+            self.cursor.execute('SELECT * from course where id = ?',
+                (self.data['id'],))
         elif 'ini_id' in self.data:
-            self.cursor.execute('SELECT * from course where ini_id = ?', (self.data['ini_id'],))
+            self.cursor.execute('SELECT * from course where ini_id = ?',
+                (self.data['ini_id'],))
         else:
             raise RuntimeError('No record selected')
 

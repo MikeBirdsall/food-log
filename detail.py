@@ -137,6 +137,7 @@ class EditCourse(object):
         self.thumb_url = config.dir('THUMB_URL')
         self.template_dir = config.dir('TEMPLATE_DIR')
         self.db_file = config.dir('DB_FILE')
+        self.cursor = None
 
     def process(self):
         """ If form filled, update database. In either case (re)draw form """
@@ -177,9 +178,11 @@ class EditCourse(object):
 
     def load_record(self):
         if 'id' in self.data:
-            self.cursor.execute('SELECT * from course where id = ?', (self.data['id'],))
+            self.cursor.execute('SELECT * from course where id = ?',
+                (self.data['id'],))
         elif 'ini_id' in self.data:
-            self.cursor.execute('SELECT * from course where ini_id = ?', (self.data['ini_id'],))
+            self.cursor.execute('SELECT * from course where ini_id = ?',
+                (self.data['ini_id'],))
         else:
             raise RuntimeError('No record selected')
 
