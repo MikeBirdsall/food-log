@@ -250,7 +250,7 @@ class EntryForm(object):
 
         answer['image_file'] = self.fileitem.filename
 
-        image_filename = self.bname+".image"
+        image_filename = self.bname + ".image"
         image_path = os.path.join(self.archive_dir, image_filename)
         # We don't know what kind of image file it is but we don't need to
         with file(image_path, 'wb') as fout:
@@ -270,7 +270,7 @@ class EntryForm(object):
             answer['day'] = exif_daytime.day()
             answer['time'] = exif_daytime.time()
 
-        thumbid = self.bname+".jpg"
+        thumbid = self.bname + ".jpg"
         thumbfile_name = os.path.join(self.thumb_dir, thumbid)
         thumb = img.copy()
         thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
@@ -278,7 +278,7 @@ class EntryForm(object):
             thumb = thumb.convert('RGB')
         thumb.save(thumbfile_name, "JPEG")
         os.chmod(thumbfile_name, 0644)
-        answer['thumb_id'] = thumbid
+        answer['thumb_id'] = self.bname
         return answer
 
     def set_fields_from_form(self):
@@ -297,10 +297,10 @@ class EntryForm(object):
         """ Combine image data and text field data """
         answer = dict(
             day=self.upload_time.strftime("%Y-%m-%d"),
-            time=self.upload_time.strftime("%H:%M")
+            time=self.upload_time.strftime("%H:%M"),
+            ini_id=self.bname
         )
 
-        # print "Content-Type: text/plain\n\nHere I am"
         answer.update(image_fields)
         answer.update(text_fields)
 
