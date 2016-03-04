@@ -36,6 +36,5 @@ if __name__ == '__main__':
     z = config_path()
 
     if 'GATEWAY_INTERFACE' in os.environ:
-        for x in ('ROOT_DIR DATA_DIR THUMB_DIR THUMB_URL UPLOAD_DIR '
-                 ' ARCHIVE_DIR').split():
+        for x in ('THUMB_DIR THUMB_URL ARCHIVE_DIR DB_FILE DB_LOG MENU_URL VIEW_MENU_URL').split():
             print x, z.dir(x)

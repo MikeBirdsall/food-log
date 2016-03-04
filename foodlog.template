@@ -1,10 +1,12 @@
 [paths]
-ROOT_DIR: /home/mbirdsall/food/
-DATA_DIR: %(ROOT_DIR)s/www/and/images/byday/
-THUMB_DIR: %(ROOT_DIR)s/www/and/images/thumbs/
-THUMB_URL: /and/images/thumbs/
-UPLOAD_DIR: %(ROOT_DIR)s/www/and/images/
-ARCHIVE_DIR: %(UPLOAD_DIR)s/archive/
-DB_FILE: %(DATA_DIR)s/current.sqlite
-template_dir: %(ROOT_DIR)s/www/and/images/templates
-MENU_URL: /and/images/pages/
+# Not used in code, just convenience for others
+ROOT_DIR: /home/yyy/
+
+THUMB_DIR: %(ROOT_DIR)s/thumbs/      # Holds thumbnails
+THUMB_URL: /thumbs/                # relative to server root
+ARCHIVE_DIR: %(ROOT_DIR)s/archive/ # Original images
+DB_FILE: %(ROOT_DIR)s/current.sqlite # database file
+DB_LOG: %(ROOT_DIR)s/current.log # file with logs of database commands
+MENU_URL: /and/images/pages/ # directory for html files for dietician
+VIEW_MENU_URL: /and/images/viewpages # directory for html files for dieter
+

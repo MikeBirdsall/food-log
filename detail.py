@@ -132,10 +132,8 @@ class EditCourse(object):
 
         config = config_path()
         self.menu_url = config.dir('VIEW_MENU_URL')
-        self.data_dir = config.dir('DATA_DIR')
         self.thumb_dir = config.dir('THUMB_DIR')
         self.thumb_url = config.dir('THUMB_URL')
-        self.template_dir = config.dir('TEMPLATE_DIR')
         self.db_file = config.dir('DB_FILE')
         self.cursor = None
 
