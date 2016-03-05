@@ -267,8 +267,8 @@ class EntryForm(object):
 
         exif_daytime = read_exif_data(img)
         if exif_daytime:
-            answer['day'] = exif_daytime.day()
-            answer['time'] = exif_daytime.time()
+            answer['day'] = exif_daytime[0]
+            answer['time'] = exif_daytime[1]
 
         thumbid = self.bname + ".jpg"
         thumbfile_name = os.path.join(self.thumb_dir, thumbid)
@@ -329,7 +329,13 @@ class EntryForm(object):
                 print >> self.log_file, dict(command=line, args=vals)
 
 def read_exif_data(img):
-    """ Read out pertinent image exif data - in this case datetime """
+    """ Read out pertinent image exif data - in this case datetime 
+
+        Exif time is in YYYY:MM:DD HH:MM:SS format.
+        The formats from the form are YYYY-MM-DD and HH:MM
+        The easiest way to convert is to go through datetime
+    
+    """
     try:
         exif = img._getexif() # pylint: disable=W0212
     except AttributeError:
@@ -339,7 +345,8 @@ def read_exif_data(img):
     for tag, value in exif.items():
         decoded = TAGS.get(tag, hex(tag))
         if decoded.startswith('DateTime'):
-            return datetime.strptime(value, "%Y:%m:%d %H:%M:%S")
+            dt = datetime.strptime(value, "%Y:%m:%d %H:%M:%S")
+            return dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
 
 def meal_at_this_time(when):
     """ Return string for default meal eaten at this time
