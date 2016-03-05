@@ -24,7 +24,7 @@ UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
 VALID_FIELDS = UPDATE_FIELDS.union('id ini_id action'.split())
 
-FORM_TOP_TEMPLATE = """/
+FORM_TOP_TEMPLATE = """\
 Content-Type: text/html
 
 <html>
