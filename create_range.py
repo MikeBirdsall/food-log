@@ -186,15 +186,15 @@ class ConstructWebPage(object):
 
             for course in cursor.fetchall():
                 fitem = ITEM(**course) # pylint:disable=W0142
-                items[fitem.day, fitem.time] = fitem
-                days[fitem.day].append((fitem.day, fitem.time))
+                items[fitem.id] = fitem
+                days[fitem.day].append(fitem.id)
 
-            for day, item_list in sorted(days.iteritems(), reverse=self.reverse):
+            for day, item_id_list in sorted(days.iteritems(), reverse=self.reverse):
                 meal_date = datetime.strptime(day, "%Y-%m-%d").strftime(
                     "%A %Y-%m-%d")
                 self.page_content.append(DAY_HEADER_TEMPLATE.format(date=meal_date))
                 self.print_item_rows([value for key, value in items.items()
-                    if key in item_list])
+                    if key in item_id_list])
 
     def detail_or_edit_url(self, dish):
         """ Return Link to detail or edit page for item """
