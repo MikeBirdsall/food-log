@@ -97,7 +97,7 @@ Content-Type: text/html
         <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1" value="{servings}"><br>
 
         <label class="inst" for="day">Day:</label>
         <input class="inst" type="date" name="day" id="day" value="{day}"><br>

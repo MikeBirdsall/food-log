@@ -115,7 +115,7 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<html>
         <legend>Instance Information:</legend>
 
         <label class="inst">Servings:
-            <input class="inst" type="number" name="servings" min="1" max="9" value="1" step="0.1">
+            <input class="inst" type="number" name="servings" min="0.1" max="9" value="1" step="0.1">
         </label>
 
         <label class="inst">Day:
