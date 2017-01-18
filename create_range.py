@@ -295,6 +295,9 @@ def get_dates(args):
         return week_range(1)
     elif args.previous is not None:
         return week_range(args.previous)
+    elif args.days_ago is not None:
+        which = date.today() - timedelta(days=args.days_ago)
+        return which, which
     else:
         return (
             args.start_date or
@@ -331,6 +334,7 @@ def get_args():
         type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
     parser.add_argument("--end-date", "--end_date",
         type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
+    parser.add_argument("--days-ago", "--ago", "-a", type=int)
 
     args = parser.parse_args()
 
