@@ -1,0 +1,12 @@
+#!/bin/bash
+cd /big/dom/xkirkbird/cgi-bin/foodlog/
+
+python create_range.py --title "Full Edit Reversed" --edit --reverse --cgi '/cgi-bin/foodlog/' /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/foodlog/pages/list.html
+python create_range.py --title "Edit Last Week" --cgi '/cgi-bin/foodlog/' -w --edit /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/foodlog/pages/last_week.html
+python create_range.py --title "Edit This Week" --edit --cgi '/cgi-bin/foodlog/' --now /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/foodlog/pages/this_week.html
+
+
+python create_range.py --title "Full List" --cgi '/cgi-bin/foodlog/' --reverse /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/mbirdsall/foodlog/list.html
+python create_range.py --title "Meals from Last Week"  --cgi '/cgi-bin/foodlog/' -w /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/mbirdsall/foodlog/last_week.html
+python create_range.py --title "Meals this week"  --cgi '/cgi-bin/foodlog/' --now /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/mbirdsall/foodlog/this_week.html
+

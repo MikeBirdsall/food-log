@@ -1,0 +1,6 @@
+#!/bin/bash
+cd /big/dom/xkirkbird/cgi-bin/foodlog/
+
+python create_range.py --title "Today" --edit -a 0 --cgi '/cgi-bin/foodlog/' /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/foodlog/pages/today.html
+python create_range.py --title "Yesterday" --cgi '/cgi-bin/foodlog/' -a 1 --edit /big/dom/xkirkbird/kirkbird/fooddataarchive/foodlog.sqlite -o /big/dom/xkirkbird/www/foodlog/pages/yesterday.html
+
