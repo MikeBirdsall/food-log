@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Program to display a food item - based on Edit with eidt not allowed
+Program to display a food item - based on Edit with edit not allowed
 
 This cgi-bin program is one of a group of programs to help me create and
 maintain a record of everything I eat. This one writes and populates an html
@@ -94,7 +94,7 @@ Content-Type: text/html
         <fieldset style="max-width:360px" disabled>
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="1" max="9" value="{servings}"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" value="{servings}"><br>
 
         <label class="inst" for="day">Day:</label>
         <input class="inst" type="date" name="day" id="day" value="{day}"><br>
@@ -153,7 +153,7 @@ class EditCourse(object):
     def process_data(self):
 
         if 'action' not in self.data:
-            status = "Ready to Edit"
+            status = "------------"
         else:
             status = "Invalid button %s" % self.data['action']
 
