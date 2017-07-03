@@ -1,0 +1,41 @@
+The project has to be installed into a host running a web server, with the
+files set up properly for the particular web server.
+
+I haven't figured that out sufficiently to automate it, and in fact I don't
+know if that is possible to work across different web server setups. This file
+is currently a record of how I install a new instance on my web server, trying
+to keep it as generic as I can.
+
+o Download the project from github
+
+Notes on installing a new installation,
+this one for pwb
+
+ - Moved the foodlog files to the cgi-bin directory where they will be used.
+
+   -  copy_template.py
+   -  create_db.py
+   -  create_range.py
+   -  detail.py
+   -  edit.py
+   -  entry_form.py
+   -  foodlog.template
+   -  form.py
+   -  my_info.py
+   -  tables.sql
+   -  update
+   -  update.daily
+   -  update.prod
+
+ - Copy index.html to the directory of URLs
+ - Edit index.html to set the right cgi-bin directory
+ 
+
+Ok, big problem with that, in that all "cgi-bin" URLs are getting mapped to
+the kirkbird.com/cgi-bin directory. So I'm moving all these files into that
+directory, and editing the index.html file to use that directory.
+
+Now, fix the configuration file
+ - Copy foodlog.template to foodlog.cfg in the same cgi-bin directory
+
+
