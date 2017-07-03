@@ -44,38 +44,17 @@ o Copy the executables
   cp <staging-area>/foodlog/*.py <execs>
   
 o Update and copy the index.html files
+  update the pages to point to the right place
   cp <staging-area>/html/editpages/index.html <editpages>
   cp <staging-area>/html/viewpages/index.html <viewpages>
 
+o Create the original database and log file
+  cp <staging-area>/tables.sql <execs>/tables.sql
+  python create_db.py
 
-Notes on installing a new installation,
-this one for pwb
-
- - Moved the foodlog files to the cgi-bin directory where they will be used.
-
-   -  copy_template.py
-   -  create_db.py
-   -  create_range.py
-   -  detail.py
-   -  edit.py
-   -  entry_form.py
-   -  foodlog.template
-   -  form.py
-   -  my_info.py
-   -  tables.sql
-   -  update
-   -  update.daily
-   -  update.prod
-
- - Copy index.html to the directory of URLs
- - Edit index.html to set the right cgi-bin directory
- 
-
-Ok, big problem with that, in that all "cgi-bin" URLs are getting mapped to
-the kirkbird.com/cgi-bin directory. So I'm moving all these files into that
-directory, and editing the index.html file to use that directory.
-
-Now, fix the configuration file
- - Copy foodlog.template to foodlog.cfg in the same cgi-bin directory
+o Setup cron to update reports
+  - Move cron executables to directory
+  - Edit cron executables for directories
+  - Add executables to cron
 
 
