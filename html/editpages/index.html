@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      table {
+        background:#fff7db;
+      }
+      table, th, td { border: 1px solid black;
+        border-collapse: collapse;
+      }
+      td {
+        padding-bottom: 3em;
+      }
+      button {
+        max-width: 540;
+        width:100%;
+        background:#db8c47;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Food Menu</h1>
+    <form method="get">
+      <button formaction="<execs>/form.py">Enter Dish</button><br/><br/>
+      <button formaction="<execs>/copy_template.py">Copy Dish</button><br/><br/>
+      <button formaction="this_week.html">This Week</button><br/><br/>
+      <button formaction="last_week.html">Last Week</button><br/><br/>
+      <button formaction="list.html">Full List</button><br/><br/>
+    </form>
+  </body>
+</html>

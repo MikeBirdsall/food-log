@@ -6,7 +6,47 @@ know if that is possible to work across different web server setups. This file
 is currently a record of how I install a new instance on my web server, trying
 to keep it as generic as I can.
 
+o Determine a number of directories and file paths you need to run the project
+  <staging-area>: Directory to download the project. This can be temporary
+  <execs>:        Directory for cgi-bin executables for this app
+  <archive>:      Directory where original images will be stored
+  <db-file>:      Database file (end with .sqlite)
+  <log-file>:     File with sqlite commands to recreate database file.
+  - The following have to be in directories where URLs can be served up
+  <thumbs>:       Directory where thumbnail images will be stored
+  <editpages>:    Directory for html report pages that allow editing
+  <viewpages>:    Directory for html report pages that don't allow editing
+
+o Create the directories, if they don't already exist
+
+o Determine the relative URLs for some of those:
+  <Uthumbs> for <thumbs>
+  <Ueditpages> for <editpages>
+  <Uviewpages> for <viewpages>
+  
 o Download the project from github
+  git clone https://github.com/MikeBirdsall/food-log.git <staging-area>
+
+o Create the configuration file
+  cp foodlog.template <execs>/foodlog.cfg
+  Edit <execs>/foodlog.cfg and fill in or complete
+  THUMB_DIR <thumbs>
+  THUMB_URL <Uthumbs>
+  ARCHIVE_DIR <archive>
+  DB_FILE <db-file>
+  DB_LOG <log-file>
+  MENU_URL <Ueditpages>
+  VIEW_MENU_URL <Uviewpages>
+  DATA_DIR <dontcare>
+  TEMPLATE_DIR <dontcare>
+
+o Copy the executables 
+  cp <staging-area>/foodlog/*.py <execs>
+  
+o Update and copy the index.html files
+  cp <staging-area>/html/editpages/index.html <editpages>
+  cp <staging-area>/html/viewpages/index.html <viewpages>
+
 
 Notes on installing a new installation,
 this one for pwb
