@@ -215,8 +215,20 @@ class EntryForm(object):
             return text_fields['error']
 
         merged = self.merge_fields(image_fields, text_fields)
-        self.insert_in_db(merged)
-        return "Uploaded %s" % self.bname
+        # Create multiple records if semicolons in orig_description/description and no cals/carbs/prot/fat
+        if 'description' in merged and ';' in merged['description']:
+            if bool(set(merged.keys()) & set(['calories', 'fat', 'protein', 'carbs'])):
+                return "Can't split course with %s set" % (list(set(merged.keys()) & set(['calories', 'fat', 'protein', 'carbs'])))
+            else:
+                newdesc = merged['description'].split(';')
+                for description in newdesc:
+                    part=merged.copy()
+                    part['description'] = description
+                    self.insert_in_db(part)
+                return "Uploaded %s dishes at %s" % (len(newdesc),self.bname)
+        else:
+            self.insert_in_db(merged)
+            return "Uploaded %s" % self.bname
 
     def outfile_name(self):
         """ Using timestamp as basis for filenames
@@ -311,6 +323,11 @@ class EntryForm(object):
         return answer
 
     def insert_in_db(self, dict_):
+        """ Insert record(s) defined by dict_ 
+
+
+        """
+
         """ Insert a course record with columns and values defined by dict_ """
         fields = [x for x in dict_ if dict_[x] != ""]
         vals = [dict_[x] for x in fields]
