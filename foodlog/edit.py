@@ -68,6 +68,7 @@ Content-Type: text/html
         <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
+      <input type="submit" value="Delete" name="action"></div><br><br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <input type="hidden" name="id" value={id}>
@@ -115,6 +116,7 @@ Content-Type: text/html
             </datalist>
       </fieldset>
       <br>
+      <input type="submit" value="Delete" name="action"></div><br><br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
     </form>
@@ -164,6 +166,8 @@ class EditCourse(object):
             status = self.update()
         elif self.data['action'] == 'Make Template':
             status = self.make_template()
+        elif self.data['action'] == 'Delete':
+            status = self.delete()
         else:
             status = "Invalid button %s" % self.data['action']
 
@@ -204,6 +208,12 @@ class EditCourse(object):
         return "<h3>Template created at %s</h3>" % (datetime.now().time())
 
 
+    def delete(self):
+        """ Delete record from database and write mysql in log """
+        line = "Delete from course where id = %s" % (self.data['id'])
+        self.cursor.execute(line)
+        return "<p>File deleted at %s</p>" % datetime.now().time()
+
     def update(self):
         """ Update fields in database and write mysql in log """
         status = "<p>Not yet updated</p>"
@@ -224,7 +234,7 @@ class EditCourse(object):
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})
 
-            status = "<p>File updated at %s</p>" % datetime.now().time()
+            status = "<p>Dish  updated at %s</p>" % datetime.now().time()
 
         return status
 
