@@ -63,7 +63,7 @@ Content-Type: text/html
     </style>
   </head>
   <body>
-    <h1>Food Entry</h1>
+    <h1>Edit Food Entry</h1>
     <form method="get">
         <button formaction="{MENU_URL}">Food Menu</button>
     </form>
@@ -126,6 +126,101 @@ Content-Type: text/html
 </html>
 """
 
+DELETED_TEMPLATE = """\
+Content-Type: text/html
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      form {{
+          width:360px;
+      }}
+      label {{
+          display: inline-block;
+          text-align:left;
+      }}
+      label.nutrit {{
+          width:130px;
+          text-align:right;
+      }}
+      input.nutrit {{
+          display:inline-block;
+          width:70px;
+      }}
+      label.inst {{
+          width:70px;
+          text-align:right;
+      }}
+      input:inst {{
+          text-align:left;
+      }}
+      input {{
+          display:inline-block;
+          text-align:right;
+      }}
+      fieldset {{
+          background:#fff7db;
+      }}
+    </style>
+  </head>
+  <body>
+    <h1>Deleted Food Entry</h1>
+    <form method="get">
+        <button formaction="{MENU_URL}">Food Menu</button>
+    </form>
+    <form method="post" action="{SCRIPT_NAME}">
+      <input type="hidden" name="id" value={id}>
+      <fieldset style="max-width:360px">
+        <legend>Identifying Information:</legend>
+        Description:<br>
+        <input type="text" name="description" placeholder="Title" value="{description}" readonly>
+        <br>Comment:<br>
+        <input type="text" name="comment" placeholder="Comment" value="{comment}" readonly><br>
+        Amount:<br>
+        <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}" readonly>
+      </fieldset>
+
+      <fieldset style="max-width:360px"><legend>Nutrition:</legend>
+        <label class="nutrit" for="calories">Calories:</label>
+        <input class="nutrit" type="number" name="calories" id="calories"
+          max="3000" step ="5" value="{calories}" readonly>
+        <label class="nutrit" for="carbs">Carbs(g):</label>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1" readonly><br>
+        <label class="nutrit" for="protein">Protein(g):</label>
+        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
+           value="{protein}" readonly><br>
+        <label class="nutrit" for="fat">Fat(g):</label>
+        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5" readonly>
+        </fieldset>
+
+        <fieldset style="max-width:360px">
+        <legend>Instance Information:</legend>
+        <label class="inst" for="servings">Servings:</label>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1" value="{servings}" readonly><br>
+
+        <label class="inst" for="day">Day:</label>
+        <input class="inst" type="date" name="day" id="day" value="{day}" readonly><br>
+
+        <label class="inst" for="time">Time:</label>
+        <input type="time" name="time" value="{time}" readonly><br>
+
+        <label class="inst" for="meal">Meal:</label>
+        <input class="inst" list="meals" id="meal" name="meal" value="{meal}" readonly>
+            <datalist id="meals">
+            <option value="Breakfast">
+            <option value="Lunch">
+            <option value="Supper">
+            <option value="Snack">
+            </datalist>
+      </fieldset>
+      <br>
+    </form>
+    {STATUS}<br/>
+  </body>
+</html>
+"""
+
 IMAGE_TEMPLATE = """\
     <img src="%s" alt="Food">\
 """
@@ -168,6 +263,14 @@ class EditCourse(object):
             status = self.make_template()
         elif self.data['action'] == 'Delete':
             status = self.delete()
+            print DELETED_TEMPLATE.format(
+                MENU_URL=self.menu_url,
+                SCRIPT_NAME=SCRIPT_NAME,
+                STATUS=status,
+                **self.old_data
+            )
+            return
+            
         else:
             status = "Invalid button %s" % self.data['action']
 
@@ -209,10 +312,11 @@ class EditCourse(object):
 
 
     def delete(self):
-        """ Delete record from database and write mysql in log """
+        """ Delete record from database, write deleted entry in log """
+        print >> self.log_file, "Delete", self.old_data
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
-        return "<p>File deleted at %s</p>" % datetime.now().time()
+        return "<p>Entry deleted at %s</p>" % datetime.now().time()
 
     def update(self):
         """ Update fields in database and write mysql in log """
