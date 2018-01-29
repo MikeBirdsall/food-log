@@ -68,7 +68,6 @@ Content-Type: text/html
         <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
-      <input type="submit" value="Delete" name="action"></div><br><br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <input type="hidden" name="id" value={id}>
@@ -115,10 +114,10 @@ Content-Type: text/html
             <option value="Snack">
             </datalist>
       </fieldset>
-      <br>
-      <input type="submit" value="Delete" name="action"></div><br><br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      <br> <br> <br> <br>
+      <input type="submit" value="Delete" name="action">
     </form>
     {STATUS}<br/>
     {IMAGE}
@@ -314,6 +313,8 @@ class EditCourse(object):
     def delete(self):
         """ Delete record from database, write deleted entry in log """
         print >> self.log_file, "Delete", self.old_data
+        print >> self.log_file, "Replace with:"
+        print >> self.log_file, "#insert into course ", str(tuple(self.old_data.keys())).translate(None, "'"), "VALUES ", str(tuple(self.old_data.values()))
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
         return "<p>Entry deleted at %s</p>" % datetime.now().time()

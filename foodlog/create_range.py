@@ -306,10 +306,17 @@ def get_dates(args):
             args.end_date or date.today())
 
 def add_with_none(now, new, servings):
-    if new is None:
+    if new in (None, ''):
+        return (now[0], "+?")
+    elif new == '':
+        print("Bad value: new:%s" % new)
         return (now[0], "+?")
     else:
-        return (now[0] + (new * servings), now[1])
+        try:
+            return (now[0] + (float(new) * float(servings)), now[1])
+        except ValueError:
+            print("Bad value: total:%s, new:%s, servings:%s" % (now[0], new, servings))
+            return (now[0], "??%s" % (new))
 
 def get_args():
     """ Commandline program to create food diary dataabase from ini files """
