@@ -69,6 +69,7 @@ Content-Type: text/html
     </form>
     <form method="post" action="{SCRIPT_NAME}">
       <input type="submit" value="Update" name="action">
+      <input type="submit" value="Copy" name="action" style="float: center;">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <input type="hidden" name="id" value={id}>
       <fieldset style="max-width:360px">
@@ -258,6 +259,8 @@ class EditCourse(object):
             status = "Ready to Edit"
         elif self.data['action'] == 'Update':
             status = self.update()
+        elif self.data['action'] == 'Copy':
+            status = self.copy()
         elif self.data['action'] == 'Make Template':
             status = self.make_template()
         elif self.data['action'] == 'Delete':
@@ -269,7 +272,7 @@ class EditCourse(object):
                 **self.old_data
             )
             return
-            
+
         else:
             status = "Invalid button %s" % self.data['action']
 
@@ -318,6 +321,17 @@ class EditCourse(object):
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
         return "<p>Entry deleted at %s</p>" % datetime.now().time()
+
+    def copy(self):
+        # pull defaults from self
+        copied = {(key, self.data.get(key, '')) for key in
+            'description comment size calories carbs fat protein'.split()}
+        form = EntryForm()
+        form.create_form(copied, )
+        if form.status:
+            return form.status
+        print form.page
+
 
     def update(self):
         """ Update fields in database and write mysql in log """
