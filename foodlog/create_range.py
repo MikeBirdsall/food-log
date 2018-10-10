@@ -79,14 +79,14 @@ HEAD_TEMPLATE = """\
     <h1>{title}</h1>
     <h2>{start} - {end}</h2>
     <form method="get">
-        <button formaction="index.html">Food Menu</button>
+        <button formaction="./">Food Menu</button>
     </form>
     <table>"""
 
 AFTERWARD_TEMPLATE = """\
     </table>
     <form method="get">
-        <button formaction="index.html">Food Menu</button>
+        <button formaction="./">Food Menu</button>
     </form>
     recomputed on %s
   </body>
@@ -330,17 +330,20 @@ def get_args():
         help="Atomic output to this file or use stdout")
 
     editgroup = parser.add_mutually_exclusive_group()
-    editgroup.add_argument("--edit", action="store_false", dest="readonly")
-    editgroup.add_argument("--readonly", action="store_true")
+    editgroup.add_argument("--edit", action="store_false", dest="readonly", default='False')
+    editgroup.add_argument("--readonly", action="store_true", default='False')
 
     dategroup = parser.add_mutually_exclusive_group()
     dategroup.add_argument("--now", "--current", "-n", action="store_true")
     dategroup.add_argument("--previous", "-p", type=int, choices=xrange(10))
     dategroup.add_argument("--last-week", "-w", action='store_true')
     parser.add_argument("--start-date", "--start_date",
-        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
+        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(),
+        help="YYYY-MM-DD")
+
     parser.add_argument("--end-date", "--end_date",
-        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date())
+        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(),
+        help="YYYY-MM-DD")
     parser.add_argument("--days-ago", "--ago", "-a", type=int)
 
     args = parser.parse_args()

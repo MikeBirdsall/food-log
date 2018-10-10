@@ -16,6 +16,7 @@ import os
 import sqlite3
 from datetime import datetime
 from my_info import config_path
+from entry_form import EntryForm
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -261,6 +262,7 @@ class EditCourse(object):
             status = self.update()
         elif self.data['action'] == 'Copy':
             status = self.copy()
+            return
         elif self.data['action'] == 'Make Template':
             status = self.make_template()
         elif self.data['action'] == 'Delete':
@@ -323,11 +325,13 @@ class EditCourse(object):
         return "<p>Entry deleted at %s</p>" % datetime.now().time()
 
     def copy(self):
+        global SCRIPT_NAME
         # pull defaults from self
-        copied = {(key, self.data.get(key, '')) for key in
+        copied = {key:self.data.get(key, '') for key in
             'description comment size calories carbs fat protein'.split()}
         form = EntryForm()
-        form.create_form(copied, )
+        SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
+        form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
         if form.status:
             return form.status
         print form.page
