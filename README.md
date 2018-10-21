@@ -52,8 +52,8 @@ that week. I should change the program to support that, but I haven't so far.
 
 ![Dieter_Menu](https://github.com/MikeBirdsall/food-log/blob/master/docs/images/dieter_view.png)
 
- o Enter Dish - a form to enter whatever information you want about what you eat
- o Copy Dish - make a copy of the timeless information of a stored template
- o This Week - View all food from the preceeding Thursday until now
- o Last Week - View all food from the last complete Thursday-Wednesday period
- o Full List - All food going back for over a month
+ * Enter Dish - a form to enter whatever information you want about what you eat
+ * Copy Dish - make a copy of the timeless information of a stored template
+ * This Week - View all food from the preceeding Thursday until now
+ * Last Week - View all food from the last complete Thursday-Wednesday period
+ * Full List - All food going back for over a month
