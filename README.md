@@ -46,3 +46,6 @@ that week. I should change the program to support that, but I haven't so far.
 
 ![Dietitian Menu](https://github.com/MikeBirdsall/food-log/blob/master/docs/images/dietitian_view.png)
 
+![Dieter_Menu](https://github.com/MikeBirdsall/food-log/blob/master/docs/images/dieter_view.png)
+
+
