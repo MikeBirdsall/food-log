@@ -17,3 +17,9 @@ that week. I should change the program to support that, but I haven't so far.
  * This Week - View all food from the preceeding Thursday until now
  * Last Week - View all food from the last complete Thursday-Wednesday period
  * Full List - All food going back for over a month
+
+ ## Enter Dish
+
+![Enter Dish](https://github.com/MikeBirdsall/food-log/blob/master/docs/images/enter_dish.png)
+
+

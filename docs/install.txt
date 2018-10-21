@@ -1,3 +1,5 @@
+# Installation
+
 The project has to be installed into a host running a web server, with the
 files set up properly for the particular web server.
 
@@ -5,7 +7,7 @@ I haven't automated it, and in fact I don't know enough about different web
 server setups to do that. This file is currently a record of how I install
 a new instance on my web server, tryingto keep it as generic as I can.
 
-o Determine a number of directories and file paths you need to run the project
+* Determine a number of directories and file paths you need to run the project
   <staging-area>: Directory to download the project. This can be temporary
   <execs>:        Directory for cgi-bin executables for this app
   <archive>:      Directory where original images will be stored
@@ -16,20 +18,20 @@ o Determine a number of directories and file paths you need to run the project
   <editpages>:    Directory for html report pages that allow editing
   <viewpages>:    Directory for html report pages that don't allow editing
 
-o Create the directories, if they don't already exist
+* Create the directories, if they don't already exist
 
 
 
-o Determine the relative URLs for some of those:
+* Determine the relative URLs for some of those:
   <Uthumbs> for <thumbs>
   <Ueditpages> for <editpages>
   <Uviewpages> for <viewpages>
-o Add .htaccess directives to prevent any Indexing or other options from thise directories
+* Add .htaccess directives to prevent any Indexing or other options from thise directories
   
-o Download the project from github
+* Download the project from github
   git clone https://github.com/MikeBirdsall/food-log.git <staging-area>
 
-o Create the configuration file
+* Create the configuration file
   cp <staging-area>foodlog/foodlog.template <execs>/foodlog.cfg
   Edit <execs>/foodlog.cfg and fill in or complete
   THUMB_DIR <thumbs>
@@ -40,21 +42,21 @@ o Create the configuration file
   MENU_URL <Ueditpages>
   VIEW_MENU_URL <Uviewpages>
   
-o Copy the executables 
+* Copy the executables 
   cp <staging-area>/foodlog/*.py <execs>
   
-o createpdate and copy the index.html files
+* createpdate and copy the index.html files
   update the pages to point to the right place
   cp <staging-area>/html/editpages/index.html <editpages>
   cp <staging-area>/html/viewpages/index.html <viewpages>
 
-o Create the original database and log file
+* Create the original database and log file
   cp <staging-area>/tables.sql <execs>/tables.sql
   python create_db.py
    This is currently still python2.
    I need to supply an empty database and history file to replace this step.
 
-o Setup cron to update reports
+* Setup cron to update reports
   - Move cron executables to directory
   - Edit cron executables for directories
   - Add executables to cron
