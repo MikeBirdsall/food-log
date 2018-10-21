@@ -44,5 +44,14 @@ it this way. It really isn't easy to get a busy dietitian to use it this way.
 I create a lasting view of each week, and e-mail a custom link to each after
 that week. I should change the program to support that, but I haven't so far.
 
-![Dietitian Menu](/docs/images/dietitian_menu.png)
+![Dietitian Menu](MikeBirdsall.github.com/food-log/docs/images/dietitian_menu.png)
 
+try again
+
+![Dietitian Menu](https://github.com/MikeBirdsall/food-log/blob/master/docs/images/dietitian_view.png)
+
+try again
+
+![Dietitian Menu](MikeBirdsall.github.com/food-log/blob/master/docs/images/dietitian_view.png)
+
+last try
