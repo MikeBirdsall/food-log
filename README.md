@@ -36,6 +36,9 @@ Dietitian View: https://kirkbird.com/guestfoodlog/viewpages
 Dieter View:    https://kirkbird.com/guestfoodlog/editpages 
 [User Name:guest Password:guest]
 
+For more information about navigating and using the application,
+check out [Using the program](docs/Manual.md)
+
 ## Using the program
 
 ### Dietician Menu
