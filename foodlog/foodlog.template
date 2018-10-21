@@ -7,6 +7,6 @@ THUMB_URL: /thumbs/                ; relative to server root
 ARCHIVE_DIR: %(ROOT_DIR)s/archive/ ; Original images
 DB_FILE: %(ARCHIVE_DIR)s/foodlog.sqlite ; database file
 DB_LOG: %(ARCHIVE_DIR)s/foodlog.log ; file with logs of database commands
-MENU_URL: /and/images/pages/ ; directory for html files for dietician
-VIEW_MENU_URL: /and/images/viewpages ; directory for html files for dieter
+MENU_URL: /and/images/pages/ ; directory for html files for dieter
+VIEW_MENU_URL: /and/images/viewpages ; directory for html files for dietician
 
