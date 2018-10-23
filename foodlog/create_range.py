@@ -53,8 +53,8 @@ import sqlite3
 from tempfile import NamedTemporaryFile
 
 
-ITEM = namedtuple('item', 'id comment carbs description servings calories fat day '
-    'time protein meal size ini_id thumb_id')
+ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
+    'day time protein meal size ini_id thumb_id')
 
 HEAD_TEMPLATE = """\
 <html>
@@ -146,6 +146,7 @@ class ConstructWebPage(object):
         self.start_date = None
         self.end_date = None
         self.page_content = []
+        self.reverse = False
 
     def output(self, start_date, end_date, output_file, reverse, title):
         self.reverse = reverse
@@ -165,11 +166,11 @@ class ConstructWebPage(object):
                     temp.write(chunk)
             if os.stat(temp.name).st_size == 0:
                 raise RuntimeError('File created is empty')
-            os.chmod(temp.name, 0644)
+            os.chmod(temp.name, 0o644)
             os.rename(temp.name, output_file)
         else:
             for chunk in self.page_content:
-                print chunk
+                print(chunk)
 
     def print_rows(self):
         # Open the database,
@@ -178,28 +179,33 @@ class ConstructWebPage(object):
         with sqlite3.connect(self.database) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute('''select id, description, comment, servings, calories,
-                fat, protein, carbs, day, time, meal, size, ini_id, thumb_id
+            cursor.execute('''select id, description, comment, servings,
+                calories, fat, protein, carbs, day, time, meal, size, ini_id,
+                thumb_id
                 from course
                 where day between ? and ? order by day, time''',
                 (self.start_date, self.end_date))
 
             for course in cursor.fetchall():
-                fitem = ITEM(**course) # pylint:disable=W0142
+                fitem = ITEM(**course)
                 items[fitem.id] = fitem
                 days[fitem.day].append(fitem.id)
 
-            for day, item_id_list in sorted(days.iteritems(), reverse=self.reverse):
+            for day, item_id_list in sorted(
+                    days.iteritems(), reverse=self.reverse):
                 meal_date = datetime.strptime(day, "%Y-%m-%d").strftime(
                     "%A %Y-%m-%d")
-                self.page_content.append(DAY_HEADER_TEMPLATE.format(date=meal_date))
+                self.page_content.append(DAY_HEADER_TEMPLATE.format(
+                    date=meal_date))
                 self.print_item_rows([value for key, value in items.items()
                     if key in item_id_list])
 
-    def detail_or_edit_url(self, dish):
+    def detail_or_edit_url(self, dish, bold=False):
         """ Return Link to detail or edit page for item """
 
         label = ellipse_truncate(dish.description)
+        if bold:
+            label = "<strong>{}</strong>".format(label)
         script = "detail.py" if self.readonly else "edit.py"
         return "<a href={loc}{script}?id={id}>{label}</a>".format(
             loc=self.cgi, script=script, label=label, id=dish.id)
@@ -208,7 +214,8 @@ class ConstructWebPage(object):
         answer = dict()
         for key, value in kwargs.iteritems():
             answer[key] = value
-        answer['dish'] = self.detail_or_edit_url(dish)
+        bold = dish.thumb_id is not None
+        answer['dish'] = self.detail_or_edit_url(dish, bold=bold)
         for field in "calories carbs fat protein".split():
             answer[field] = safe_by_servings(getattr(dish, field, None),
                 dish.servings)
@@ -225,7 +232,7 @@ class ConstructWebPage(object):
         for meal in meals.values():
             meal.sort(key=attrgetter('time'))
 
-        return sorted(meals.values(), key=lambda x:x[0].time)
+        return sorted(meals.values(), key=lambda x: x[0].time)
 
     def print_item_rows(self, item_rows):
 
@@ -240,7 +247,9 @@ class ConstructWebPage(object):
         self.page_content.append(FIRST_IN_MEAL_TEMPLATE.format(
             **self.course_dict(dish, meal=dish.meal, courses=len(meal))))
         for dish in meal[1:]:
-            self.page_content.append(OTHERS_IN_MEAL_TEMPLATE.format(**self.course_dict(dish)))
+            self.page_content.append(
+                OTHERS_IN_MEAL_TEMPLATE.format(**self.course_dict(dish))
+            )
 
     def print_total(self, meals):
         """ Print total row for entire day"""
@@ -300,11 +309,11 @@ def get_dates(args):
         return which, which
     else:
         return (
-            args.start_date or
+            args.start_date or (
                 # First day of previous month
-                (date.today().replace(day=1) - timedelta(days=1)).replace(day=1),
+                date.today().replace(day=1) - timedelta(days=1)
+                ).replace(day=1),
             args.end_date or date.today())
-
 def add_with_none(now, new, servings):
     if new in (None, ''):
         return (now[0], "+?")
@@ -315,7 +324,8 @@ def add_with_none(now, new, servings):
         try:
             return (now[0] + (float(new) * float(servings)), now[1])
         except ValueError:
-            print("Bad value: total:%s, new:%s, servings:%s" % (now[0], new, servings))
+            print("Bad value: total:%s, new:%s, servings:%s" %
+                (now[0], new, servings))
             return (now[0], "??%s" % (new))
 
 def get_args():
@@ -323,14 +333,21 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("sqlite_file", type=str, help="database file")
-    parser.add_argument("--cgi", required=True)
-    parser.add_argument("--title", "-t")
-    parser.add_argument("--reverse", "-r", action="store_true")
+    parser.add_argument("--cgi", #required=True,
+        help="cgi directory")
+    parser.add_argument("--title", "-t",
+        help="Title for H1 Header")
+    parser.add_argument("--reverse", "-r", action="store_true",
+        help="List meals latest first")
     parser.add_argument("--output", "-o",
         help="Atomic output to this file or use stdout")
 
     editgroup = parser.add_mutually_exclusive_group()
-    editgroup.add_argument("--edit", action="store_false", dest="readonly", default='False')
+    editgroup.add_argument(
+        "--edit",
+        action="store_false",
+        dest="readonly",
+        default='False')
     editgroup.add_argument("--readonly", action="store_true", default='False')
 
     dategroup = parser.add_mutually_exclusive_group()
@@ -338,11 +355,11 @@ def get_args():
     dategroup.add_argument("--previous", "-p", type=int, choices=xrange(10))
     dategroup.add_argument("--last-week", "-w", action='store_true')
     parser.add_argument("--start-date", "--start_date",
-        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(),
+        type=lambda s: datetime.strptime(s, "%Y-%m-%d").date(),
         help="YYYY-MM-DD")
 
     parser.add_argument("--end-date", "--end_date",
-        type=lambda s:datetime.strptime(s, "%Y-%m-%d").date(),
+        type=lambda s: datetime.strptime(s, "%Y-%m-%d").date(),
         help="YYYY-MM-DD")
     parser.add_argument("--days-ago", "--ago", "-a", type=int)
 
