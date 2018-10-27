@@ -57,6 +57,7 @@ ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')
 
 HEAD_TEMPLATE = """\
+<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />

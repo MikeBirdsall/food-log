@@ -22,6 +22,7 @@ SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
 HEAD_TEMPLATE = """\
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
   <head>
     <title>Create course from template</title>

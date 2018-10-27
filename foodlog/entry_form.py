@@ -7,6 +7,7 @@ from my_info import config_path
 TEMPLATE = """\
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />

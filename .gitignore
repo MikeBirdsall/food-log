@@ -1,3 +1,5 @@
 **/*.swo
 **/*.swp
+**/foodlog.cfg
+**/foodlog.sqlite
 *.pyc

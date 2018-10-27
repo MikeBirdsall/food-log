@@ -28,6 +28,7 @@ VALID_FIELDS = UPDATE_FIELDS.union('id ini_id action'.split())
 FORM_TOP_TEMPLATE = """\
 Content-Type: text/html
 
+<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -131,6 +132,7 @@ DELETED_TEMPLATE = """\
 Content-Type: text/html
 
 <html>
+<!DOCTYPE html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>

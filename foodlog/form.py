@@ -29,7 +29,8 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 UPLOAD_SECTION = "upload"
 IMAGE_FILE_FIELD = "pic"
-PAGE_TEMPLATE = """Content-Type: text/html\n\n<html>
+PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
+<html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
@@ -323,7 +324,7 @@ class EntryForm(object):
         return answer
 
     def insert_in_db(self, dict_):
-        """ Insert record(s) defined by dict_ 
+        """ Insert record(s) defined by dict_
 
 
         """
@@ -346,12 +347,12 @@ class EntryForm(object):
                 print >> self.log_file, dict(command=line, args=vals)
 
 def read_exif_data(img):
-    """ Read out pertinent image exif data - in this case datetime 
+    """ Read out pertinent image exif data - in this case datetime
 
         Exif time is in YYYY:MM:DD HH:MM:SS format.
         The formats from the form are YYYY-MM-DD and HH:MM
         The easiest way to convert is to go through datetime
-    
+
     """
     try:
         exif = img._getexif() # pylint: disable=W0212
