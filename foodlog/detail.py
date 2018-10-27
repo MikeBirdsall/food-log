@@ -50,7 +50,7 @@ Content-Type: text/html
           width:70px;
           text-align:right;
       }}
-      input:inst {{
+      input.inst {{
           text-align:left;
       }}
       input {{

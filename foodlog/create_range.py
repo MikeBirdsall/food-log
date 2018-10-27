@@ -208,7 +208,7 @@ class ConstructWebPage(object):
         if bold:
             label = "<strong>{}</strong>".format(label)
         script = "detail.py" if self.readonly else "edit.py"
-        return "<a href={loc}{script}?id={id}>{label}</a>".format(
+        return '<a href="{loc}{script}?id={id}">{label}</a>'.format(
             loc=self.cgi, script=script, label=label, id=dish.id)
 
     def course_dict(self, dish, **kwargs):

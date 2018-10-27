@@ -60,7 +60,7 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
         text-align:left;
       }}
 
-      input:inst {{
+      input.inst {{
         display:block;
         text-align:left;
       }}
