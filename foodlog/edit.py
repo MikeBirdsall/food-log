@@ -31,6 +31,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Edit Course Detail</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {{
@@ -134,6 +135,7 @@ Content-Type: text/html
 <html>
 <!DOCTYPE html>
   <head>
+    <title>Deleted Course Display</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       form {{
