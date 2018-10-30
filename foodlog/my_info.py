@@ -1,11 +1,21 @@
 #!/usr/bin/python
-from  ConfigParser import ConfigParser
-import os, sys
+try:
+    from configparser import ConfigParser
+    hack=False
+except ImportError:
+    from  ConfigParser import ConfigParser
+    hack = True
+
+import os
+import sys
 
 class config_path(object):
     def __init__(self):
 
-        self.config = config = ConfigParser()
+        if hack:
+            self.config = config = ConfigParser()
+        else:
+            self.config = config = ConfigParser(inline_comment_prefixes=(';',))
         config.read(self.config_file())
 
 
@@ -23,18 +33,18 @@ class config_path(object):
 
 if __name__ == '__main__':
     if 'GATEWAY_INTERFACE' in os.environ:
-        print """Content-Type: text/plain\n\n"""
-        print "argv[0]", sys.argv[0]
-        print "empty path", os.path.dirname("")
-        print "-", os.path.join(os.path.dirname(""), "foodlog.cfg")
+        print("""Content-Type: text/plain\n\n""")
+        print("argv[0]", sys.argv[0])
+        print("empty path", os.path.dirname(""))
+        print("-", os.path.join(os.path.dirname(""), "foodlog.cfg"))
 
 
         for x in sorted(os.environ.keys()):
-            print x, os.environ.get(x, "Unset")
-        print
+            print(x, os.environ.get(x, "Unset"))
+        print()
 
     z = config_path()
 
     if 'GATEWAY_INTERFACE' in os.environ:
         for x in ('THUMB_DIR THUMB_URL ARCHIVE_DIR DB_FILE DB_LOG MENU_URL VIEW_MENU_URL').split():
-            print x, z.dir(x)
+            print(x, z.dir(x))
