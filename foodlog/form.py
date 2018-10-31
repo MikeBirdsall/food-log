@@ -74,8 +74,9 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
   <body>
     <h1>Food Entry</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+      <input type="hidden" name="edit" value="1" />
     </form>
     <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
       <input type="submit"><br>
@@ -143,8 +144,9 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
     </form>
 
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
+      <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+      <input type="hidden" name="edit" value="1" />
     </form>
     <p>{STATUS}</p>
   </body>
