@@ -71,7 +71,7 @@ AFTERWARD_TEMPLATE = """</table>
     <form method="get">
         <button formaction="{foodmenu}">Food Menu</button>
     </form>
-    recomputed on %s
+    recomputed on {now}
   </body>
 </html>"""
 
@@ -177,7 +177,9 @@ def add_with_none(now, new, servings):
         try:
             return (now[0] + (float(new) * float(servings)), now[1])
         except ValueError:
-            print_error("add_with_none", "Bad value: total:%s, new:%s, servings:%s" %
+            print_error(
+                "add_with_none",
+                "Bad value: total:%s, new:%s, servings:%s" %
                 (now[0], new, servings))
             return (now[0], "??%s" % (new))
 
@@ -220,7 +222,7 @@ class ConstructWebPage():
 
     def __init__(self, database, readonly):
         self.database = database
-        self.readonly = readonly
+        self.readonly = bool(int(readonly))
         self.start_date = None
         self.end_date = None
         self.page_content = []
@@ -230,7 +232,7 @@ class ConstructWebPage():
     def output(self, start_date, end_date, reverse, title):
         self.start_date = start_date
         self.end_date = end_date
-        self.reverse = int(reverse)
+        self.reverse = bool(int(reverse))
         self.title = title
         if self.readonly:
             foodmenu = VIEW_MENU_URL
@@ -244,7 +246,11 @@ class ConstructWebPage():
             title=title))
 
         self.print_rows()
-        self.page_content.append(AFTERWARD_TEMPLATE % (datetime.now().date()))
+        self.page_content.append(
+            AFTERWARD_TEMPLATE.format(
+            now=datetime.now().date(),
+            foodmenu=foodmenu))
+
         for chunk in self.page_content:
             print(chunk)
 
