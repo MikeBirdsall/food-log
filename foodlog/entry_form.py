@@ -56,7 +56,7 @@ Content-Type: text/html
       <button formaction="./report.py">List all meals</button>
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
-      <button formaction="{MENU_URL}" style="float: right;>Food Menu</button>
+      <button formaction="{MENU_URL}" style="float: right">Food Menu</button>
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
       <br>
@@ -115,7 +115,8 @@ Content-Type: text/html
     </form>
 
     <form method="get">
-      <button formaction="./report.py">List all meals</button>
+      <br>
+      <button formaction="./report.py">List all Meals</button>
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
       <button formaction="{MENU_URL}" style="float: right;>Food Menu</button>
