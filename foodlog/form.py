@@ -73,6 +73,9 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
       input[type=submit] {{
         background: #db8c47;
       }}
+      button {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>
@@ -80,8 +83,8 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
     <form method="get">
       <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
-      <input type="hidden" name="edit" value="1" />
-      <input type="hidden" name="reverse" value="1" />
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
     </form>
     <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
       <br>
@@ -155,8 +158,8 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
     <form method="get">
       <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
-      <input type="hidden" name="edit" value="1" />
-      <input type="hidden" name="reverse" value="1" />
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
     </form>
     <p>{STATUS}</p>
   </body>
