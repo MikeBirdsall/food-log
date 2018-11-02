@@ -1,6 +1,0 @@
-#!/bin/bash
-cd <execs>
-
-python create_range.py --title "Today" --edit -a 0 --cgi '<execs>' <db-file> -o <editpages>/today.html
-python create_range.py --title "Yesterday" --cgi '<execs>' -a 1 --edit <db-file> -o <editpages>/yesterday.html
-
