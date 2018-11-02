@@ -176,6 +176,9 @@ Content-Type: text/html
       fieldset {{
           background:#fff7db;
       }}
+      button {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>
