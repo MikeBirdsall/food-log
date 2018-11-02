@@ -2,25 +2,26 @@
     <head>
         <meta name="viewport" content="width=300" />
         <style>
-            table {
-                background:#fff7db;
-            }
-            table, th, td { border: 1px solid black;
-                border-collapse: collapse;
-            }
-            td {
-                padding-top: 2em;
-                padding-bottom: 2em;
-                padding-right: 1em;
-                padding-left: 1em;
+            button {
+                max-width: 540px;
+                width:100%;
+                background:#db8c47;
             }
         </style>
     </head>
     <body>
         <h1>Food Menu</h1>
-        <table>
-            <tr><td><a href="./last_week.html">Last Full Week (Thu-Wed)</a></tr>
-            <tr><td><a href="./this_week.html">This Week (Thu-Today)</a></tr>
-        </table>
+        <form method="get">
+          <button formaction="<execs>/report.py">This Week</button><br/><br/>
+          <input type="hidden" name="range" value="thisweek">
+        </form>
+        <form method="get">
+          <button formaction="<execs>/report.py">Last Week</button><br/><br/>
+          <input type="hidden" name="range" value="lastweek">
+        </form>
+        <form method="get">
+          <button formaction="<execs>/report.py">Full List</button><br/><br/>
+          <input type="hidden" name="reverse" value="1">
+        </form>
     </body>
 </html>

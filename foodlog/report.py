@@ -57,6 +57,9 @@ HEAD_TEMPLATE = """Content-Type: text/html
         padding: 5px;
         white-space: nowrap;
       }}
+      button {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>

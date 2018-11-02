@@ -63,18 +63,27 @@ Content-Type: text/html
       fieldset {{
           background:#fff7db;
       }}
+      input[type=submit] {{
+          background: #db8c47;
+      }}
+      button {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>
     <h1>Edit Food Entry</h1>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
+        <button formaction="{MENU_URL}/">Food Menu</button>
+        <br>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
+      <br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Copy" name="action" style="float: center;">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <input type="hidden" name="id" value={id}>
+      <br>
       <fieldset style="max-width:360px">
         <legend>Identifying Information:</legend>
         Description:<br>
@@ -96,9 +105,9 @@ Content-Type: text/html
            value="{protein}"><br>
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-        </fieldset>
+      </fieldset>
 
-        <fieldset style="max-width:360px">
+      <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
         <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1" value="{servings}"><br>
@@ -132,8 +141,8 @@ Content-Type: text/html
 DELETED_TEMPLATE = """\
 Content-Type: text/html
 
-<html>
 <!DOCTYPE html>
+<html>
   <head>
     <title>Deleted Course Display</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -172,7 +181,7 @@ Content-Type: text/html
   <body>
     <h1>Deleted Food Entry</h1>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
+        <button formaction="{MENU_URL}/">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
       <input type="hidden" name="id" value={id}>

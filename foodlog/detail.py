@@ -61,12 +61,15 @@ Content-Type: text/html
       fieldset {{
           background:#fff7db;
       }}
+      button {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>
     <h1>Food Entry</h1>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
+        <button formaction="{MENU_URL}/">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}">
       <input type="hidden" name="id" value={id}>

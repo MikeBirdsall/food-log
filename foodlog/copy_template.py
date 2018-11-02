@@ -29,16 +29,16 @@ Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       button {{
-        max-width: 540;
+        max-width: 540px;
         width: 100%;
-        background:#db8c47;
+        background: #db8c47;
       }}
     </style>
   </head>
   <body> \
     <h1>Choose Template</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/index.html">Back to Food Menu</button><br/><br/>\
+      <button formaction="{MENU_URL}/">Back to Food Menu</button><br/><br/>\
 """
 
 ROW_TEMPLATE = """\

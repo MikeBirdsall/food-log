@@ -69,6 +69,10 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
       fieldset {{
         background:#fff7db;
       }}
+
+      input[type=submit] {{
+        background: #db8c47;
+      }}
     </style>
   </head>
   <body>
@@ -77,9 +81,12 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
       <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
       <input type="hidden" name="edit" value="1" />
+      <input type="hidden" name="reverse" value="1" />
     </form>
     <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
-      <input type="submit"><br>
+      <br>
+      <input type="submit">
+      <br>
       <fieldset style="max-width:360px">
         <legend>Image Entry:</legend>
         <input type="file" name="pic" accept="image/*"/>
@@ -140,13 +147,16 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
           <option value="Snack">
         </datalist>
       </fieldset>
+      <br>
       <input type="submit">
+      <br>
     </form>
 
     <form method="get">
       <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
       <input type="hidden" name="edit" value="1" />
+      <input type="hidden" name="reverse" value="1" />
     </form>
     <p>{STATUS}</p>
   </body>

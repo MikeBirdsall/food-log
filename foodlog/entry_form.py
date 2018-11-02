@@ -42,16 +42,26 @@ Content-Type: text/html
       fieldset {{
         background:#fff7db;
       }}
+      button {{
+          background: #db8c47;
+      }}
+      input[type=submit] {{
+          background: #db8c47;
+      }}
     </style>
   </head>
   <body>
     <h1>Food Entry</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
-      <button formaction="{MENU_URL}">Food Menu</button>
+      <button formaction="./report.py">List all meals</button>
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
+      <button formaction="{MENU_URL}" style="float: right;>Food Menu</button>
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
-      <input type="submit"><br>
+      <br>
+      <input type="submit">
+      <br>
       <fieldset style="max-width:360px">
         <legend>Image Entry:</legend>
         <input type="file" name="pic" accept="image/*"/><br>
@@ -99,12 +109,16 @@ Content-Type: text/html
           <option value="Snack">
         </datalist><br>
       </fieldset>
-      <input type="submit"><br>
+      <br>
+      <input type="submit">
+      <br>
     </form>
 
     <form method="get">
-      <button formaction="{MENU_URL}/list.html">List all meals</button>
-      <button formaction="{MENU_URL}">Food Menu</button>
+      <button formaction="./report.py">List all meals</button>
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
+      <button formaction="{MENU_URL}" style="float: right;>Food Menu</button>
     </form>
     <p>{status}</p>
   </body>\n</html>
