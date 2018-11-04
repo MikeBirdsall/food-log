@@ -8,7 +8,7 @@ TEMPLATE = """\
 Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Enter Course</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -97,7 +97,7 @@ Content-Type: text/html
         <input class="inst" type="date" name="day" id="day"><br>
 
         <label class="inst" for="time">Time:</label>
-        <input type="time" name="time"><br>
+        <input class="inst" type="time" name="time" id="time"><br>
 
         <label class="inst" for="meal">Meal:</label>
         <input class="inst" list="meals" id="meal" name="meal">
@@ -119,7 +119,7 @@ Content-Type: text/html
       <button formaction="./report.py">List all Meals</button>
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
-      <button formaction="{MENU_URL}" style="float: right;>Food Menu</button>
+      <button formaction="{MENU_URL}" style="float: right">Food Menu</button>
     </form>
     <p>{status}</p>
   </body>\n</html>

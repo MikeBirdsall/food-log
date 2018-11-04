@@ -30,7 +30,7 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 UPLOAD_SECTION = "upload"
 IMAGE_FILE_FIELD = "pic"
 PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Input Course Information</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />

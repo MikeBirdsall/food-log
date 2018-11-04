@@ -26,7 +26,7 @@ ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
 INVALID_TEMPLATE = """Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
   <title>Invalid Parameters</title>
   <meta name="viewport" content="width-device-width, initial-scale=1" />
@@ -41,7 +41,7 @@ INVALID_TEMPLATE = """Content-Type: text/html
 HEAD_TEMPLATE = """Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html> lang="en"
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Food Record {start} - {end}</title>

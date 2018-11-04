@@ -23,7 +23,7 @@ HEAD_TEMPLATE = """\
 Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Create course from template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />

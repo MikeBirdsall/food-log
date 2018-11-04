@@ -29,7 +29,7 @@ FORM_TOP_TEMPLATE = """\
 Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Edit Course Detail</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -142,7 +142,7 @@ DELETED_TEMPLATE = """\
 Content-Type: text/html
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Deleted Course Display</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
