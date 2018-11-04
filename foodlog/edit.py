@@ -328,7 +328,7 @@ class EditCourse(object):
         self.cursor.execute(xline, xparms)
         print >> self.log_file, dict(command=xline, args=xparms)
 
-        return "<h3>Template created at %s</h3>" % (datetime.now().time())
+        return "<h3>Template created at %s</h3>" % (datetime.now().time().strftime("%I:%M:%S %p"))
 
 
     def delete(self):
@@ -338,7 +338,7 @@ class EditCourse(object):
         print >> self.log_file, "#insert into course ", str(tuple(self.old_data.keys())).translate(None, "'"), "VALUES ", str(tuple(self.old_data.values()))
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
-        return "<p>Entry deleted at %s</p>" % datetime.now().time()
+        return "<p>Entry deleted at %s</p>" % datetime.now().time().strftime("%I:%M:%S %p")
 
     def copy(self):
         global SCRIPT_NAME
@@ -373,7 +373,8 @@ class EditCourse(object):
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})
 
-            status = "<p>Dish  updated at %s</p>" % datetime.now().time()
+            status = ("<p>Dish  updated at %s</p>" %
+                datetime.now().time().strftime("%-I:%M:%S %p"))
 
         return status
 
