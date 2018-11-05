@@ -41,7 +41,7 @@ INVALID_TEMPLATE = """Content-Type: text/html
 HEAD_TEMPLATE = """Content-Type: text/html
 
 <!DOCTYPE html>
-<html> lang="en"
+<html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Food Record {start} - {end}</title>
@@ -336,6 +336,9 @@ class ConstructWebPage():
 
     def print_total(self, meals):
         """ Print total row for entire day"""
+
+        # TODO: change these into objects with method to add dish
+        # and return the joined strings
         cals = carbs = fat = protein = (0, "")
         for meal in meals:
             for dish in meal:
@@ -343,6 +346,11 @@ class ConstructWebPage():
                 carbs = add_with_none(carbs, dish.carbs, dish.servings)
                 fat = add_with_none(fat, dish.fat, dish.servings)
                 protein = add_with_none(protein, dish.protein, dish.servings)
+
+        cals = ("{:.1f}".format(cals[0]), cals[1])
+        carbs = ("{:.1f}".format(carbs[0]), carbs[1])
+        fat = ("{:.1f}".format(fat[0]), fat[1])
+        protein = ("{:.1f}".format(protein[0]), protein[1])
 
     # pylint:disable=W0141
         self.page_content.append(
@@ -355,7 +363,7 @@ class ConstructWebPage():
 def safe_by_servings(val, servings=1):
     if val is None:
         return ""
-    return val * servings
+    return "{:.1f}".format(val * servings)
 
 def ellipse_truncate(text, length=40):
     """ Return canonical form of description to fit in length """
