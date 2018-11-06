@@ -221,6 +221,45 @@ def get_args():
 
     return args
 
+class Nutrient():
+
+    def __init__(self):
+        self.missing_values = False
+        self.bad_values = False
+        self.total = 0.0
+
+    def addin(self, value, servings):
+        """ Add in numeric, otherwise set missing or illegal attribute """
+        if value in (None, ''):
+            self.missing_values = True
+        else:
+            try:
+                self.total += value * servings
+            except ValueError:
+                self.bad_values = True
+
+    def notated_value(self):
+        value = "{:.1f}".format(self.total).rstrip('0').rstrip('.')
+        missing_flag = "+?" if self.missing_values else ""
+        bad_flag = "??!!" if self.bad_values else ""
+        return "{}{}{}".format(value, missing_flag, bad_flag)
+
+NUTRIENTS = 'calories carbs fat protein'.split()
+
+class TotalNutrition():
+
+    def __init__(self):
+        self.which = {}
+        for nutrient in NUTRIENTS:
+            self.which[nutrient] = Nutrient()
+
+    def add_nutrition(self, dish):
+        for nutrient in NUTRIENTS:
+            self.which[nutrient].addin(getattr(dish, nutrient), dish.servings)
+
+    def totals(self):
+        return [self.which[n].notated_value() for n in NUTRIENTS]
+
 class ConstructWebPage():
 
     def __init__(self, database, readonly):
@@ -337,33 +376,18 @@ class ConstructWebPage():
     def print_total(self, meals):
         """ Print total row for entire day"""
 
-        # TODO: change these into objects with method to add dish
-        # and return the joined strings
-        cals = carbs = fat = protein = (0, "")
+        total = TotalNutrition()
+
         for meal in meals:
             for dish in meal:
-                cals = add_with_none(cals, dish.calories, dish.servings)
-                carbs = add_with_none(carbs, dish.carbs, dish.servings)
-                fat = add_with_none(fat, dish.fat, dish.servings)
-                protein = add_with_none(protein, dish.protein, dish.servings)
+                total.add_nutrition(dish)
 
-        cals = ("{:.1f}".format(cals[0]), cals[1])
-        carbs = ("{:.1f}".format(carbs[0]), carbs[1])
-        fat = ("{:.1f}".format(fat[0]), fat[1])
-        protein = ("{:.1f}".format(protein[0]), protein[1])
-
-    # pylint:disable=W0141
-        self.page_content.append(
-            TOTAL_TEMPLATE % (
-            ''.join(map(str, cals)),
-            ''.join(map(str, carbs)),
-            ''.join(map(str, fat)),
-            ''.join(map(str, protein))))
+        self.page_content.append(TOTAL_TEMPLATE % tuple(total.totals()))
 
 def safe_by_servings(val, servings=1):
     if val is None:
         return ""
-    return "{:.1f}".format(val * servings)
+    return "{:.1f}".format(val * servings).rstrip('0').rstrip('.')
 
 def ellipse_truncate(text, length=40):
     """ Return canonical form of description to fit in length """
