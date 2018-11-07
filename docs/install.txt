@@ -5,7 +5,7 @@ files set up properly for the particular web server.
 
 I haven't automated it, and in fact I don't know enough about different web
 server setups to do that. This file is currently a record of how I install
-a new instance on my web server, tryingto keep it as generic as I can.
+a new instance on my web server, trying to keep it as generic as I can.
 
 * Determine a number of directories and file paths you need to run the project
   <staging-area>: Directory to download the project. This can be temporary
@@ -45,7 +45,7 @@ a new instance on my web server, tryingto keep it as generic as I can.
 * Copy the executables 
   cp <staging-area>/foodlog/*.py <execs>
   
-* createpdate and copy the index.html files
+* create, update and copy the index.html files
   update the pages to point to the right place
   cp <staging-area>/html/editpages/index.html <editpages>
   cp <staging-area>/html/viewpages/index.html <viewpages>
@@ -55,10 +55,4 @@ a new instance on my web server, tryingto keep it as generic as I can.
   python create_db.py
    This is currently still python2.
    I need to supply an empty database and history file to replace this step.
-
-* Setup cron to update reports
-  - Move cron executables to directory
-  - Edit cron executables for directories
-  - Add executables to cron
-
 
