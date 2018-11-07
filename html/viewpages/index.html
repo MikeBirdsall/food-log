@@ -1,27 +1,75 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <meta name="viewport" content="width=300" />
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Food Log Viewer</title>
         <style>
             button {
-                max-width: 540px;
-                width:100%;
-                background:#db8c47;
+                max-width: 300px;
+                width:80%;
+                background-color:#db8c47;
+                color: white;
+                font-size: 25px;
+            }
+            form {
+                margin-bottom: 30px;
             }
         </style>
     </head>
     <body>
-        <h1>Food Menu</h1>
+        <h1>Mike Birdsall Food Records</h1>
         <form method="get">
-          <button formaction="<execs>/report.py">This Week</button><br/><br/>
-          <input type="hidden" name="range" value="thisweek">
+            <button formaction="<execs>/report.py">This Week</button>
+            <input type="hidden" name="range" value="thisweek">
         </form>
         <form method="get">
-          <button formaction="<execs>/report.py">Last Week</button><br/><br/>
-          <input type="hidden" name="range" value="lastweek">
+            <button formaction="<execs>/report.py">Last Week</button>
+            <input type="hidden" name="range" value="lastweek">
         </form>
         <form method="get">
-          <button formaction="<execs>/report.py">Full List</button><br/><br/>
-          <input type="hidden" name="reverse" value="1">
+            <button formaction="<execs>/report.py">Week 1</button>
+            <input type="hidden" name="start" value="2018-9-27">
+            <input type="hidden" name="end" value="2018-10-3">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 2</button>
+            <input type="hidden" name="start" value="2018-10-4">
+            <input type="hidden" name="end" value="2018-10-10">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 3</button>
+            <input type="hidden" name="start" value="2018-10-11">
+            <input type="hidden" name="end" value="2018-10-17">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 4</button>
+            <input type="hidden" name="start" value="2018-10-18">
+            <input type="hidden" name="end" value="2018-10-24">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 5</button>
+            <input type="hidden" name="start" value="2018-10-25">
+            <input type="hidden" name="end" value="2018-10-31">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 6</button>
+            <input type="hidden" name="start" value="2018-11-1">
+            <input type="hidden" name="end" value="2018-11-7">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 7</button>
+            <input type="hidden" name="start" value="2018-11-8">
+            <input type="hidden" name="end" value="2018-11-14">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Week 8</button>
+            <input type="hidden" name="start" value="2018-11-15">
+            <input type="hidden" name="end" value="2018-11-21">
+        </form>
+        <form method="get">
+            <button formaction="<execs>/report.py">Full List</button>
+            <input type="hidden" name="reverse" value="1">
         </form>
     </body>
 </html>
