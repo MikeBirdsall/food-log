@@ -16,6 +16,7 @@ import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sqlite3
+import subprocess
 from datetime import datetime, time
 from my_info import config_path
 from PIL import Image
@@ -301,12 +302,25 @@ class EntryForm(object):
 
         thumbid = self.bname + ".jpg"
         thumbfile_name = os.path.join(self.thumb_dir, thumbid)
-        thumb = img.copy()
-        thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
-        if thumb.mode != 'RGB':
-            thumb = thumb.convert('RGB')
-        thumb.save(thumbfile_name, "JPEG")
-        os.chmod(thumbfile_name, 0644)
+
+        
+
+        # Check that file names don't have some sort of space in them
+        if len(image_path.split()) > 1 or len(thumbfile_name.split()) > 1:
+            return dict(error="Bad filesnames {} or {}".format(image_path, thumbfile_name))
+
+        command = "convert -thumbnail {} {} {}".format(THUMB_SIZE[1], image_path,thumbfile_name).split()
+        returncode = subprocess.call(command)
+        if returncode:
+            # Try it the old way here in python
+            thumb = img.copy()
+            thumb.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
+            if thumb.mode != 'RGB':
+                thumb = thumb.convert('RGB')
+            thumb.save(thumbfile_name, "JPEG")
+            os.chmod(thumbfile_name, 0644)
+            return dict(error="Error creating thumbnail {}".format(thumbnail_name))
+
         answer['thumb_id'] = self.bname
         return answer
 
