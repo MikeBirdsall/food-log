@@ -1,7 +1,39 @@
 #!/usr/bin/env python3
 """ Create dynamic report for foodlog with daily summary only.
 
-    The general appearance of the report will be (whether text or http)
+How To Use This Module
+======================
+
+1. Import it: ``from daysummary import Summary``
+
+2. Summarize:
+
+   summary = Summary(dbfile, start_date, end_date)
+
+3. The Summary object has these attributes:
+
+    Summary.days:
+        List of dicts, each
+            dict['date'] - YYYY-MM-DD for date summarized
+            dict[calories, carbs, fat, or protein] -
+                Nutrient object with
+                    total,
+                    missing_values,
+                    bag_values
+                    name
+    Summary.total:
+        TotalNutrition object with attributes:
+            title - string with currently "Total"
+            which - dictionary of Nutrient objects keyed by name
+
+    Summary.average:
+        TotalNutrition object with attributes:
+            title - string with currently "Average"
+            which - dictionary of Nutrient objects keyed by name
+            points_in_average - dictionary giving now many averaged by nutrinent
+
+
+When run as a main program, prints the summary as a report in the form:
 
     | DayDate | Cals | Carbs | Fat | Protein |
     |---------|------|-------|-----|---------|
@@ -22,43 +54,15 @@
     The Average is taken from days which had a valid value,
     which is to say no missing or bad value
 
-
-
-    Runs as cgi-bin from a browser
-
-    Intended at start to work with URLs of the form
-
-    http://...?start=mm/dd/yyyy;end=mm/dd/yyyy
-    http://...?range=today
-    http://...?range=yesterday
-    ...
-
 """
-import cgi
-import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
-from collections import defaultdict, namedtuple
+import argparse
+from collections import namedtuple
 from datetime import date, datetime, timedelta
 import sqlite3
 from my_info import config_path
 
-
-ITEM = namedtuple('item', 'carbs servings calories fat day protein')
-
-INVALID_TEMPLATE = """Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <title>Invalid Parameters</title>
-  <meta name="viewport" content="width-device-width, initial-scale=1" />
-  </head>
-  <body>
-    <h1>{}</h1>
-    {}
-  </body>
-</html>
-"""
+INVALID_TEMPLATE = """ {} {} """
 
 
 config = config_path() # pylint: disable=invalid-name
@@ -71,8 +75,9 @@ VALID = set('start end range title reverse edit'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def print_error(header, text):
+
     print(INVALID_TEMPLATE.format(header, text))
-    sys.exit(0)
+    sys.exit(2)
 
 def week_range(num_weeks, firstweekday=3):
     """ Return the range num_weeks ago
@@ -91,7 +96,7 @@ def week_range(num_weeks, firstweekday=3):
     return first_day_of_week, last_day_of_week
 
 def get_dates(args):
-    if 'range' in args:
+    if args['range']:
         range_key = args['range']
         if range_key == 'today':
             which = date.today()
@@ -140,44 +145,46 @@ def add_with_none(now, new, servings):
             return (now[0], "??%s" % (new))
 
 
+
 def get_args():
 
-    args = {}
-    form = cgi.FieldStorage()
-    params = set(form.keys())
-    invalid = params - VALID
-    valid = params - invalid
-    if invalid:
-        print_error("Invalid parameters:", invalid)
-
-
-    for key in valid:
-        args[key] = form.getfirst(key)
+    parser = argparse.ArgumentParser(description="Report daily foodlog totals")
+    parser.add_argument("--start", type=str,
+        help="First date in report, YYYY-MM-DD")
+    parser.add_argument("--end", type=str,
+        help="Last date in report: YYYY-MM-DD")
+    parser.add_argument("--range", type=str, choices=VALID_RANGES,
+        help="date range:{}".format(VALID_RANGES))
+    parser.add_argument("--title", type=str, help="Displayed title")
+    nsargs = parser.parse_args()
+    args = vars(nsargs) # Use as dict rather than namespace
 
     # Check for incompatible params
-    if 'range' in args and ('start' in args or 'end' in args):
+    if nsargs.range and nsargs.end: # start is checked par argpars
         print_error("Incompatible parameters",
-            "Cannot mix range and start or end")
-
-    if 'range' in args and args['range'] not in VALID_RANGES:
-        print_error("Invalid parameters:",
-            "{} is not a valid value for range".format(args['range']))
+            "argument --end not allowed with argument --range")
 
     # Check that start and end are valid dates
     # Todo investigate importing dateutil.parser using venv
-    for date_ in [x for x in ['start', 'end'] if x in args]:
+    for date_ in [x for x in ['start', 'end'] if args[x] is not None]:
         try:
-            args[date_] = datetime.strptime(args[date_], "%Y-%m-%d").date()
+            args[date_] = datetime.strptime(args[date_], ISODATE).date()
         except ValueError:
             print_error("Bad date",
                 "Date {} should be YYYY-MM-DD".format(args[date_]))
+
+    if args['start'] and args['end'] and args['start'] > args['end']:
+        print_error("Bad Date Range",
+            "Start date: {} cannot be after end date: {}".format(
+            args['start'], args['end']))
 
     return args
 
 class Nutrient:
 
     def __init__(self, name):
-        self.missing_values = False
+        self.unchanged = True
+        self.missing_values = True
         self.bad_values = False
         self.total = 0.0
         self.name = name
@@ -195,6 +202,9 @@ class Nutrient:
         else:
             try:
                 self.total += value * servings
+                if self.unchanged:
+                    self.missing_values = False
+                    self.unchanged = False
             except ValueError:
                 self.bad_values = True
 
@@ -263,6 +273,21 @@ class TotalNutrition:
     def totals(self):
         return [self.which[n].notated_value() for n in NUTRIENTS]
 
+ISODATE = "%Y-%m-%d"
+def date_str(str_or_val):
+    """ Gets date ISO string and datetime.date from either one """
+    if isinstance(str_or_val, date):
+        return str_or_val.isoformat()
+    else:
+        return str_or_val
+
+def day_range(start_date, end_date):
+    s = datetime.strptime(start_date, ISODATE).date()
+    e = datetime.strptime(end_date, ISODATE).date()
+    delta = e - s
+    for i in range(delta.days + 1):
+        yield (s + timedelta(i)).isoformat()
+
 class Summary:
     """ Summary of nutrition intake over time range
 
@@ -274,9 +299,15 @@ class Summary:
         """
 
     def __init__(self, database, start_date, end_date):
+        """ database is string with database file name
+            start_date and end_date are either datetime.date
+            or ISO string for date (YYYY-MM-DD)
+            Internally, we use the ISO string
+        """
         self.database = database
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = date_str(start_date)
+        self.end_date = date_str(end_date)
+
         self.total = None
         self.average = None
         self.days = None
@@ -292,7 +323,10 @@ class Summary:
 
     def calc_days(self):
         """ Calculate daily sums of nutrients """
-        days = self.days_total_nutrition = defaultdict(TotalNutrition)
+        days = self.days_total_nutrition = {}
+        for day in day_range(self.start_date, self.end_date):
+            days[day] = TotalNutrition()
+            days[day].set_title(day)
 
         with sqlite3.connect(self.database) as conn:
             conn.row_factory = namedtuple_factory
@@ -309,54 +343,23 @@ class Summary:
 
         # List of dicts of nutrients and date
         self.days = []
-        for _ignore, day in sorted(days.items()):
+        for title, day in sorted(days.items()):
             row = dict()
-            row['date'] = day.title
+            row['date'] = title
             row.update(day.which)
             self.days.append(row)
 
 
     def calc_total(self):
         total = self.total = TotalNutrition()
-        total.title = "Total"
         for day_n in self.days_total_nutrition.values():
             total.add_total_nutrition(day_n)
 
     def calc_average(self):
         average = self.average = TotalNutrition()
-        average.title = "Average"
         for day_n in self.days_total_nutrition.values():
             average.accumulate_average(day_n)
         average.scale()
-
-
-    def __str__(self):
-        answer = []
-        answer.append(
-            "{:>11} {:>7} {:>6} {:>6} {:>6}".format(
-            "Date", "Cals", "Carbs", "Fat", "Protein"))
-        for x, row in (
-            (x, self.days_total_nutrition[x])
-            for x in sorted(self.days_total_nutrition)
-        ):
-            nutes = row.as_dict()
-            nutes['date'] = x
-            answer.append(
-                "{date:11}: {calories:7} {carbs:6} {fat:6} {protein:6}".format(
-                    **nutes))
-        nutes = self.total.as_dict()
-        nutes['date'] = "Total"
-        answer.append(
-            "{date:11}: {calories:7} {carbs:6} {fat:6} {protein:6}".format(
-                **nutes))
-
-        nutes = self.average.as_dict()
-        nutes['date'] = "Average"
-        answer.append(
-            "{date:11}: {calories:7} {carbs:6} {fat:6} {protein:6}".format(
-                **nutes))
-
-        return "\n".join(answer)
 
 def decorated_nutrient(nutrient, places=0):
     """ Writes nutrients coded for missing or bad values
