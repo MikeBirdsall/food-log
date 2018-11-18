@@ -56,6 +56,7 @@ When run as a main program, prints the summary as a report in the form:
 
 """
 import sys
+import os
 import argparse
 from collections import namedtuple
 from datetime import date, datetime, timedelta
@@ -76,7 +77,7 @@ VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def print_error(header, text):
 
-    print(INVALID_TEMPLATE.format(header, text))
+    print("""INVALID_TEMPLATE""".format(header, text))
     sys.exit(2)
 
 def week_range(num_weeks, firstweekday=3):
@@ -191,8 +192,13 @@ class Nutrient:
 
     def add_nutrient(self, other):
         """ add other Nutrient to self """
-        self.missing_values = self.missing_values or other.missing_values
-        self.bad_values = self.bad_values or other.bad_values
+        if self.unchanged:
+            self.missing_values = other.missing_values
+            self.bad_values = other.bad_values
+            self.unchanged = False
+        else:
+            self.missing_values = self.missing_values or other.missing_values
+            self.bad_values = self.bad_values or other.bad_values
         self.total += other.total
 
     def addin(self, value, servings):
@@ -382,6 +388,11 @@ def print_row(title_, nutrients):
     print(rowformat.format(**row))
 
 def main():
+
+    if 'REQUEST_METHOD' in os.environ:
+        print("""Content-type: text/plain
+
+        """)
 
     if not DB_FILE or ";" in DB_FILE:
         print_error("PROBLEM WITH DATABASE", DB_FILE)
