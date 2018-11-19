@@ -35,6 +35,10 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
         text-align:left;
       }}
 
+      input.calc {{
+        width:150px;
+      }}
+
       input {{
         display:inline-block;
         text-align:right;
@@ -92,28 +96,28 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
         <input class="nutrit" type="number" name="calories" id="calories" max="3000" step="5"/>
             <button type="button" onclick="document.getElementById('calories').value = 
                   eval(document.getElementById('calccal').value || 0)">=</button>
-            <input type="text" id="calccal" />
+            <input class="calc" type="text" id="calccal" />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
             <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1">
             <button type="button" onclick="document.getElementById('carbs').value = 
                   eval(document.getElementById('calccarbs').value || 0)">=</button>
-            <input type="text" id="calccarbs" />
+            <input class="calc" type="text" id="calccarbs" />
         <br>
 
         <label class="nutrit" for="prot">Protein(g):</label>
             <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1">
             <button type="button" onclick="document.getElementById('prot').value = 
                   eval(document.getElementById('calcprot').value || 0)">=</button>
-            <input type="text" id="calcprot" />
+            <input class="calc" type="text" id="calcprot" />
         <br>
 
         <label class="nutrit" for="fat" >Fat(g):</label>
             <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.5">
             <button type="button" onclick="document.getElementById('fat').value = 
                   eval(document.getElementById('calcfat').value) || 0">=</button>
-            <input type="text" id="calcfat"/>
+            <input class="calc" type="text" id="calcfat"/>
         <br>
 
       </fieldset>
@@ -199,29 +203,40 @@ Content-Type: text/html
   <head>
     <title>View Course Info</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       form {{
           width:360px;
       }}
+
       label {{
           display: inline-block;
           text-align:left;
       }}
+      
       label.nutrit {{
-          width:130px;
+          width:70px;
           text-align:right;
       }}
+
       input.nutrit {{
           display:inline-block;
-          width:70px;
+          width:45px;
       }}
+
       label.inst {{
           width:70px;
           text-align:right;
       }}
+
       input.inst {{
           text-align:left;
       }}
+
+      input.calc {{
+        width:150px;
+      }}
+
       input {{
           display:inline-block;
           text-align:right;
@@ -255,13 +270,21 @@ Content-Type: text/html
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
           max="3000" step ="5" value="{calories}">
+        <br>
+
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1"><br>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1">
+        <br>
+
         <label class="nutrit" for="protein">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
-           value="{protein}"><br>
+           value="{protein}">
+        <br>
+
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
+        <br>
+
         </fieldset>
 
         <fieldset style="max-width:360px" disabled>
@@ -309,32 +332,44 @@ Content-Type: text/html
       form {{
           width:360px;
       }}
+
       label {{
           display: inline-block;
           text-align:left;
       }}
+
       label.nutrit {{
-          width:130px;
+          width:70px;
           text-align:right;
       }}
+
       input.nutrit {{
           display:inline-block;
-          width:70px;
+          width:45px;
       }}
+
       label.inst {{
           width:70px;
           text-align:right;
       }}
+
       input.inst {{
           text-align:left;
       }}
+
+      input.calc {{
+        width:150px;
+      }}
+
       input {{
           display:inline-block;
           text-align:right;
       }}
+
       fieldset {{
           background:#fff7db;
       }}
+
       button {{
           background: #db8c47;
       }}
@@ -361,13 +396,33 @@ Content-Type: text/html
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
           max="3000" step ="5" value="{calories}" readonly>
+            <button type="button" onclick="document.getElementById('calories').value = 
+                  eval(document.getElementById('calccal').value || 0)">=</button>
+            <input class="calc" type="text" id="calccal" />
+        <br>
+
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1" readonly><br>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1" readonly>
+            <button type="button" onclick="document.getElementById('carbs').value = 
+                  eval(document.getElementById('calccarbs').value || 0)">=</button>
+            <input class="calc" type="text" id="calccarbs" />
+        <br>
+
         <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
+        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1">
+            <button type="button" onclick="document.getElementById('prot').value = 
+                  eval(document.getElementById('calcprot').value || 0)">=</button>
+            <input class="calc" type="text" id="calcprot" />
+        <br>
+
            value="{protein}" readonly><br>
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5" readonly>
+            <button type="button" onclick="document.getElementById('fat').value = 
+                  eval(document.getElementById('calcfat').value) || 0">=</button>
+            <input class="calc" type="text" id="calcfat"/>
+        <br>
+
         </fieldset>
 
         <fieldset style="max-width:360px">
@@ -409,35 +464,48 @@ Content-Type: text/html
       form {{
           width:360px;
       }}
+
       label {{
           display: inline-block;
           text-align:left;
       }}
+
       label.nutrit {{
-          width:130px;
+          width:70px;
           text-align:right;
       }}
+      
       input.nutrit {{
           display:inline-block;
-          width:70px;
+          width:45px;
       }}
+
       label.inst {{
           width:70px;
           text-align:right;
       }}
+
       input.inst {{
           text-align:left;
       }}
+
+      input.calc {{
+        width:150px;
+      }}
+
       input {{
           display:inline-block;
           text-align:right;
       }}
+
       fieldset {{
           background:#fff7db;
       }}
+
       input[type=submit] {{
           background: #db8c47;
       }}
+
       button {{
           background: #db8c47;
       }}
@@ -470,13 +538,33 @@ Content-Type: text/html
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
           max="3000" step ="5" value="{calories}">
+            <button type="button" onclick="document.getElementById('calories').value = 
+                  eval(document.getElementById('calccal').value || 0)">=</button>
+            <input class="calc" type="text" id="calccal" />
+        <br>
+
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1"><br>
+        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1">
+            <button type="button" onclick="document.getElementById('carbs').value = 
+                  eval(document.getElementById('calccarbs').value || 0)">=</button>
+            <input class="calc" type="text" id="calccarbs" />
+        <br>
+
         <label class="nutrit" for="protein">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
-           value="{protein}"><br>
+           value="{protein}">
+            <button type="button" onclick="document.getElementById('prot').value = 
+                  eval(document.getElementById('calcprot').value || 0)">=</button>
+            <input class="calc" type="text" id="calcprot" />
+        <br>
+
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
+            <button type="button" onclick="document.getElementById('fat').value = 
+                  eval(document.getElementById('calcfat').value) || 0">=</button>
+            <input class="calc" type="text" id="calcfat"/>
+        <br>
+
       </fieldset>
 
       <fieldset style="max-width:360px">
@@ -522,35 +610,48 @@ Content-Type: text/html
       form {{
         width:360px;
       }}
+
       label {{
         display: inline-block;
         text-align:left;
       }}
+
       label.nutrit {{
-         width:130px;
+         width:70px;
          text-align:right;
       }}
+
       input.nutrit {{
         display:inline-block;
-        width:70px;
+        width:45px;
       }}
+
       label.inst {{
         width:70px;
         text-align:right;
       }}
+
       input.inst {{
         text-align:left;
       }}
+
+      input.calc {{
+        width:150px;
+      }}
+
       input {{
         display:inline-block;
         text-align:right;
       }}
+
       fieldset {{
         background:#fff7db;
       }}
+
       button {{
           background: #db8c47;
       }}
+
       input[type=submit] {{
           background: #db8c47;
       }}
@@ -585,12 +686,32 @@ Content-Type: text/html
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" {calories} id="calories" max="3000" step="5">
+            <button type="button" onclick="document.getElementById('calories').value = 
+                  eval(document.getElementById('calccal').value || 0)">=</button>
+            <input class="calc" type="text" id="calccal" />
+        <br>
+
         <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" {carbs} id="carbs" size="2" max="300" step="1"><br>
+        <input class="nutrit" type="number" name="carbs" {carbs} id="carbs" size="2" max="300" step="1">
+            <button type="button" onclick="document.getElementById('carbs').value = 
+                  eval(document.getElementById('calccarbs').value || 0)">=</button>
+            <input class="calc" type="text" id="calccarbs" />
+        <br>
+
         <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="prot" {protein} size="2" max="300" step="1"><br>
+        <input class="nutrit" type="number" name="protein" id="prot" {protein} size="2" max="300" step="1">
+            <button type="button" onclick="document.getElementById('prot').value = 
+                  eval(document.getElementById('calcprot').value || 0)">=</button>
+            <input class="calc" type="text" id="calcprot" />
+        <br>
+
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" {fat} size="2" max="300" step="0.5">
+            <button type="button" onclick="document.getElementById('fat').value = 
+                  eval(document.getElementById('calcfat').value) || 0">=</button>
+            <input class="calc" type="text" id="calcfat"/>
+        <br>
+        
       </fieldset>
 
       <fieldset style="max-width:360px">
