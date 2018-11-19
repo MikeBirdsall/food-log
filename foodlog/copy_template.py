@@ -14,42 +14,10 @@ import os, sys
 import sqlite3
 from my_info import config_path
 from entry_form import EntryForm
+from templates import HEAD_TEMPLATE, ROW_TEMPLATE, FORM_TAIL_TEMPLATE
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
-
-
-HEAD_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Create course from template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      button {{
-        max-width: 540px;
-        width: 100%;
-        background: #db8c47;
-      }}
-    </style>
-  </head>
-  <body> \
-    <h1>Choose Template</h1>
-    <form method="get">
-      <button formaction="{MENU_URL}/">Back to Food Menu</button><br/><br/>\
-"""
-
-ROW_TEMPLATE = """\
-      <button name="choice" type="submit" value=%s>%s</button><br/><br/>\
-"""
-
-FORM_TAIL_TEMPLATE = """\
-    </form>\
-  </body>
-</html>\
-"""
 
 config = config_path()
 DB_FILE = config.dir('DB_FILE')

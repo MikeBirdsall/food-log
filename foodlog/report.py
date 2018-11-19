@@ -19,103 +19,12 @@ from operator import attrgetter
 from datetime import date, datetime, timedelta
 import sqlite3
 from my_info import config_path
+from templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE, 
+    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, NUTRITION_TEMPLATE, 
+    OTHERS_IN_MEAL_TEMPLATE, FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
 
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')
-
-INVALID_TEMPLATE = """Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <title>Invalid Parameters</title>
-  <meta name="viewport" content="width-device-width, initial-scale=1" />
-  </head>
-  <body>
-    <h1>{}</h1>
-    {}
-  </body>
-</html>
-"""
-
-HEAD_TEMPLATE = """Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Food Record {start} - {end}</title>
-    <style>
-      table {{
-        background:#fff7db;
-      }}
-      table, th, td {{
-        border: 1px solid black;
-        border-collapse: collapse;
-      }}
-      th, td {{
-        padding: 5px;
-        white-space: nowrap;
-      }}
-      button {{
-          background: #db8c47;
-      }}
-    </style>
-  </head>
-  <body>
-    <h1>{title}</h1>
-    <h2>{start} - {end}</h2>
-    <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
-    </form>
-    <table>"""
-
-AFTERWARD_TEMPLATE = """</table>
-    <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
-    </form>
-    recomputed on {now}
-  </body>
-</html>"""
-
-DAY_HEADER_TEMPLATE = """<tr>
-        <th colspan="7">{date}</th>
-      </tr>
-      <tr>
-        <th>Meal</th>
-        <th>Item</th>
-        <th>Servings</th>
-        <th>Cals</th>
-        <th>Carbs</th>
-        <th>Fat</th>
-        <th>Protein</th>
-      </tr>"""
-
-NUTRITION_TEMPLATE = """<td>{dish}</td>
-        <td>{servings}</td>
-        <td>{calories}</td>
-        <td>{carbs}</td>
-        <td>{fat}</td>
-        <td>{protein}</td>
-"""
-
-OTHERS_IN_MEAL_TEMPLATE = """<tr>
-""" + NUTRITION_TEMPLATE + """</tr>"""
-
-FIRST_IN_MEAL_TEMPLATE = """<tr><th rowspan="{courses}">{meal}</th>
-""" + NUTRITION_TEMPLATE + """</tr>"""
-
-TOTAL_TEMPLATE = """<tr>
-        <th colspan="3">Total</th>
-        <td>%s</td>
-        <td>%s</td>
-        <td>%s</td>
-        <td>%s</td>
-      </tr>
-"""
-
-
-
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
@@ -281,7 +190,7 @@ class ConstructWebPage():
         else:
             foodmenu = MENU_URL
 
-        self.page_content.append(HEAD_TEMPLATE.format(
+        self.page_content.append(REPORT_HEAD_TEMPLATE.format(
             start=start_date,
             end=end_date,
             foodmenu=foodmenu,

@@ -15,6 +15,7 @@ import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sqlite3
 from my_info import config_path
+from templates import FORM_TOP_TEMPLATE, IMAGE_TEMPLATE
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -22,110 +23,6 @@ TEMPLATE_REQUIRED = frozenset('description calories fat protein carbs'.split())
 UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
 VALID_FIELDS = UPDATE_FIELDS.union('id ini_id action'.split())
-
-FORM_TOP_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>View Course Info</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      form {{
-          width:360px;
-      }}
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-      label.nutrit {{
-          width:130px;
-          text-align:right;
-      }}
-      input.nutrit {{
-          display:inline-block;
-          width:70px;
-      }}
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-      input.inst {{
-          text-align:left;
-      }}
-      input {{
-          display:inline-block;
-          text-align:right;
-      }}
-      fieldset {{
-          background:#fff7db;
-      }}
-      button {{
-          background: #db8c47;
-      }}
-    </style>
-  </head>
-  <body>
-    <h1>Food Entry</h1>
-    <form method="get">
-        <button formaction="{MENU_URL}/">Food Menu</button>
-    </form>
-    <form method="post" action="{SCRIPT_NAME}">
-      <input type="hidden" name="id" value={id}>
-      <fieldset style="max-width:360px" disabled>
-        <legend>Identifying Information:</legend>
-        Description:<br>
-        <input type="text" name="description" placeholder="Title" value="{description}">
-        <br>Comment:<br>
-        <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
-        Amount:<br>
-        <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
-      </fieldset>
-
-      <fieldset style="max-width:360px" disabled><legend>Nutrition:</legend>
-        <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories"
-          max="3000" step ="5" value="{calories}">
-        <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1"><br>
-        <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
-           value="{protein}"><br>
-        <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-        </fieldset>
-
-        <fieldset style="max-width:360px" disabled>
-        <legend>Instance Information:</legend>
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" value="{servings}"><br>
-
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day" value="{day}"><br>
-
-        <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" value="{time}"><br>
-
-        <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal" value="{meal}">
-            <datalist id="meals">
-            <option value="Breakfast">
-            <option value="Lunch">
-            <option value="Supper">
-            <option value="Snack">
-            </datalist>
-      </fieldset>
-    </form>
-    {STATUS}<br/>
-    {IMAGE}
-  </body>
-</html>
-"""
-
-IMAGE_TEMPLATE = """\
-    <img src="%s" alt="Food">\
-"""
 
 class EditCourse(object):
     """ Main program do create and handle form to edit food items """
