@@ -24,6 +24,8 @@ class EntryForm(object):
                 values[field] = ""
         values['status'] = status
         values['script'] = script
+        values['TITLE'] = "Enter Course"
+        values['h1'] = "Food Entry"
         values['MENU_URL'] = config_path().dir('MENU_URL')
         self.page = TEMPLATE.format(**values)
 

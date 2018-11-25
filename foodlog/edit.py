@@ -72,6 +72,8 @@ class EditCourse(object):
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
+                TITLE="Deleted Course Display",
+                h1="Deleted_Food_Entry",
                 **self.old_data
             )
             return
@@ -93,6 +95,7 @@ class EditCourse(object):
                 STATUS=status,
                 IMAGE=image,
                 TITLE="Edit Course Detail",
+                h1="Edit Food Entry",
                 **self.old_data
         )
 

@@ -58,17 +58,10 @@ Content-Type: text/html
           background: #db8c47;
       }}
     </style>
-    <script>
-      <!--
-        function sayHello() {{
-          alert("Hello World")
-        }}
-      //-->
-    </script>
 
   </head>
   <body>
-    <h1>Food Entry</h1>
+    <h1>{h1}</h1>
     <form method="get">
       <button formaction="report.py">List all meals</button>
       <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
@@ -183,7 +176,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Create course from template</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
@@ -195,7 +188,7 @@ Content-Type: text/html
     </style>
   </head>
   <body> \
-    <h1>Choose Template</h1>
+    <h1>{h1}</h1>
     <form method="get">
       <button formaction="{MENU_URL}/">Back to Food Menu</button><br/><br/>\
 """
@@ -217,7 +210,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>View Course Info</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
@@ -266,7 +259,7 @@ Content-Type: text/html
     </style>
   </head>
   <body>
-    <h1>Food Entry</h1>
+    <h1>{h1}</h1>
     <form method="get">
         <button formaction="{MENU_URL}/">Food Menu</button>
     </form>
@@ -342,7 +335,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Deleted Course Display</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
@@ -393,7 +386,7 @@ Content-Type: text/html
     </style>
   </head>
   <body>
-    <h1>Deleted Food Entry</h1>
+    <h1>{h1}</h1>
     <form method="get">
         <button formaction="{MENU_URL}/">Food Menu</button>
     </form>
@@ -530,7 +523,7 @@ Content-Type: text/html
     </style>
   </head>
   <body>
-    <h1>Edit Food Entry</h1>
+    <h1>{h1}</h1>
     <form method="get">
         <button formaction="{MENU_URL}/">Food Menu</button>
         <br>
@@ -642,7 +635,7 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Enter Course</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
@@ -697,7 +690,7 @@ Content-Type: text/html
     </style>
   </head>
   <body>
-    <h1>Food Entry</h1>
+    <h1>{h1}</h1>
     <form method="get">
       <button formaction="./report.py">List all meals</button>
       <input type="hidden" name="edit" value="1">

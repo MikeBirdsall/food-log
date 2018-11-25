@@ -58,7 +58,11 @@ class CopyTemplate(object):
         print form.page
 
     def create_selection(self):
-        print HEAD_TEMPLATE.format(MENU_URL=MENU_URL)
+        print HEAD_TEMPLATE.format(
+            MENU_URL=MENU_URL,
+            TITLE="Create Course From Template",
+            h1="Choose Template"
+            )
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()

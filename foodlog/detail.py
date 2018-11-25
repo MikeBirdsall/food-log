@@ -72,6 +72,8 @@ class EditCourse(object):
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
                 IMAGE=image,
+                TITLE="View Course Info",
+                h1="Food Entry",
                 **self.old_data
         )
 
