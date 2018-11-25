@@ -59,7 +59,8 @@ class EntryForm(object):
             SCRIPT_NAME=SCRIPT_NAME,
             MENU_URL=self.menu_url,
             STATUS=status,
-            TITLE="Input Course Information"
+            TITLE="Input Course Information",
+            h1="Food Entry"
         )
 
     def handle_filled_form(self):
