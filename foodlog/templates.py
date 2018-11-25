@@ -455,6 +455,7 @@ Content-Type: text/html
       <br>
     </form>
     <p>{STATUS}</p>
+    {IMAGE}
 
   </body>
 </html>

@@ -68,12 +68,13 @@ class EditCourse(object):
             status = self.make_template()
         elif self.data['action'] == 'Delete':
             status = self.delete()
-            print DELETED_TEMPLATE.format(
+            print EDIT_TOP_TEMPLATE.format(
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
+                IMAGE='',
                 TITLE="Deleted Course Display",
-                h1="Deleted_Food_Entry",
+                h1="Deleted Food Entry",
                 **self.old_data
             )
             return
