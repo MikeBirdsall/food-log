@@ -17,7 +17,7 @@ import sqlite3
 from datetime import datetime
 from my_info import config_path
 from entry_form import EntryForm
-from templates import IMAGE_TEMPLATE, DELETED_TEMPLATE, EDIT_TOP_TEMPLATE
+from templates import IMAGE_TEMPLATE, DELETED_TEMPLATE, EDIT_TOP_TEMPLATE, FORM_TOP_TEMPLATE
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -68,7 +68,7 @@ class EditCourse(object):
             status = self.make_template()
         elif self.data['action'] == 'Delete':
             status = self.delete()
-            print EDIT_TOP_TEMPLATE.format(
+            print FORM_TOP_TEMPLATE.format(
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
