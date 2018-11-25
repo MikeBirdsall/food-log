@@ -58,7 +58,8 @@ class EntryForm(object):
         print PAGE_TEMPLATE.format(
             SCRIPT_NAME=SCRIPT_NAME,
             MENU_URL=self.menu_url,
-            STATUS=status
+            STATUS=status,
+            TITLE="Input Course Information"
         )
 
     def handle_filled_form(self):
@@ -167,7 +168,7 @@ class EntryForm(object):
         thumbid = self.bname + ".jpg"
         thumbfile_name = os.path.join(self.thumb_dir, thumbid)
 
-        
+
 
         # Check that file names don't have some sort of space in them
         if len(image_path.split()) > 1 or len(thumbfile_name.split()) > 1:

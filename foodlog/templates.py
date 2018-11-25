@@ -1,34 +1,37 @@
 
 # Used in form.py
-PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
+PAGE_TEMPLATE = """\
+Content-Type: text/html
+
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Input Course Information</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
       form {{
-        width:360px;
+          width:360px;
       }}
 
       label {{
-        display: inline-block;
-        text-align:left;
+          display: inline-block;
+          text-align:left;
       }}
 
       label.nutrit {{
-         width:70px;
-         text-align:right;
+          width:70px;
+          text-align:right;
       }}
 
       input.nutrit {{
-        display:inline-block;
-        width:45px;
+          display:inline-block;
+          width:45px;
       }}
 
       label.inst {{
-        width:70px;
-        text-align:right;
+          width:70px;
+          text-align:right;
       }}
 
       input.inst {{
@@ -62,7 +65,7 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
         }}
       //-->
     </script>
-        
+
   </head>
   <body>
     <h1>Food Entry</h1>
@@ -72,7 +75,7 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
     </form>
-    <form method="post" enctype="multipart/form-data" action="{SCRIPT_NAME}">
+    <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
       <input type="submit">
       <br>
@@ -83,39 +86,44 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
 
       <fieldset style="max-width:360px">
         <legend>Identifying Information:</legend>
-        Description: (used as title for dish)<br>
-        <input type="text" name="description" placeholder="Title/Description/Identifier"/>
+        Description:<br>
+        <input type="text" name="description" placeholder="Title"
+        />
         <br>Comment:<br>
-            <input type="text" name="comment" placeholder="Comment/Context/Excuse"/>
+        <input type="text" name="comment" placeholder="Comment/Context/Excuse"
+        />
         <br>Amount:<br>
-            <input type="text" name="size" placeholder="Like 2 cups or 12 oz or large bowl"/>
+        <input type="text" name="size" placeholder="Like 2 cups or large bowl"
+        />
       </fieldset>
 
       <fieldset style="max-width:360px"><legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step="5"/>
-            <button type="button" onclick="document.getElementById('calories').value = 
+        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step="5"
+        />
+            <button type="button" onclick="document.getElementById('calories').value =
                   eval(document.getElementById('calccal').value || 0)">=</button>
             <input class="calc" type="text" id="calccal" />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
-            <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1">
-            <button type="button" onclick="document.getElementById('carbs').value = 
+            <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" step="1"
+            />
+            <button type="button" onclick="document.getElementById('carbs').value =
                   eval(document.getElementById('calccarbs').value || 0)">=</button>
             <input class="calc" type="text" id="calccarbs" />
         <br>
 
         <label class="nutrit" for="prot">Protein(g):</label>
             <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1">
-            <button type="button" onclick="document.getElementById('prot').value = 
+            <button type="button" onclick="document.getElementById('prot').value =
                   eval(document.getElementById('calcprot').value || 0)">=</button>
             <input class="calc" type="text" id="calcprot" />
         <br>
 
         <label class="nutrit" for="fat" >Fat(g):</label>
             <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" step="0.5">
-            <button type="button" onclick="document.getElementById('fat').value = 
+            <button type="button" onclick="document.getElementById('fat').value =
                   eval(document.getElementById('calcfat').value) || 0">=</button>
             <input class="calc" type="text" id="calcfat"/>
         <br>
@@ -126,16 +134,21 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
         <legend>Instance Information:</legend>
 
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" value="1" step="0.1"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1"
+            value="1"
+        /><br>
 
         <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day"><br>
+        <input class="inst" type="date" name="day" id="day"
+        /><br>
 
         <label class="inst" for="time">Time: </label>
-        <input type="time" name="time" id="time"><br>
+        <input type="time" name="time" id="time"
+        /><br>
 
         <label class="inst" for="meal">Meal: </label>
-        <input class="inst" list="meals" name="meal" id="meal"><br>
+        <input class="inst" list="meals" name="meal" id="meal"
+        />
 
         <datalist id="meals">
           <option value="Breakfast">
@@ -156,7 +169,9 @@ PAGE_TEMPLATE = """Content-Type: text/html\n\n<!DOCTYPE html>
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
     </form>
+
     <p>{STATUS}</p>
+
   </body>
 </html>
 """
@@ -170,6 +185,7 @@ Content-Type: text/html
   <head>
     <title>Create course from template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       button {{
         max-width: 540px;
@@ -213,7 +229,7 @@ Content-Type: text/html
           display: inline-block;
           text-align:left;
       }}
-      
+
       label.nutrit {{
           width:70px;
           text-align:right;
@@ -308,7 +324,7 @@ Content-Type: text/html
             </datalist>
       </fieldset>
     </form>
-    {STATUS}<br/>
+    <p>{STATUS}</p>
     {IMAGE}
   </body>
 </html>
@@ -328,6 +344,7 @@ Content-Type: text/html
   <head>
     <title>Deleted Course Display</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       form {{
           width:360px;
@@ -396,21 +413,21 @@ Content-Type: text/html
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" id="calories"
           max="3000" step ="5" value="{calories}" readonly>
-            <button type="button" onclick="document.getElementById('calories').value = 
+            <button type="button" onclick="document.getElementById('calories').value =
                   eval(document.getElementById('calccal').value || 0)">=</button>
             <input class="calc" type="text" id="calccal" />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
         <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1" readonly>
-            <button type="button" onclick="document.getElementById('carbs').value = 
+            <button type="button" onclick="document.getElementById('carbs').value =
                   eval(document.getElementById('calccarbs').value || 0)">=</button>
             <input class="calc" type="text" id="calccarbs" />
         <br>
 
         <label class="nutrit" for="protein">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1">
-            <button type="button" onclick="document.getElementById('prot').value = 
+            <button type="button" onclick="document.getElementById('prot').value =
                   eval(document.getElementById('calcprot').value || 0)">=</button>
             <input class="calc" type="text" id="calcprot" />
         <br>
@@ -418,7 +435,7 @@ Content-Type: text/html
            value="{protein}" readonly><br>
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5" readonly>
-            <button type="button" onclick="document.getElementById('fat').value = 
+            <button type="button" onclick="document.getElementById('fat').value =
                   eval(document.getElementById('calcfat').value) || 0">=</button>
             <input class="calc" type="text" id="calcfat"/>
         <br>
@@ -458,8 +475,9 @@ Content-Type: text/html
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Edit Course Detail</title>
+    <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       form {{
           width:360px;
@@ -474,7 +492,7 @@ Content-Type: text/html
           width:70px;
           text-align:right;
       }}
-      
+
       input.nutrit {{
           display:inline-block;
           width:45px;
@@ -517,7 +535,7 @@ Content-Type: text/html
         <button formaction="{MENU_URL}/">Food Menu</button>
         <br>
     </form>
-    <form method="post" action="{SCRIPT_NAME}">
+    <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Copy" name="action" style="float: center;">
@@ -527,25 +545,32 @@ Content-Type: text/html
       <fieldset style="max-width:360px">
         <legend>Identifying Information:</legend>
         Description:<br>
-        <input type="text" name="description" placeholder="Title" value="{description}">
+        <input type="text" name="description" placeholder="Title"
+            value="{description}"
+        />
         <br>Comment:<br>
-        <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
-        Amount:<br>
-        <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
+        <input type="text" name="comment" placeholder="Comment"
+            value="{comment}"
+        />
+        <br>Amount:<br>
+        <input type="text" name="size" placeholder="Like 2 cups or large bowl"
+            value="{size}"
+        />
       </fieldset>
 
       <fieldset style="max-width:360px"><legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories"
-          max="3000" step ="5" value="{calories}">
-            <button type="button" onclick="document.getElementById('calories').value = 
+        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step ="5"
+            value="{calories}"
+        />
+            <button type="button" onclick="document.getElementById('calories').value =
                   eval(document.getElementById('calccal').value || 0)">=</button>
             <input class="calc" type="text" id="calccal" />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
         <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1">
-            <button type="button" onclick="document.getElementById('carbs').value = 
+            <button type="button" onclick="document.getElementById('carbs').value =
                   eval(document.getElementById('calccarbs').value || 0)">=</button>
             <input class="calc" type="text" id="calccarbs" />
         <br>
@@ -553,14 +578,14 @@ Content-Type: text/html
         <label class="nutrit" for="protein">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
            value="{protein}">
-            <button type="button" onclick="document.getElementById('prot').value = 
+            <button type="button" onclick="document.getElementById('prot').value =
                   eval(document.getElementById('calcprot').value || 0)">=</button>
             <input class="calc" type="text" id="calcprot" />
         <br>
 
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-            <button type="button" onclick="document.getElementById('fat').value = 
+            <button type="button" onclick="document.getElementById('fat').value =
                   eval(document.getElementById('calcfat').value) || 0">=</button>
             <input class="calc" type="text" id="calcfat"/>
         <br>
@@ -569,34 +594,47 @@ Content-Type: text/html
 
       <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
+
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1" value="{servings}"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1"
+            value="{servings}"
+        /><br>
 
         <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day" value="{day}"><br>
+        <input class="inst" type="date" name="day" id="day"
+            value="{day}"
+        /><br>
 
         <label class="inst" for="time">Time:</label>
         <input type="time" name="time" value="{time}"><br>
 
         <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal" value="{meal}">
-            <datalist id="meals">
-            <option value="Breakfast">
-            <option value="Lunch">
-            <option value="Supper">
-            <option value="Snack">
-            </datalist>
+        <input class="inst" list="meals" id="meal" name="meal"
+            value="{meal}"
+        />
+        <datalist id="meals">
+          <option value="Breakfast">
+          <option value="Lunch">
+          <option value="Supper">
+          <option value="Snack">
+          <option value="Exercise">
+        </datalist>
       </fieldset>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+
       <br> <br> <br> <br>
       <input type="submit" value="Delete" name="action">
+
+        <br>
     </form>
-    {STATUS}<br/>
+
+    <p>{STATUS}</p>
     {IMAGE}
   </body>
 </html>
 """
+
 # Used in entry_form.py
 TEMPLATE = """\
 Content-Type: text/html
@@ -606,46 +644,47 @@ Content-Type: text/html
   <head>
     <title>Enter Course</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <style>
       form {{
-        width:360px;
+          width:360px;
       }}
 
       label {{
-        display: inline-block;
-        text-align:left;
+          display: inline-block;
+          text-align:left;
       }}
 
       label.nutrit {{
-         width:70px;
-         text-align:right;
+          width:70px;
+          text-align:right;
       }}
 
       input.nutrit {{
-        display:inline-block;
-        width:45px;
+          display:inline-block;
+          width:45px;
       }}
 
       label.inst {{
-        width:70px;
-        text-align:right;
+          width:70px;
+          text-align:right;
       }}
 
       input.inst {{
-        text-align:left;
+          text-align:left;
       }}
 
       input.calc {{
-        width:150px;
+          width:150px;
       }}
 
       input {{
-        display:inline-block;
-        text-align:right;
+          display:inline-block;
+          text-align:right;
       }}
 
       fieldset {{
-        background:#fff7db;
+          background:#fff7db;
       }}
 
       button {{
@@ -686,32 +725,32 @@ Content-Type: text/html
         <legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
         <input class="nutrit" type="number" name="calories" {calories} id="calories" max="3000" step="5">
-            <button type="button" onclick="document.getElementById('calories').value = 
+            <button type="button" onclick="document.getElementById('calories').value =
                   eval(document.getElementById('calccal').value || 0)">=</button>
             <input class="calc" type="text" id="calccal" />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
         <input class="nutrit" type="number" name="carbs" {carbs} id="carbs" size="2" max="300" step="1">
-            <button type="button" onclick="document.getElementById('carbs').value = 
+            <button type="button" onclick="document.getElementById('carbs').value =
                   eval(document.getElementById('calccarbs').value || 0)">=</button>
             <input class="calc" type="text" id="calccarbs" />
         <br>
 
         <label class="nutrit" for="prot">Protein(g):</label>
         <input class="nutrit" type="number" name="protein" id="prot" {protein} size="2" max="300" step="1">
-            <button type="button" onclick="document.getElementById('prot').value = 
+            <button type="button" onclick="document.getElementById('prot').value =
                   eval(document.getElementById('calcprot').value || 0)">=</button>
             <input class="calc" type="text" id="calcprot" />
         <br>
 
         <label class="nutrit" for="fat">Fat(g):</label>
         <input class="nutrit" type="number" name="fat" id="fat" {fat} size="2" max="300" step="0.5">
-            <button type="button" onclick="document.getElementById('fat').value = 
+            <button type="button" onclick="document.getElementById('fat').value =
                   eval(document.getElementById('calcfat').value) || 0">=</button>
             <input class="calc" type="text" id="calcfat"/>
         <br>
-        
+
       </fieldset>
 
       <fieldset style="max-width:360px">
@@ -754,13 +793,15 @@ Content-Type: text/html
 
 # Used in report.py
 
-INVALID_TEMPLATE = """Content-Type: text/html
+INVALID_TEMPLATE = """\
+Content-Type: text/html
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
   <title>Invalid Parameters</title>
   <meta name="viewport" content="width-device-width, initial-scale=1" />
+  <meta charset="UTF-8">
   </head>
   <body>
     <h1>{}</h1>
@@ -769,12 +810,14 @@ INVALID_TEMPLATE = """Content-Type: text/html
 </html>
 """
 
-REPORT_HEAD_TEMPLATE = """Content-Type: text/html
+REPORT_HEAD_TEMPLATE = """\
+Content-Type: text/html
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
     <title>Food Record {start} - {end}</title>
     <style>
       table {{

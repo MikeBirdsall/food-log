@@ -92,6 +92,7 @@ class EditCourse(object):
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
                 IMAGE=image,
+                TITLE="Edit Course Detail",
                 **self.old_data
         )
 
