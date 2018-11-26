@@ -210,6 +210,68 @@ FORM_TAIL_TEMPLATE = """\
 
 # Used in detail.py
 
+HEAD2_TEMPLATE = """\
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{TITLE}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <style>
+      form {{
+          width:360px;
+      }}
+
+      label {{
+          display: inline-block;
+          text-align:left;
+      }}
+
+      label.nutrit {{
+          width:70px;
+          text-align:right;
+      }}
+
+      input.nutrit {{
+          display:inline-block;
+          width:45px;
+      }}
+
+      label.inst {{
+          width:70px;
+          text-align:right;
+      }}
+
+      input.inst {{
+          text-align:left;
+      }}
+
+      input.calc {{
+        width:150px;
+      }}
+
+      input {{
+          display:inline-block;
+          text-align:right;
+      }}
+
+      fieldset {{
+          background:#fff7db;
+      }}
+
+      input[type=submit] {{
+          background: #db8c47;
+      }}
+
+      button {{
+          background: #db8c47;
+      }}
+    </style>
+  </head>
+"""
+
 FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
@@ -309,67 +371,6 @@ IMAGE_TEMPLATE = """\
     <img src="%s" alt="Food">\
 """
 
-HEAD2_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>{TITLE}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8">
-    <style>
-      form {{
-          width:360px;
-      }}
-
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-
-      label.nutrit {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.nutrit {{
-          display:inline-block;
-          width:45px;
-      }}
-
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.inst {{
-          text-align:left;
-      }}
-
-      input.calc {{
-        width:150px;
-      }}
-
-      input {{
-          display:inline-block;
-          text-align:right;
-      }}
-
-      fieldset {{
-          background:#fff7db;
-      }}
-
-      input[type=submit] {{
-          background: #db8c47;
-      }}
-
-      button {{
-          background: #db8c47;
-      }}
-    </style>
-  </head>
-"""
 # Used in edit.py
 
 EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
