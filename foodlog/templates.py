@@ -260,6 +260,11 @@ Content-Type: text/html
       fieldset {{
           background:#fff7db;
       }}
+
+      input[type=submit] {{
+          background: #db8c47;
+      }}
+
       button {{
           background: #db8c47;
       }}
@@ -269,8 +274,10 @@ Content-Type: text/html
     <h1>{h1}</h1>
     <form method="get">
         <button formaction="{MENU_URL}/">Food Menu</button>
+        <br>
     </form>
-    <form method="post" action="{SCRIPT_NAME}">
+    <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
+      <br>
       <input type="hidden" name="id" value={id}>
       <fieldset style="max-width:360px" disabled>
         <legend>Identifying Information:</legend>
