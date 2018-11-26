@@ -19,8 +19,8 @@ from operator import attrgetter
 from datetime import date, datetime, timedelta
 import sqlite3
 from my_info import config_path
-from templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE, 
-    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, NUTRITION_TEMPLATE, 
+from templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
+    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, NUTRITION_TEMPLATE,
     OTHERS_IN_MEAL_TEMPLATE, FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
 
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
@@ -294,7 +294,7 @@ class ConstructWebPage():
         self.page_content.append(TOTAL_TEMPLATE % tuple(total.totals()))
 
 def safe_by_servings(val, servings=1):
-    if val is None:
+    if val is None or val == '':
         return ""
     return "{:.1f}".format(val * servings).rstrip('0').rstrip('.')
 
