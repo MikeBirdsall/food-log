@@ -352,8 +352,6 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
       </fieldset>
       {BUTTON_BAR}
       {DELETE_BAR}
-      <input type="submit" value="Delete" name="action">
-      </fieldset>
       <br>
     </form>
 
@@ -474,8 +472,7 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
         </datalist>
       </fieldset>
       {BUTTON_BAR}
-      <input type="submit" value="Delete" name="action">
-
+      {DELETE_BAR}
         <br>
     </form>
 
