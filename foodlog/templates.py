@@ -281,9 +281,9 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <input type="submit" value="Update" name="action" style="display:none" disabled>
-      <input type="submit" value="Copy" name="action" style="float: center;" style="display:none" disabled>
-      <input type="submit" value="Make Template" name="action" style="float: right;" style="display:none" disabled><br>
+      <input type="submit" value="Update" name="action" hidden disabled>
+      <input type="submit" value="Copy" name="action" hidden disabled>
+      <input type="submit" value="Make Template" name="action" style="float: right;" hidden disabled><br>
       <input type="hidden" name="id" value={id}>
       <fieldset style="max-width:360px" disabled>
         <legend>Identifying Information:</legend>
@@ -336,7 +336,7 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
         /><br>
 
         <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" value="{time}"><br>
+        <input type="time" name="time" id="time" value="{time}"><br>
 
         <label class="inst" for="meal">Meal:</label>
         <input class="inst" list="meals" id="meal" name="meal"
@@ -350,7 +350,7 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
           <option value="Exercise">
         </datalist>
       </fieldset>
-      <fieldset style="display:none" disabled>
+      <fieldset hidden disabled>
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <br> <br> <br> <br>
@@ -382,11 +382,9 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <fieldset enabled>
-          <input type="submit" value="Update" name="action">
-          <input type="submit" value="Copy" name="action" style="float: center;">
-          <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-      </fieldset>
+      <input type="submit" value="Update" name="action">
+      <input type="submit" value="Copy" name="action">
+      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <input type="hidden" name="id" value={id}>
       <br>
       <fieldset style="max-width:360px">
