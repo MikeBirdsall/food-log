@@ -278,9 +278,11 @@ Content-Type: text/html
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <input type="submit" value="Update" name="action" disabled style="display:none;">
-      <input type="submit" value="Copy" name="action" style="float: center;" disabled style="display:none;">
-      <input type="submit" value="Make Template" name="action" style="float: right;" disabled style="display:none;"><br>
+      <fieldset style="display:none" disabled>
+          <input type="submit" value="Update" name="action">
+          <input type="submit" value="Copy" name="action" style="float: center;">
+          <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      </fieldset>
       <input type="hidden" name="id" value={id}>
       <fieldset style="max-width:360px" disabled>
         <legend>Identifying Information:</legend>
