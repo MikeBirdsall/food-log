@@ -376,7 +376,7 @@ DEL_BUTTON_BAR = """\
 
 CMD_BUTTON_BAR = """\
       <input type="submit" value="Update" name="action">
-      <input type="submit" value="Copy" name="action">
+      <input type="submit" value="Copy" style=margin-left: 5em" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
 """
 
