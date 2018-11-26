@@ -210,66 +210,7 @@ FORM_TAIL_TEMPLATE = """\
 
 # Used in detail.py
 
-FORM_TOP_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>{TITLE}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8">
-    <style>
-      form {{
-          width:360px;
-      }}
-
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-
-      label.nutrit {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.nutrit {{
-          display:inline-block;
-          width:45px;
-      }}
-
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.inst {{
-          text-align:left;
-      }}
-
-      input.calc {{
-        width:150px;
-      }}
-
-      input {{
-          display:inline-block;
-          text-align:right;
-      }}
-
-      fieldset {{
-          background:#fff7db;
-      }}
-
-      input[type=submit] {{
-          background: #db8c47;
-      }}
-
-      button {{
-          background: #db8c47;
-      }}
-    </style>
-  </head>
+FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
@@ -278,26 +219,31 @@ Content-Type: text/html
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <fieldset style="display:none" disabled>
-          <input type="submit" value="Update" name="action">
-          <input type="submit" value="Copy" name="action" style="float: center;">
-          <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-      </fieldset>
+      <input type="submit" value="Update" name="action" style="display:none" disabled>
+      <input type="submit" value="Copy" name="action" style="float: center;" style="display:none" disabled>
+      <input type="submit" value="Make Template" name="action" style="float: right;" style="display:none" disabled><br>
       <input type="hidden" name="id" value={id}>
       <fieldset style="max-width:360px" disabled>
         <legend>Identifying Information:</legend>
         Description:<br>
-        <input type="text" name="description" placeholder="Title" value="{description}">
+        <input type="text" name="description" placeholder="Title"
+            value="{description}"
+        />
         <br>Comment:<br>
-        <input type="text" name="comment" placeholder="Comment" value="{comment}"><br>
-        Amount:<br>
-        <input type="text" name="size" placeholder="Like 2 cups or large bowl" value="{size}">
+        <input type="text" name="comment" placeholder="Comment"
+            value="{comment}"
+        />
+        <br>Amount:<br>
+        <input type="text" name="size" placeholder="Like 2 cups or large bowl"
+            value="{size}"
+        />
       </fieldset>
 
       <fieldset style="max-width:360px" disabled><legend>Nutrition:</legend>
         <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories"
-          max="3000" step ="5" value="{calories}">
+        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step ="5"
+            value="{calories}"
+        />
         <br>
 
         <label class="nutrit" for="carbs">Carbs(g):</label>
@@ -318,24 +264,39 @@ Content-Type: text/html
       <fieldset style="max-width:360px" disabled>
         <legend>Instance Information:</legend>
         <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" value="{servings}"><br>
+        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9"
+            value="{servings}"
+        /><br>
 
         <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day" value="{day}"><br>
+        <input class="inst" type="date" name="day" id="day"
+            value="{day}"
+        /><br>
 
         <label class="inst" for="time">Time:</label>
         <input type="time" name="time" value="{time}"><br>
 
         <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal" value="{meal}">
-            <datalist id="meals">
-            <option value="Breakfast">
-            <option value="Lunch">
-            <option value="Supper">
-            <option value="Snack">
-            </datalist>
+        <input class="inst" list="meals" id="meal" name="meal"
+            value="{meal}"
+        />
+        <datalist id="meals">
+          <option value="Breakfast">
+          <option value="Lunch">
+          <option value="Supper">
+          <option value="Snack">
+          <option value="Exercise">
+        </datalist>
       </fieldset>
+      <fieldset style="display:none" disabled>
+      <input type="submit" value="Update" name="action">
+      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      <br> <br> <br> <br>
+      <input type="submit" value="Delete" name="action">
+      </fieldset>
+      <br>
     </form>
+
     <p>{STATUS}</p>
     {IMAGE}
   </body>
@@ -348,9 +309,7 @@ IMAGE_TEMPLATE = """\
     <img src="%s" alt="Food">\
 """
 
-# Used in edit.py
-
-EDIT_TOP_TEMPLATE = """\
+HEAD2_TEMPLATE = """\
 Content-Type: text/html
 
 <!DOCTYPE html>
@@ -410,6 +369,10 @@ Content-Type: text/html
       }}
     </style>
   </head>
+"""
+# Used in edit.py
+
+EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
@@ -503,9 +466,9 @@ Content-Type: text/html
           <option value="Exercise">
         </datalist>
       </fieldset>
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
 
+        <input type="submit" value="Update" name="action">
+        <input type="submit" value="Make Template" name="action" style="float: right;"><br>
       <br> <br> <br> <br>
       <input type="submit" value="Delete" name="action">
 
