@@ -418,9 +418,11 @@ Content-Type: text/html
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Copy" name="action" style="float: center;">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      <fieldset enabled>
+          <input type="submit" value="Update" name="action">
+          <input type="submit" value="Copy" name="action" style="float: center;">
+          <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      </fieldset>
       <input type="hidden" name="id" value={id}>
       <br>
       <fieldset style="max-width:360px">
