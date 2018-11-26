@@ -208,7 +208,6 @@ FORM_TAIL_TEMPLATE = """\
 </html>\
 """
 
-# Used in detail.py
 
 HEAD2_TEMPLATE = """\
 Content-Type: text/html
@@ -272,6 +271,8 @@ Content-Type: text/html
   </head>
 """
 
+# Used in detail.py
+
 FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
@@ -281,10 +282,9 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <input type="submit" value="Update" name="action" hidden disabled>
-      <input type="submit" value="Copy" name="action" hidden disabled>
-      <input type="submit" value="Make Template" name="action" style="float: right;" hidden disabled><br>
+      {BUTTON_BAR}
       <input type="hidden" name="id" value={id}>
+      <br>
       <fieldset style="max-width:360px" disabled>
         <legend>Identifying Information:</legend>
         Description:<br>
@@ -350,10 +350,8 @@ FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
           <option value="Exercise">
         </datalist>
       </fieldset>
-      <fieldset hidden disabled>
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-      <br> <br> <br> <br>
+      {BUTTON_BAR}
+      {DELETE_BAR}
       <input type="submit" value="Delete" name="action">
       </fieldset>
       <br>
@@ -373,6 +371,19 @@ IMAGE_TEMPLATE = """\
 
 # Used in edit.py
 
+DEL_BUTTON_BAR = """\
+      <br> <br> <br> <br>
+      <input type="submit" value="Delete" name="action">
+"""
+
+CMD_BUTTON_BAR = """\
+      <input type="submit" value="Update" name="action">
+      <input type="submit" value="Copy" name="action">
+      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+"""
+
+NO_BUTTON_BAR = ""
+
 EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
@@ -382,9 +393,7 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
       <br>
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Copy" name="action">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+      {BUTTON_BAR}
       <input type="hidden" name="id" value={id}>
       <br>
       <fieldset style="max-width:360px">
@@ -439,7 +448,6 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
 
       <fieldset style="max-width:360px">
         <legend>Instance Information:</legend>
-
         <label class="inst" for="servings">Servings:</label>
         <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1"
             value="{servings}"
@@ -451,7 +459,7 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
         /><br>
 
         <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" value="{time}"><br>
+        <input type="time" name="time" id="time" value="{time}"><br>
 
         <label class="inst" for="meal">Meal:</label>
         <input class="inst" list="meals" id="meal" name="meal"
@@ -465,10 +473,7 @@ EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
           <option value="Exercise">
         </datalist>
       </fieldset>
-
-        <input type="submit" value="Update" name="action">
-        <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-      <br> <br> <br> <br>
+      {BUTTON_BAR}
       <input type="submit" value="Delete" name="action">
 
         <br>
