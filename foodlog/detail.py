@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 Program to display a food item - based on Edit with edit not allowed
 
@@ -67,7 +67,7 @@ class EditCourse(object):
         else:
             image = ''
 
-        print FORM_TOP_TEMPLATE.format(
+        print(FORM_TOP_TEMPLATE.format(
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
@@ -76,7 +76,7 @@ class EditCourse(object):
                 h1="Food Entry",
                 BUTTON_BAR=NO_BUTTON_BAR,
                 DELETE_BAR=NO_BUTTON_BAR,
-                **self.old_data
+                **self.old_data)
         )
 
 

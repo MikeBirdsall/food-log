@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 Program to edit a food item
 
@@ -69,7 +69,7 @@ class EditCourse(object):
             status = self.make_template()
         elif self.data['action'] == 'Delete':
             status = self.delete()
-            print FORM_TOP_TEMPLATE.format(
+            print(FORM_TOP_TEMPLATE.format(
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
@@ -78,7 +78,7 @@ class EditCourse(object):
                 h1="Deleted Food Entry",
                 BUTTON_BAR=CMD_BUTTON_BAR,
                 DELETE_BAR=NO_BUTTON_BAR,
-                **self.old_data
+                **self.old_data)
             )
             return
 
@@ -93,7 +93,7 @@ class EditCourse(object):
         else:
             image = ''
 
-        print EDIT_TOP_TEMPLATE.format(
+        print(EDIT_TOP_TEMPLATE.format(
                 MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
@@ -102,7 +102,7 @@ class EditCourse(object):
                 h1="Edit Food Entry",
                 BUTTON_BAR=CMD_BUTTON_BAR,
                 DELETE_BAR=DEL_BUTTON_BAR,
-                **self.old_data
+                **self.old_data)
         )
 
     def make_template(self):
@@ -121,16 +121,20 @@ class EditCourse(object):
             calories fat protein carbs size""".split())
 
         self.cursor.execute(xline, xparms)
-        print >> self.log_file, dict(command=xline, args=xparms)
+        print(dict(command=xline, args=xparms), file=self.log_file)
 
         return "<h3>Template created at %s</h3>" % (datetime.now().time().strftime("%I:%M:%S %p"))
 
 
     def delete(self):
         """ Delete record from database, write deleted entry in log """
-        print >> self.log_file, "Delete", self.old_data
-        print >> self.log_file, "Replace with:"
-        print >> self.log_file, "#insert into course ", str(tuple(self.old_data.keys())).translate(None, "'"), "VALUES ", str(tuple(self.old_data.values()))
+        print("Delete", self.old_data, file=self.log_file)
+        print("Replace with:", file=self.log_file)
+        print("#insert into course ",
+            str(tuple(self.old_data.keys())).translate(None, "'"),
+            "VALUES ",
+            str(tuple(self.old_data.values())),
+            file=self.log_file)
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
         return "<p>Entry deleted at %s</p>" % datetime.now().time().strftime("%I:%M:%S %p")
@@ -145,7 +149,7 @@ class EditCourse(object):
         form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
         if form.status:
             return form.status
-        print form.page
+        print(form.page)
 
 
     def update(self):
@@ -163,7 +167,7 @@ class EditCourse(object):
             # Want to self.cursor.execute(xline, *needed stuff)
             # Want to print lline % * needed stuff
             self.cursor.execute(line, args)
-            print >> self.log_file, dict(command=line, args=args)
+            print(dict(command=line, args=args), file=self.log_file)
 
             # Update the data to reflect changes
             self.old_data.update({k: self.data.get(k) for k in needed})

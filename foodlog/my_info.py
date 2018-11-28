@@ -1,10 +1,6 @@
-#!/usr/bin/python
-try:
-    from configparser import ConfigParser
-    hack=False
-except ImportError:
-    from  ConfigParser import ConfigParser
-    hack = True
+#!/usr/bin/python3
+from configparser import ConfigParser
+hack=False
 
 import os
 import sys
@@ -12,10 +8,7 @@ import sys
 class config_path(object):
     def __init__(self):
 
-        if hack:
-            self.config = config = ConfigParser()
-        else:
-            self.config = config = ConfigParser(inline_comment_prefixes=(';',))
+        self.config = config = ConfigParser(inline_comment_prefixes=(';',))
         config.read(self.config_file())
 
 

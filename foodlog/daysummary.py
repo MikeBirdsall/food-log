@@ -77,7 +77,7 @@ VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def print_error(header, text):
 
-    print("""INVALID_TEMPLATE""".format(header, text))
+    print(INVALID_TEMPLATE.format(header, text))
     sys.exit(2)
 
 def week_range(num_weeks, firstweekday=3):

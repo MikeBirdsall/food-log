@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 Program to load information about what I eat from an Android phone
 
@@ -55,12 +55,12 @@ class EntryForm(object):
             else:
                 status = "Unsubmitted Form"
 
-        print PAGE_TEMPLATE.format(
+        print(PAGE_TEMPLATE.format(
             SCRIPT_NAME=SCRIPT_NAME,
             MENU_URL=self.menu_url,
             STATUS=status,
             TITLE="Input Course Information",
-            h1="Food Entry"
+            h1="Food Entry")
         )
 
     def handle_filled_form(self):
@@ -99,17 +99,23 @@ class EntryForm(object):
             return text_fields['error']
 
         merged = self.merge_fields(image_fields, text_fields)
-        # Create multiple records if semicolons in orig_description/description and no cals/carbs/prot/fat
+        # Create multiple records if semicolons in orig_description/description
+        # and no cals/carbs/prot/fat
         if 'description' in merged and ';' in merged['description']:
-            if bool(set(merged.keys()) & set(['calories', 'fat', 'protein', 'carbs'])):
-                return "Can't split course with %s set" % (list(set(merged.keys()) & set(['calories', 'fat', 'protein', 'carbs'])))
+            if bool(
+                    set(merged.keys()) &
+                    set(['calories', 'fat', 'protein', 'carbs'])):
+                return "Can't split course with %s set" % (
+                    list(
+                        set(merged.keys()) &
+                        set(['calories', 'fat', 'protein', 'carbs'])))
             else:
                 newdesc = merged['description'].split(';')
                 for description in newdesc:
-                    part=merged.copy()
+                    part = merged.copy()
                     part['description'] = description
                     self.insert_in_db(part)
-                return "Uploaded %s dishes at %s" % (len(newdesc),self.bname)
+                return "Uploaded %s dishes at %s" % (len(newdesc), self.bname)
         else:
             self.insert_in_db(merged)
             return "Uploaded %s" % self.bname
@@ -149,7 +155,7 @@ class EntryForm(object):
         image_filename = self.bname + ".image"
         image_path = os.path.join(self.archive_dir, image_filename)
         # We don't know what kind of image file it is but we don't need to
-        with file(image_path, 'wb') as fout:
+        with open(image_path, 'wb') as fout:
             while True:
                 chunk = self.fileitem.file.read(100000)
                 if not chunk:
@@ -173,9 +179,12 @@ class EntryForm(object):
 
         # Check that file names don't have some sort of space in them
         if len(image_path.split()) > 1 or len(thumbfile_name.split()) > 1:
-            return dict(error="Bad filesnames {} or {}".format(image_path, thumbfile_name))
+            return dict(
+                error="Bad filesnames {} or {}".format(
+                    image_path, thumbfile_name))
 
-        command = "convert -thumbnail {} {} {}".format(THUMB_SIZE[1], image_path,thumbfile_name).split()
+        command = "convert -thumbnail {} {} {}".format(
+            THUMB_SIZE[1], image_path, thumbfile_name).split()
         returncode = subprocess.call(command)
         if returncode:
             # Try it the old way here in python
@@ -184,8 +193,10 @@ class EntryForm(object):
             if thumb.mode != 'RGB':
                 thumb = thumb.convert('RGB')
             thumb.save(thumbfile_name, "JPEG")
-            os.chmod(thumbfile_name, 0644)
-            return dict(error="Error creating thumbnail {}".format(thumbnail_name))
+            os.chmod(thumbfile_name, 0o644)
+            return dict(
+                error="Error creating thumbnail {}".format(
+                    thumbfile_name))
 
         answer['thumb_id'] = self.bname
         return answer
@@ -225,7 +236,7 @@ class EntryForm(object):
 
         """
 
-        """ Insert a course record with columns and values defined by dict_ """
+        # Insert a course record with columns and values defined by dict_
         fields = [x for x in dict_ if dict_[x] != ""]
         vals = [dict_[x] for x in fields]
 
@@ -235,12 +246,12 @@ class EntryForm(object):
             if not fields:
                 line = "insert into course default values"
                 cursor.execute(line)
-                print >> self.log_file, dict(command=line)
+                print(dict(command=line), file=self.log_file)
             else:
                 line = "INSERT INTO course (%s) VALUES (%s)" % (
                     ", ".join(fields), ", ".join("?" for x in vals))
                 cursor.execute(line, vals)
-                print >> self.log_file, dict(command=line, args=vals)
+                print(dict(command=line, args=vals), file=self.log_file)
 
 def read_exif_data(img):
     """ Read out pertinent image exif data - in this case datetime

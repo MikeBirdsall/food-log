@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """ Create database from ini files
 
     I started out using ini files as the first input and primary backup method
@@ -36,7 +36,7 @@ class ConstructDatabase(object):
         with open('tables.sql', 'r') as sqlite_file:
             schema = sqlite_file.read()
         self.conn.executescript(schema)
-        print >> self.log_file, schema
+        print(schema, file=self.log_file)
 
 def main():
     """ Commandline program to create food diary database from ini files """

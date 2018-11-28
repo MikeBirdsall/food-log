@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 Program to create course entry based on a template
 
@@ -32,11 +32,11 @@ class CopyTemplate(object):
             status = self.form_entry()
             if not status:
                 return
-            print """<p3>%s</p3>""" % status
+            print("""<p3>%s</p3>""" % status)
         self.create_selection()
 
     def emit_button(self, row):
-        print ROW_TEMPLATE % (row['id'], row['description'])
+        print(ROW_TEMPLATE % (row['id'], row['description']))
 
     def form_entry(self):
         """ Print an entry form with default values from template """
@@ -55,20 +55,20 @@ class CopyTemplate(object):
         form.create_form(row, script=SCRIPT_NAME)
         if form.status:
             return form.status
-        print form.page
+        print(form.page)
 
     def create_selection(self):
-        print HEAD_TEMPLATE.format(
+        print(HEAD_TEMPLATE.format(
             MENU_URL=MENU_URL,
             TITLE="Create Course From Template",
             h1="Choose Template"
-            )
+            ))
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             for row in cursor.execute('select * from template'):
                 self.emit_button(row)
-        print FORM_TAIL_TEMPLATE
+        print(FORM_TAIL_TEMPLATE)
 
 if __name__ == '__main__':
     CopyTemplate().run()
