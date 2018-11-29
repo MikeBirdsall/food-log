@@ -3,7 +3,7 @@
 """
 
 from my_info import config_path
-from templates import TEMPLATE
+from templates import TEMPLATE, WITH_EDIT_CSS
 
 
 FIELDS = 'description comment size calories carbs fat protein'.split()
@@ -27,6 +27,7 @@ class EntryForm(object):
         values['TITLE'] = "Enter Course"
         values['h1'] = "Food Entry"
         values['MENU_URL'] = config_path().dir('MENU_URL')
+        values['EDIT_CSS'] = WITH_EDIT_CSS
         self.page = TEMPLATE.format(**values)
 
 

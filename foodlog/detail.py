@@ -15,7 +15,8 @@ import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sqlite3
 from my_info import config_path
-from templates import FORM_TOP_TEMPLATE, IMAGE_TEMPLATE, NO_BUTTON_BAR
+from templates import (FORM_TOP_TEMPLATE, IMAGE_TEMPLATE, NO_BUTTON_BAR,
+    WITHOUT_EDIT_CSS)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -76,6 +77,8 @@ class EditCourse(object):
                 h1="Food Entry",
                 BUTTON_BAR=NO_BUTTON_BAR,
                 DELETE_BAR=NO_BUTTON_BAR,
+                EDIT_CSS=WITHOUT_EDIT_CSS,
+                disabled="disabled",
                 **self.old_data)
         )
 

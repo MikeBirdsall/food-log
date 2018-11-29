@@ -18,7 +18,8 @@ from datetime import datetime
 from my_info import config_path
 from entry_form import EntryForm
 from templates import (IMAGE_TEMPLATE, EDIT_TOP_TEMPLATE,
-    FORM_TOP_TEMPLATE, CMD_BUTTON_BAR, DEL_BUTTON_BAR, NO_BUTTON_BAR)
+    FORM_TOP_TEMPLATE, CMD_BUTTON_BAR, DEL_BUTTON_BAR, NO_BUTTON_BAR,
+    WITHOUT_EDIT_CSS, WITH_EDIT_CSS)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -78,6 +79,8 @@ class EditCourse(object):
                 h1="Deleted Food Entry",
                 BUTTON_BAR=CMD_BUTTON_BAR,
                 DELETE_BAR=NO_BUTTON_BAR,
+                EDIT_CSS=WITHOUT_EDIT_CSS,
+                disabled="disabled",
                 **self.old_data)
             )
             return
@@ -102,6 +105,8 @@ class EditCourse(object):
                 h1="Edit Food Entry",
                 BUTTON_BAR=CMD_BUTTON_BAR,
                 DELETE_BAR=DEL_BUTTON_BAR,
+                EDIT_CSS=WITH_EDIT_CSS,
+                disabled="",
                 **self.old_data)
         )
 

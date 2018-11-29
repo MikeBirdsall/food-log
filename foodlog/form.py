@@ -21,7 +21,7 @@ from datetime import datetime, time
 from my_info import config_path
 from PIL import Image
 from PIL.ExifTags import TAGS
-from templates import PAGE_TEMPLATE
+from templates import PAGE_TEMPLATE, WITH_EDIT_CSS
 
 THUMB_SIZE = 400, 300
 ORIG_KEYS = """description comment size calories carbs protein fat servings
@@ -59,6 +59,7 @@ class EntryForm(object):
             SCRIPT_NAME=SCRIPT_NAME,
             MENU_URL=self.menu_url,
             STATUS=status,
+            EDIT_CSS=WITH_EDIT_CSS,
             TITLE="Input Course Information",
             h1="Food Entry")
         )
