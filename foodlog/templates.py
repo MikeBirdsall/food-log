@@ -1,5 +1,8 @@
-# Used in form.py
+"""
+    Templates and supporting strings for creating HTML for foodlog
+"""
 
+# Snippets to fill in variable parts of the templates
 WITHOUT_EDIT_CSS = """\
       input.calc {
         width:150px;
@@ -17,6 +20,21 @@ WITH_EDIT_CSS = """\
       }
 """
 
+DEL_BUTTON_BAR = """\
+      <br> <br> <br> <br>
+      <input type="submit" value="Delete" name="action">
+"""
+
+CMD_BUTTON_BAR = """\
+      <input type="submit" value="Update" name="action">
+      <input type="submit" value="Copy" style="margin-left: 5em" name="action">
+      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
+"""
+
+NO_BUTTON_BAR = ""
+
+# Used for form.py, the basic script for entering food
+# The central part should match with edit, delete, ...
 PAGE_TEMPLATE = """\
 Content-Type: text/html
 
@@ -73,11 +91,11 @@ Content-Type: text/html
       input[type=submit] {{
         background: #db8c47;
       }}
+
       button {{
           background: #db8c47;
       }}
     </style>
-
   </head>
   <body>
     <h1>{h1}</h1>
@@ -263,22 +281,26 @@ Content-Type: text/html
       }}
 
       input.inst {{
-          text-align:left;
+        text-align:left;
+      }}
+
+      input.calc {{
+        width:150px;
       }}
 
       {EDIT_CSS}
 
       input {{
-          display:inline-block;
-          text-align:right;
+        display:inline-block;
+        text-align:right;
       }}
 
       fieldset {{
-          background:#fff7db;
+        background:#fff7db;
       }}
 
       input[type=submit] {{
-          background: #db8c47;
+        background: #db8c47;
       }}
 
       button {{
@@ -288,9 +310,9 @@ Content-Type: text/html
   </head>
 """
 
-# Used in detail.py
+# Used in detail.py, edit.py
 
-FORM_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
+TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
@@ -398,183 +420,9 @@ IMAGE_TEMPLATE = """\
 
 # Used in edit.py
 
-DEL_BUTTON_BAR = """\
-      <br> <br> <br> <br>
-      <input type="submit" value="Delete" name="action">
-"""
-
-CMD_BUTTON_BAR = """\
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Copy" style="margin-left: 5em" name="action">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-"""
-
-NO_BUTTON_BAR = ""
-
-EDIT_TOP_TEMPLATE = HEAD2_TEMPLATE + """\
-  <body>
-    <h1>{h1}</h1>
-    <form method="get">
-        <button formaction="{MENU_URL}/">Food Menu</button>
-        <br>
-    </form>
-    <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
-      <br>
-      {BUTTON_BAR}
-      <input type="hidden" name="id" value={id}>
-      <br>
-      <fieldset style="max-width:360px" {disabled}>
-        <legend>Identifying Information:</legend>
-        Description:<br>
-        <input type="text" name="description" placeholder="Title"
-            value="{description}"
-        />
-        <br>Comment:<br>
-        <input type="text" name="comment" placeholder="Comment"
-            value="{comment}"
-        />
-        <br>Amount:<br>
-        <input type="text" name="size" placeholder="Like 2 cups or large bowl"
-            value="{size}"
-        />
-      </fieldset>
-
-      <fieldset style="max-width:360px" {disabled}><legend>Nutrition:</legend>
-        <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step ="5"
-            value="{calories}"
-        />
-        <button type="button" class="ifedit" onclick="document.getElementById('calories').value =
-            eval(document.getElementById('calccal').value || 0)">=</button>
-        <input class="calc" type="text" id="calccal" />
-        <br>
-
-        <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1">
-        <button type="button" class="ifedit" onclick="document.getElementById('carbs').value =
-            eval(document.getElementById('calccarbs').value || 0)">=</button>
-        <input class="calc" type="text" id="calccarbs" />
-        <br>
-
-        <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
-           value="{protein}">
-        <button type="button" class="ifedit" onclick="document.getElementById('prot').value =
-            eval(document.getElementById('calcprot').value || 0)">=</button>
-        <input class="calc" type="text" id="calcprot" />
-        <br>
-
-        <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-        <button type="button" class="ifedit" onclick="document.getElementById('fat').value =
-            eval(document.getElementById('calcfat').value) || 0">=</button>
-        <input class="calc" type="text" id="calcfat"/>
-        <br>
-
-      </fieldset>
-
-      <fieldset style="max-width:360px" {disabled}>
-        <legend>Instance Information:</legend>
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1"
-            value="{servings}"
-        /><br>
-
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day"
-            value="{day}"
-        /><br>
-
-        <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" id="time" value="{time}"><br>
-
-        <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal"
-            value="{meal}"
-        />
-        <datalist id="meals">
-          <option value="Breakfast">
-          <option value="Lunch">
-          <option value="Supper">
-          <option value="Snack">
-          <option value="Exercise">
-        </datalist>
-      </fieldset>
-      {BUTTON_BAR}
-      {DELETE_BAR}
-      <br>
-    </form>
-
-    <p>{STATUS}</p>
-    {IMAGE}
-  </body>
-</html>
-"""
-
 # Used in entry_form.py
 
-TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>{TITLE}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8">
-    <style>
-      form {{
-          width:360px;
-      }}
-
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-
-      label.nutrit {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.nutrit {{
-          display:inline-block;
-          width:45px;
-      }}
-
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.inst {{
-          text-align:left;
-      }}
-
-      {EDIT_CSS}
-
-      input.calc {{
-          width:150px;
-      }}
-
-      input {{
-          display:inline-block;
-          text-align:right;
-      }}
-
-      fieldset {{
-          background:#fff7db;
-      }}
-
-      button {{
-          background: #db8c47;
-      }}
-
-      input[type=submit] {{
-          background: #db8c47;
-      }}
-    </style>
-  </head>
+TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
