@@ -76,3 +76,39 @@
     """
 
 
+Adding full-text search
+
+Instead of having users create special templates that they can reuse, add a
+full-text search capability on the whole set of courses consumed, using the
+sqlite full text search. With that, they can open up an earlier item and copy
+it. Or I can copy it for them. I'll have to work out what feels best.
+
+To start with, create the virtual table needed to do the full text search.
+
+Resources: 
+  http://www.sqlitetutorial.net/sqlite-full-text-search/
+  https://www.sqlite.org/fts3.html
+Note, however, that my hosting services doesn't have fts5, so I will be using fts4.
+
+
+sql:
+  create virtual table fulltext using fts4(
+    course_id integer references course(id),
+    content text
+  );
+
+  insert into fulltext (course_id, content) select
+    id, description from course;
+
+    or, if we want more fields included in the search:
+
+  insert into fulltext (course_id, content) select
+    id, 
+        ifnull(description, "") || 
+        " " || 
+        ifnull(comment, "") 
+    from course;
+
+
+
+

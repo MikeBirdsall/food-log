@@ -35,6 +35,8 @@ NO_BUTTON_BAR = ""
 
 # Used for form.py, the basic script for entering food
 # The central part should match with edit, delete, ...
+# Needs for interpolation:
+# TITLE, EDIT_CSS, h1, MENU_URL, SCRIPT_NAME, STATUS
 PAGE_TEMPLATE = """\
 Content-Type: text/html
 
@@ -206,7 +208,26 @@ Content-Type: text/html
 </html>
 """
 
+# Used in full_search.py
+
+# Needs for interpolation:
+# description
+SEARCH_COURSE_TEMPLATE = """\
+    <tr>
+    <td>{description}</td>
+    <td>{comment}</td>
+    <td>{size}</td>
+    <td>{calories}</td>
+    <td>{carbs}</td>
+    <td>{fat}</td>
+    <td>{protein}</td>
+    <td>{score}</td>
+    </tr>
+"""
+
 # Used in copy_template
+# Needs for interpolation:
+# TITLE, MENU_URL, h1
 
 HEAD_TEMPLATE = """\
 Content-Type: text/html
@@ -225,19 +246,21 @@ Content-Type: text/html
       }}
     </style>
   </head>
-  <body> \
+  <body>
     <h1>{h1}</h1>
     <form method="get">
       <button formaction="{MENU_URL}/">Back to Food Menu</button><br/><br/>\
 """
 
 # Used in copy_template
+# Needs for interpolation:
 
 ROW_TEMPLATE = """\
       <button name="choice" type="submit" value=%s>%s</button><br/><br/>\
 """
 
 # Used in copy_template
+# Needs for interpolation:
 
 FORM_TAIL_TEMPLATE = """\
     </form>\
@@ -245,6 +268,9 @@ FORM_TAIL_TEMPLATE = """\
 </html>\
 """
 
+
+# Needs for interpolation:
+#   TITLE, EDIT_CSS
 
 HEAD2_TEMPLATE = """\
 Content-Type: text/html
@@ -306,12 +332,86 @@ Content-Type: text/html
       button {{
           background: #db8c47;
       }}
+
+      table {{
+          background:#fff7db;
+      }}
+
+      table, th, td {{
+          border: 1px solid black;
+          border-collapse: collapse;
+      }}
+
+      th, td {{
+          padding: 5px;
+          white-space: nowrap;
+      }}
+
     </style>
   </head>
 """
 
-# Used in detail.py, edit.py
+# Needs for interpolation:
+#  h1, MENU_URL, TITLE, EDIT_CSS
 
+SEARCH_HEAD_TEMPLATE = HEAD2_TEMPLATE + """\
+  <body>
+    <h1>{h1}</h1>
+    <form method="get">
+      <button formaction="./report.py">List all meals</button>
+      <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+    </form>
+    <table>
+      <tr>
+        <th>Description</th>
+        <th>Comment</th>
+        <th>Size</th>
+        <th>Cals</th>
+        <th>Carbs</th>
+        <th>Fat</th>
+        <th>Protein</th>
+        <th>Score</th>
+      </tr>
+
+"""
+
+
+
+# Needs for interpolation:
+#    foodmenu
+TABLE_TAIL_TEMPLATE = """\
+    </table>
+    <form method="get">
+        <button formaction="{MENU_URL}">Food Menu</button>
+    </form>
+  </body>
+</html>
+"""
+
+# Used in full_search.py
+# Needs for interpolation:
+#  MENU_URL, TITLE, EDIT_CSS
+
+SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
+  <body>
+    <h1>{h1}</h1>
+    <form method="post">
+      <fieldset style='max-sidth:360px'>
+        <br>
+        Search String:<br>
+        <input type="text" name="searchstring" />
+      </fieldset>
+    </form>
+    <form method="get">
+      <br>
+      <button formaction="{MENU_URL}"/>Back to Food Menu</button><br/><br/>
+    </form>
+  </body>
+</html>
+"""
+
+# Used in detail.py, edit.py
+# Needs for interpolation:
 TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
@@ -413,14 +513,14 @@ TOP_TEMPLATE = HEAD2_TEMPLATE + """\
 """
 
 # Used in detail.py
+# Needs for interpolation:
 
 IMAGE_TEMPLATE = """\
     <img src="%s" alt="Food">\
 """
 
-# Used in edit.py
-
 # Used in entry_form.py
+# Needs for interpolation:
 
 TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
@@ -519,6 +619,8 @@ TEMPLATE = HEAD2_TEMPLATE + """\
 """
 
 # Used in report.py
+# Needs for interpolation:
+
 
 INVALID_TEMPLATE = """\
 Content-Type: text/html
@@ -538,6 +640,7 @@ Content-Type: text/html
 """
 
 # Used in report.py
+# Needs for interpolation:
 
 REPORT_HEAD_TEMPLATE = """\
 Content-Type: text/html
@@ -569,13 +672,15 @@ Content-Type: text/html
     <h1>{title}</h1>
     <h2>{start} - {end}</h2>
     <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
+        <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <table>"""
 
 # Used in report.py
+# Needs for interpolation:
 
-AFTERWARD_TEMPLATE = """</table>
+AFTERWARD_TEMPLATE = """
+    </table>
     <form method="get">
         <button formaction="{foodmenu}">Food Menu</button>
     </form>
@@ -584,6 +689,7 @@ AFTERWARD_TEMPLATE = """</table>
 </html>"""
 
 # Used in report.py
+# Needs for interpolation:
 
 DAY_HEADER_TEMPLATE = """<tr>
         <th colspan="7">{date}</th>
@@ -599,6 +705,7 @@ DAY_HEADER_TEMPLATE = """<tr>
       </tr>"""
 
 # Used in report.py
+# Needs for interpolation:
 
 NUTRITION_TEMPLATE = """<td>{dish}</td>
         <td>{servings}</td>
@@ -609,16 +716,19 @@ NUTRITION_TEMPLATE = """<td>{dish}</td>
 """
 
 # Used in report.py
+# Needs for interpolation:
 
 OTHERS_IN_MEAL_TEMPLATE = """<tr>
 """ + NUTRITION_TEMPLATE + """</tr>"""
 
 # Used in report.py
+# Needs for interpolation:
 
 FIRST_IN_MEAL_TEMPLATE = """<tr><th rowspan="{courses}">{meal}</th>
 """ + NUTRITION_TEMPLATE + """</tr>"""
 
 # Used in report.py
+# Needs for interpolation:
 
 TOTAL_TEMPLATE = """<tr>
         <th colspan="3">Total</th>
