@@ -372,7 +372,6 @@ SEARCH_HEAD_TEMPLATE = HEAD2_TEMPLATE + """\
         <th>Protein</th>
         <th>Score</th>
       </tr>
-
 """
 
 
@@ -676,7 +675,7 @@ Content-Type: text/html
     <h1>{title}</h1>
     <h2>{start} - {end}</h2>
     <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
+        <button formaction="{MENU_URL}">Food Menu</button>
     </form>
     <table>"""
 
