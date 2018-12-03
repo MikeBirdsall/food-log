@@ -398,18 +398,17 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
       <input type="submit">
       <br> <br>
       <fieldset style='max-width:360px'>
-        <br>
         Search String:<br>
-        <input type="text" name="searchstring" />
+        <input type="text" name="searchstring" size="50" required/>
       </fieldset>
       <br>
       <input type="submit">
     </form>
+    <h2>{status}</h2>
     <form method="get">
       <br>
-      <button formaction="{MENU_URL}"/>Back to Food Menu</button><br/><br/>
+      <button formaction="{MENU_URL}"/>Back to Food Menu</button>
     </form>
-    <h2>{status}</h2>
     {cheatsheet}
   </body>
 </html>

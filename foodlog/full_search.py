@@ -26,7 +26,7 @@ config = config_path()
 DB_FILE = config.dir('DB_FILE')
 MENU_URL = config.dir('MENU_URL')
 
-CHEATSHEET = """/
+CHEATSHEET = """
 <p>Examples:</p>
 <ul>
   <li>salad</li>
