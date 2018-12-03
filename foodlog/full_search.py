@@ -87,6 +87,8 @@ class FullTextSearch(object):
             h1="Full Text Search")
         )
 
+        course = None
+
         for course, score in TextSearchEngine(DB_FILE, searchstring).results():
             substitutions = self.course_dict(course, score)
             print(SEARCH_COURSE_TEMPLATE.format(**substitutions))
