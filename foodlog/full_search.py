@@ -39,7 +39,7 @@ def safe_int(val):
         return "{:.1f}".format(val).rstrip('0').rstrip('.')
     return val
 
-def ellipse_truncate(text, length=40, default=""):
+def ellipse_truncate(text, length=30, default=""):
     "Return canonical form of description to fit in length """
     result = text or default
     return (result[:length-1] + "&hellip;") if len(result) > length else result
@@ -71,7 +71,7 @@ class FullTextSearch(object):
         for field in "calories carbs fat protein".split():
             answer[field] = safe_int(getattr(dish, field, None))
         for field in "comment size".split():
-            answer[field] = ellipse_truncate(getattr(dish, field, ""))
+            answer[field] = ellipse_truncate(getattr(dish, field, "")length=20)
         answer['score'] = score
 
         return answer
@@ -89,7 +89,7 @@ class FullTextSearch(object):
 
         course = None
 
-        for course, score in TextSearchEngine(DB_FILE, searchstring).results():
+        for course, score in TextSearchEngine(DB_FILE, searchstring).results()[:19]:
             substitutions = self.course_dict(course, score)
             print(SEARCH_COURSE_TEMPLATE.format(**substitutions))
 
