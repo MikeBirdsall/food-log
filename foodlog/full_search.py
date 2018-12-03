@@ -26,6 +26,17 @@ config = config_path()
 DB_FILE = config.dir('DB_FILE')
 MENU_URL = config.dir('MENU_URL')
 
+CHEATSHEET = """/
+<p>Examples:</p>
+<ul>
+  <li>salad</li>
+  <li>egg*</li>
+  <li>egg* sand*</li>
+  <li>egg* NEAR/3 rice*</li>
+  <li>steak OR roast</li>
+  <li>steak AND NOT shake</li>
+</ul>
+"""
 def safe_int(val):
     if val is None or val == '':
         return ''
@@ -126,6 +137,7 @@ class FullTextSearch(object):
             TITLE="Search for Courses",
             h1="Full Text Search",
             status=(self.status or "Ready For Search"),
+            cheatsheet=CHEATSHEET,
             EDIT_CSS=WITH_EDIT_CSS
             ))
 

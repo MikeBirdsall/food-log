@@ -409,7 +409,8 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
       <br>
       <button formaction="{MENU_URL}"/>Back to Food Menu</button><br/><br/>
     </form>
-    <p3>{status}</p3>
+    <h2>{status}</h2>
+    {cheatsheet}
   </body>
 </html>
 """
