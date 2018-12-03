@@ -397,7 +397,7 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
     <form method="post">
       <input type="submit">
       <br> <br>
-      <fieldset style='max-sidth:360px'>
+      <fieldset style='max-width:360px'>
         <br>
         Search String:<br>
         <input type="text" name="searchstring" />
@@ -409,6 +409,7 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
       <br>
       <button formaction="{MENU_URL}"/>Back to Food Menu</button><br/><br/>
     </form>
+    <p3>{status}</p3>
   </body>
 </html>
 """

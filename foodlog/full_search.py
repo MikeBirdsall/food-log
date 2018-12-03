@@ -57,12 +57,12 @@ class FullTextSearch(object):
         self.form = cgi.FieldStorage()
 
     def run(self):
+        status = None
         if self.form.keys():
             status = self.form_entry()
             if not status:
                 return
-            print("""<p3>%s</p3>""" % status)
-        self.create_search_form()
+        self.create_search_form(status)
 
 
     def course_dict(self, dish, score):
@@ -80,32 +80,42 @@ class FullTextSearch(object):
 
     def form_entry(self):
         """ Print a form with courses from search results """
+
+        page_content = []
         searchstring = self.form['searchstring'].value
 
-        print(SEARCH_HEAD_TEMPLATE.format(
+        page_content.append(SEARCH_HEAD_TEMPLATE.format(
             TITLE="Search for Courses",
             MENU_URL=MENU_URL,
             EDIT_CSS=WITH_EDIT_CSS,
-            h1="Full Text Search")
+            h1="Full Text Search: {}".format(searchstring))
         )
 
         course = None
 
-        for course, score in TextSearchEngine(DB_FILE, searchstring).results()[:19]:
+        for course, score in TextSearchEngine(
+                DB_FILE, searchstring).results()[:19]:
             substitutions = self.course_dict(course, score)
-            print(SEARCH_COURSE_TEMPLATE.format(**substitutions))
+            page_content.append(
+                SEARCH_COURSE_TEMPLATE.format(**substitutions)
+            )
 
         if not course:
             return "No Results for search %s" % searchstring
         else:
-            print(TABLE_TAIL_TEMPLATE.format(MENU_URL=MENU_URL))
+            page_content.append(
+                TABLE_TAIL_TEMPLATE.format(MENU_URL=MENU_URL)
+            )
+            for chunk in page_content:
+                print(chunk)
             return
 
-    def create_search_form(self):
+    def create_search_form(self, status):
         print(SEARCH_TEMPLATE.format(
             MENU_URL=MENU_URL,
             TITLE="Search for Courses",
             h1="Full Text Search",
+            status=(status or "Ready For Search"),
             EDIT_CSS=WITH_EDIT_CSS
             ))
 
