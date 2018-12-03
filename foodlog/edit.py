@@ -76,7 +76,7 @@ class EditCourse(object):
                 IMAGE='',
                 TITLE="Deleted Course Display",
                 h1="Deleted Food Entry",
-                BUTTON_BAR=CMD_BUTTON_BAR,
+                BUTTON_BAR=NO_BUTTON_BAR,
                 DELETE_BAR=NO_BUTTON_BAR,
                 EDIT_CSS=WITHOUT_EDIT_CSS,
                 disabled="disabled",
