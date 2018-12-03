@@ -71,7 +71,9 @@ class FullTextSearch(object):
         for field in "calories carbs fat protein".split():
             answer[field] = safe_int(getattr(dish, field, None))
         for field in "comment size".split():
-            answer[field] = ellipse_truncate(getattr(dish, field, "")length=20)
+            answer[field] = ellipse_truncate(
+                getattr(dish, field, ""),
+                length=20)
         answer['score'] = score
 
         return answer
