@@ -17,6 +17,7 @@ from my_info import config_path
 from templates import (SEARCH_TEMPLATE, SEARCH_COURSE_TEMPLATE, WITH_EDIT_CSS,
     SEARCH_HEAD_TEMPLATE, TABLE_TAIL_TEMPLATE)
 from search_engine import TextSearchEngine
+from sqlite3 import OperationalError
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
@@ -55,14 +56,15 @@ def edit_url(dish):
 class FullTextSearch(object):
     def __init__(self):
         self.form = cgi.FieldStorage()
+        self.status = None
 
     def run(self):
-        status = None
+        self.status = None
         if self.form.keys():
-            status = self.form_entry()
-            if not status:
+            self.form_entry()
+            if not self.status:
                 return
-        self.create_search_form(status)
+        self.create_search_form()
 
 
     def course_dict(self, dish, score):
@@ -77,6 +79,14 @@ class FullTextSearch(object):
         answer['score'] = score
 
         return answer
+
+    def search(self):
+        searchstring = self.form['searchstring'].value
+        try:
+            return TextSearchEngine(DB_FILE, searchstring).results()
+        except OperationalError as e:
+            self.status = e
+            return list()
 
     def form_entry(self):
         """ Print a form with courses from search results """
@@ -93,29 +103,29 @@ class FullTextSearch(object):
 
         course = None
 
-        for course, score in TextSearchEngine(
-                DB_FILE, searchstring).results()[:19]:
+        for course, score in self.search()[:19]:
             substitutions = self.course_dict(course, score)
             page_content.append(
                 SEARCH_COURSE_TEMPLATE.format(**substitutions)
             )
 
+        if self.status:
+            return
         if not course:
-            return "No Results for search %s" % searchstring
+            self.status = "No Results for search %s" % searchstring
+            return
         else:
-            page_content.append(
-                TABLE_TAIL_TEMPLATE.format(MENU_URL=MENU_URL)
-            )
+            page_content.append(TABLE_TAIL_TEMPLATE.format(MENU_URL=MENU_URL))
             for chunk in page_content:
                 print(chunk)
             return
 
-    def create_search_form(self, status):
+    def create_search_form(self):
         print(SEARCH_TEMPLATE.format(
             MENU_URL=MENU_URL,
             TITLE="Search for Courses",
             h1="Full Text Search",
-            status=(status or "Ready For Search"),
+            status=(self.status or "Ready For Search"),
             EDIT_CSS=WITH_EDIT_CSS
             ))
 
