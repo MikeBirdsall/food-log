@@ -461,8 +461,8 @@ TOP_TEMPLATE = HEAD2_TEMPLATE + """\
         <input class="calc" type="text" id="calccarbs" />
         <br>
 
-        <label class="nutrit" for="protein">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="protein" size="2" max="300" step="1"
+        <label class="nutrit" for="prot">Protein(g):</label>
+        <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1"
            value="{protein}">
         <button type="button" class="ifedit" onclick="document.getElementById('prot').value =
             eval(document.getElementById('calcprot').value || 0)">=</button>
