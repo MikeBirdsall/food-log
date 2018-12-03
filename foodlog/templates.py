@@ -407,7 +407,7 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
     <h2>{status}</h2>
     <form method="get">
       <br>
-      <button formaction="{MENU_URL}"/>Back to Food Menu</button>
+      <button formaction="{MENU_URL}">Back to Food Menu</button>
     </form>
     {cheatsheet}
   </body>

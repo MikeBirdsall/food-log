@@ -17,9 +17,8 @@ import sqlite3
 from datetime import datetime
 from my_info import config_path
 from entry_form import EntryForm
-from templates import (IMAGE_TEMPLATE, TOP_TEMPLATE,
-    TOP_TEMPLATE, CMD_BUTTON_BAR, DEL_BUTTON_BAR, NO_BUTTON_BAR,
-    WITHOUT_EDIT_CSS, WITH_EDIT_CSS)
+from templates import (IMAGE_TEMPLATE, TOP_TEMPLATE, CMD_BUTTON_BAR,
+    DEL_BUTTON_BAR, NO_BUTTON_BAR, WITHOUT_EDIT_CSS, WITH_EDIT_CSS)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -128,21 +127,26 @@ class EditCourse(object):
         self.cursor.execute(xline, xparms)
         print(dict(command=xline, args=xparms), file=self.log_file)
 
-        return "<h3>Template created at %s</h3>" % (datetime.now().time().strftime("%I:%M:%S %p"))
+        return "<h3>Template created at %s</h3>" % (
+            datetime.now().time().strftime("%I:%M:%S %p"))
 
 
     def delete(self):
         """ Delete record from database, write deleted entry in log """
+        # Write deleted entry into log
         print("Delete", self.old_data, file=self.log_file)
-        print("Replace with:", file=self.log_file)
-        print("#insert into course ",
-            str(tuple(self.old_data.keys())).translate(None, "'"),
+
+        # Write comment about how to restore it
+        print("#Replace with:", file=self.log_file)
+        print("#Insert into course ",
+            str(tuple(self.old_data.keys())).translate({ord("'"): None}),
             "VALUES ",
             str(tuple(self.old_data.values())),
             file=self.log_file)
         line = "Delete from course where id = %s" % (self.data['id'])
         self.cursor.execute(line)
-        return "<p>Entry deleted at %s</p>" % datetime.now().time().strftime("%I:%M:%S %p")
+        return ("<p>Entry deleted at %s</p>" %
+            datetime.now().time().strftime("%I:%M:%S %p"))
 
     def copy(self):
         global SCRIPT_NAME
