@@ -32,9 +32,10 @@ CHEATSHEET = """/
   <li>salad</li>
   <li>egg*</li>
   <li>egg* sand*</li>
-  <li>egg* NEAR/3 rice*</li>
+  <li>ste* NEAR/3 ric*</li>
   <li>steak OR roast</li>
-  <li>steak AND NOT shake</li>
+  <li>steak NOT shake</li>
+  <li>ste* NOT shake</li>
 </ul>
 """
 def safe_int(val):
