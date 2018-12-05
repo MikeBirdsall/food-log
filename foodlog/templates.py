@@ -83,7 +83,7 @@ Content-Type: text/html
 
       input {{
         display:inline-block;
-        text-align:right;
+        text-align:left;
       }}
 
       fieldset {{
@@ -318,7 +318,7 @@ Content-Type: text/html
 
       input {{
         display:inline-block;
-        text-align:right;
+        text-align:left;
       }}
 
       fieldset {{
