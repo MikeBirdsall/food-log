@@ -5,7 +5,7 @@
 # Snippets to fill in variable parts of the templates
 WITHOUT_EDIT_CSS = """\
       input.calc {
-        width:150px;
+        width:130px;
         visibility:hidden;
       }
 
@@ -16,7 +16,7 @@ WITHOUT_EDIT_CSS = """\
 
 WITH_EDIT_CSS = """\
       input.calc {
-        width:150px;
+        width:130px;
       }
 """
 
@@ -73,10 +73,6 @@ Content-Type: text/html
 
       input.inst {{
         text-align:left;
-      }}
-
-      input.calc {{
-        width:150px;
       }}
 
       {EDIT_CSS}
@@ -308,10 +304,6 @@ Content-Type: text/html
 
       input.inst {{
         text-align:left;
-      }}
-
-      input.calc {{
-        width:150px;
       }}
 
       {EDIT_CSS}
