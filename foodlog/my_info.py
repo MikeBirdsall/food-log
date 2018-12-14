@@ -4,8 +4,9 @@ hack=False
 
 import os
 import sys
+from appdirs import user_data_dir
 
-class config_path(object):
+class config_path:
     def __init__(self):
 
         self.config = config = ConfigParser(inline_comment_prefixes=(';',))
@@ -13,31 +14,10 @@ class config_path(object):
 
 
     def config_file(self):
-        if 'GATEWAY_INTERFACE' in os.environ and 'SCRIPT_FILENAME' in os.environ:
-            script_path = os.environ.get('SCRIPT_FILENAME', '')
-        else:
-            # Allow it to be run from command-line, as well
-            script_path = os.path.abspath(sys.argv[0])
+        path = user_data_dir("foodlog", "MGB")
 
-        return os.path.join(os.path.dirname(script_path), 'foodlog.cfg')
+        return os.path.join(path, 'foodlog.cfg')
 
     def dir(self, which):
         return self.config.get('paths', which)
 
-if __name__ == '__main__':
-    if 'GATEWAY_INTERFACE' in os.environ:
-        print("""Content-Type: text/plain\n\n""")
-        print("argv[0]", sys.argv[0])
-        print("empty path", os.path.dirname(""))
-        print("-", os.path.join(os.path.dirname(""), "foodlog.cfg"))
-
-
-        for x in sorted(os.environ.keys()):
-            print(x, os.environ.get(x, "Unset"))
-        print()
-
-    z = config_path()
-
-    if 'GATEWAY_INTERFACE' in os.environ:
-        for x in ('THUMB_DIR THUMB_URL ARCHIVE_DIR DB_FILE DB_LOG MENU_URL VIEW_MENU_URL').split():
-            print(x, z.dir(x))

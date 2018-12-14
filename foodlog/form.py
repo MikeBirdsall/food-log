@@ -15,13 +15,14 @@ the data in various forms.
 import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
+import sys
 import sqlite3
 import subprocess
 from datetime import datetime, time
-from my_info import config_path
 from PIL import Image
 from PIL.ExifTags import TAGS
-from templates import PAGE_TEMPLATE, WITH_EDIT_CSS
+from foodlog.my_info import config_path
+from foodlog.templates import INVALID_TEMPLATE, PAGE_TEMPLATE, WITH_EDIT_CSS
 
 THUMB_SIZE = 400, 300
 ORIG_KEYS = """description comment size calories carbs protein fat servings
@@ -32,32 +33,56 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 UPLOAD_SECTION = "upload"
 IMAGE_FILE_FIELD = "pic"
 
-class EntryForm(object):
+config = config_path() # pylint: disable=invalid-name
+DB_FILE = config.dir('DB_FILE')
+LOG_FILENAME = config.dir("DB_LOG")
+THUMB_DIR = config.dir("THUMB_DIR")
+ARCHIVE_DIR = config.dir("ARCHIVE_DIR")
+
+IGNORE = frozenset('template cmd'.split())
+VALID = frozenset(ORIG_KEYS).union((IMAGE_FILE_FIELD,))
+
+
+def print_error(header, text):
+    print(INVALID_TEMPLATE.format(header, text))
+    sys.exit(0)
+
+def get_args(form):
+
+    args = {}
+    params = set(form.keys())
+    params = params - IGNORE
+    invalid = params - VALID
+    valid = params - invalid
+    if invalid:
+        print_error("Invalid parameters:", invalid)
+
+    for key in valid:
+        if key == IMAGE_FILE_FIELD:
+            args[key] = form[key]
+        else:
+            args[key] = form.getfirst(key)
+
+    return args
+
+class EntryForm:
     """ Class to handle input and output of basic entry form """
-    def __init__(self):
+    def __init__(self, form, user):
         self.upload_time = datetime.now()
         self.bname = self.outfile_name()
-        config = config_path()
-        # Since this is an "edit" form, this menu_url is for the editing menus
-        self.menu_url = config.dir('MENU_URL')
-        self.db_file = config.dir('DB_FILE')
-        self.log_filename = config.dir("DB_LOG")
-        self.thumb_dir = config.dir("THUMB_DIR")
-        self.archive_dir = config.dir("ARCHIVE_DIR")
-        self.fileitem = None
         self.log_file = None
-        self.form = cgi.FieldStorage()
+
+        self.data = get_args(form)
 
     def process(self):
-        with open(self.log_filename, "a") as self.log_file:
-            if self.form.keys():
+        with open(LOG_FILENAME, "a") as self.log_file:
+            if self.data.keys():
                 status = self.handle_filled_form()
             else:
                 status = "Unsubmitted Form"
 
         print(PAGE_TEMPLATE.format(
             SCRIPT_NAME=SCRIPT_NAME,
-            MENU_URL=self.menu_url,
             STATUS=status,
             EDIT_CSS=WITH_EDIT_CSS,
             TITLE="Input Course Information",
@@ -121,6 +146,9 @@ class EntryForm(object):
             self.insert_in_db(merged)
             return "Uploaded %s" % self.bname
 
+
+
+
     def outfile_name(self):
         """ Using timestamp as basis for filenames
 
@@ -139,26 +167,26 @@ class EntryForm(object):
                 thumb_id: thumbnail file basename, if there is one
 
         """
-        if IMAGE_FILE_FIELD not in self.form:
+        if IMAGE_FILE_FIELD not in self.data:
             # Form didn't have file upload field, but let's allow it
             return dict()
 
-        self.fileitem = self.form[IMAGE_FILE_FIELD]
+        fileitem = self.data[IMAGE_FILE_FIELD]
 
-        if not self.fileitem.filename:
+        if not fileitem.filename:
             # No image file uploaded
             return dict()
 
         answer = dict()
 
-        answer['image_file'] = self.fileitem.filename
+        answer['image_file'] = fileitem.filename
 
         image_filename = self.bname + ".image"
-        image_path = os.path.join(self.archive_dir, image_filename)
+        image_path = os.path.join(ARCHIVE_DIR, image_filename)
         # We don't know what kind of image file it is but we don't need to
         with open(image_path, 'wb') as fout:
             while True:
-                chunk = self.fileitem.file.read(100000)
+                chunk = fileitem.file.read(100000)
                 if not chunk:
                     break
                 fout.write(chunk)
@@ -174,9 +202,7 @@ class EntryForm(object):
             answer['time'] = exif_daytime[1]
 
         thumbid = self.bname + ".jpg"
-        thumbfile_name = os.path.join(self.thumb_dir, thumbid)
-
-
+        thumbfile_name = os.path.join(THUMB_DIR, thumbid)
 
         # Check that file names don't have some sort of space in them
         if len(image_path.split()) > 1 or len(thumbfile_name.split()) > 1:
@@ -206,8 +232,8 @@ class EntryForm(object):
         """ Gather data from form """
         answer = dict()
         for key in ORIG_KEYS:
-            if key in self.form and not self.form.filename:
-                value = self.form.getfirst(key)
+            if key in self.data:
+                value = self.data[key]
                 # Empty strings in POST are reported
                 if value != '':
                     answer["orig_%s" % key] = answer[key] = value
@@ -241,7 +267,7 @@ class EntryForm(object):
         fields = [x for x in dict_ if dict_[x] != ""]
         vals = [dict_[x] for x in fields]
 
-        with sqlite3.connect(self.db_file) as conn:
+        with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             if not fields:
@@ -294,5 +320,10 @@ def meal_at_this_time(when):
     else:
         return "Snack"
 
-if __name__ == '__main__':
-    EntryForm().process()
+class Entry:
+    def __init__(self, form, user):
+        if not DB_FILE or ";" in DB_FILE:
+            print_error("PROBLEM WITH DATABASE", DB_FILE)
+
+        EntryForm(form, user).process()
+

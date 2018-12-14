@@ -2,8 +2,8 @@
 
 """
 
-from my_info import config_path
-from templates import TEMPLATE, WITH_EDIT_CSS
+from foodlog.my_info import config_path
+from foodlog.templates import TEMPLATE, WITH_EDIT_CSS
 
 
 FIELDS = 'description comment size calories carbs fat protein'.split()

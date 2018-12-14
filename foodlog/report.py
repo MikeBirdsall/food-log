@@ -18,8 +18,8 @@ from collections import defaultdict, namedtuple
 from operator import attrgetter
 from datetime import date, datetime, timedelta
 import sqlite3
-from my_info import config_path
-from templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
+from foodlog.my_info import config_path
+from foodlog.templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
     AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, NUTRITION_TEMPLATE,
     OTHERS_IN_MEAL_TEMPLATE, FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
 
@@ -32,6 +32,7 @@ MENU_URL = config.dir('MENU_URL')
 VIEW_MENU_URL = config.dir('VIEW_MENU_URL')
 
 
+IGNORE = set('template cmd'.split())
 VALID = set('start end range title reverse edit'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
@@ -96,11 +97,11 @@ def add_with_none(now, new, servings):
             return (now[0], "??%s" % (new))
 
 
-def get_args():
+def get_args(form):
 
     args = {}
-    form = cgi.FieldStorage()
     params = set(form.keys())
+    params = params - IGNORE
     invalid = params - VALID
     valid = params - invalid
     if invalid:
@@ -245,9 +246,9 @@ class ConstructWebPage():
         label = ellipse_truncate(dish.description)
         if bold:
             label = "<strong>{}</strong>".format(label)
-        script = "detail.py" if self.readonly else "edit.py"
-        return '<a href="./{script}?id={id}">{label}</a>'.format(
-            script=script, label=label, id=dish.id)
+        cmd = "detail" if self.readonly else "edit"
+        return '<a href="run.py?cmd={cmd}&id={id}">{label}</a>'.format(
+            cmd=cmd, label=label, id=dish.id)
 
     def course_dict(self, dish, **kwargs):
         answer = dict()
@@ -304,23 +305,22 @@ def ellipse_truncate(text, length=40):
     return (result[:length-1] + "&hellip;") if len(result) > length else result
 
 
-def main():
+class Report:
 
-    if not DB_FILE or ";" in DB_FILE:
-        print_error("PROBLEM WITH DATABASE", DB_FILE)
+    def __init__(self, form, user):
+        if not DB_FILE or ";" in DB_FILE:
+            print_error("PROBLEM WITH DATABASE", DB_FILE)
 
-    args = get_args()
-    start_date, stop_date = get_dates(args)
+        args = get_args(form)
+        start_date, stop_date = get_dates(args)
 
-    ConstructWebPage(
-        DB_FILE,
-        not args.get('edit', 0),
-    ).output(
-        start_date,
-        stop_date,
-        args.get('reverse', 0),
-        args.get('title') or "Food Log")
+        ConstructWebPage(
+            DB_FILE,
+            not args.get('edit', 0),
+        ).output(
+            start_date,
+            stop_date,
+            args.get('reverse', 0),
+            args.get('title') or "Food Log")
 
 
-if __name__ == '__main__':
-    main()

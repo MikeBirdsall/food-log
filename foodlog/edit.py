@@ -12,42 +12,69 @@ the date in valious ways.
 """
 import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
+import sys
 import os
 import sqlite3
 from datetime import datetime
-from my_info import config_path
-from entry_form import EntryForm
-from templates import (IMAGE_TEMPLATE, TOP_TEMPLATE, CMD_BUTTON_BAR,
-    DEL_BUTTON_BAR, NO_BUTTON_BAR, WITHOUT_EDIT_CSS, WITH_EDIT_CSS)
+from foodlog.my_info import config_path
+from foodlog.entry_form import EntryForm
+from foodlog.templates import (IMAGE_TEMPLATE, TOP_TEMPLATE, CMD_BUTTON_BAR,
+    DEL_BUTTON_BAR, NO_BUTTON_BAR, WITHOUT_EDIT_CSS, WITH_EDIT_CSS,
+    INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 TEMPLATE_REQUIRED = frozenset('description calories fat protein carbs'.split())
 UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
-VALID_FIELDS = UPDATE_FIELDS.union('id ini_id action'.split())
+VALID = UPDATE_FIELDS.union('id ini_id action'.split())
+config = config_path() # pylint: disable=invalid-name
+DB_FILE = config.dir('DB_FILE')
+THUMB_URL = config.dir('THUMB_URL')
+LOG_FILENAME = config.dir('DB_LOG')
+
+IGNORE = frozenset('template cmd'.split())
+
+def print_error(header, text):
+    print(INVALID_TEMPLATE.format(header, text))
+    sys.exit(0)
+
+def get_args(form):
+    params = set(form.keys())
+    if not ("id" in params or "ini_id" in params):
+        raise RuntimeError("No Input")
+
+    params = params - IGNORE
+    invalid = params - VALID
+    valid = params - invalid
+    if invalid:
+        print_error("Invalid parameters:", invalid)
+
+    return {key: form.getfirst(key) for key in valid}
 
 
-class EditCourse(object):
+class Edit:
     """ Main program do create and handle form to edit food items """
-    def __init__(self):
-        self.old_data = dict()
-        self.data = dict()
 
-        config = config_path()
-        self.menu_url = config.dir('MENU_URL')
-        self.thumb_url = config.dir('THUMB_URL')
-        self.db_file = config.dir('DB_FILE')
-        self.log_filename = config.dir('DB_LOG')
+    def __init__(self, form, user):
+        if not DB_FILE or ";" in DB_FILE:
+            print_error("PROBLEM WITH DATABASE", DB_FILE)
+
+        args = get_args(form)
+
+        self.old_data = dict()
+        self.data = args
+
         self.log_file = None
         self.cursor = None
+        self.Process(DB_FILE, user)
 
-    def process(self):
+    def Process(self, database, user):
         """ If form filled, update database. In either case (re)draw form """
+        self.page_content = {}
 
-        self.data = self.get_form_data()
-        with open(self.log_filename, "a") as self.log_file:
-            with sqlite3.connect(self.db_file) as conn:
+        with open(LOG_FILENAME, "a") as self.log_file:
+            with sqlite3.connect(database) as conn:
                 conn.row_factory = sqlite3.Row
                 self.cursor = conn.cursor()
 
@@ -70,7 +97,6 @@ class EditCourse(object):
         elif self.data['action'] == 'Delete':
             status = self.delete()
             print(TOP_TEMPLATE.format(
-                MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
                 IMAGE='',
@@ -90,13 +116,12 @@ class EditCourse(object):
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
         if thumb_id:
-            image = IMAGE_TEMPLATE % os.path.join(self.thumb_url,
+            image = IMAGE_TEMPLATE % os.path.join(THUMB_URL,
                                                   thumb_id + ".jpg")
         else:
             image = ''
 
         print(TOP_TEMPLATE.format(
-                MENU_URL=self.menu_url,
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
                 IMAGE=image,
@@ -154,7 +179,7 @@ class EditCourse(object):
         copied = {key:self.data.get(key, '') for key in
             'description comment size calories carbs fat protein'.split()}
         form = EntryForm()
-        SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
+        #SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
         form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
         if form.status:
             return form.status
@@ -201,22 +226,4 @@ class EditCourse(object):
             raise RuntimeError('Record not found')
 
         return dict(answer)
-
-    def get_form_data(self):
-
-        fs = cgi.FieldStorage()
-
-        # We need identity of record we are editing; either "id" or "ini_id"
-        if not (fs.keys() and ("id" in fs or "ini_id" in fs)):
-            raise RuntimeError("No Input")
-
-        # Don't allow extra fields - protection against misspelling
-        invalid_fields = set(fs.keys()).difference(VALID_FIELDS)
-        if invalid_fields:
-            raise RuntimeError("Bad field names %s" % invalid_fields)
-
-        return dict((x, fs.getfirst(x)) for x in fs)
-
-if __name__ == '__main__':
-    EditCourse().process()
 

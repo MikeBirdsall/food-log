@@ -13,18 +13,22 @@ import cgi
 import cgitb
 cgitb.enable()
 import os
-from my_info import config_path
-from templates import (SEARCH_TEMPLATE, SEARCH_COURSE_TEMPLATE, WITH_EDIT_CSS,
-    SEARCH_HEAD_TEMPLATE, TABLE_TAIL_TEMPLATE)
-from search_engine import TextSearchEngine
+import sys
 from sqlite3 import OperationalError
+
+from foodlog.my_info import config_path
+from foodlog.templates import (SEARCH_TEMPLATE, SEARCH_COURSE_TEMPLATE,
+    WITH_EDIT_CSS, SEARCH_HEAD_TEMPLATE, TABLE_TAIL_TEMPLATE, INVALID_TEMPLATE)
+from foodlog.search_engine import TextSearchEngine
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
 
-config = config_path()
+config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
-MENU_URL = config.dir('MENU_URL')
+
+IGNORE = set('template cmd'.split())
+VALID = frozenset('searchstring'.split())
 
 CHEATSHEET = """
 <p>Examples:</p>
@@ -57,23 +61,44 @@ def ellipse_truncate(text, length=30, default=""):
     result = text or default
     return (result[:length-1] + "&hellip;") if len(result) > length else result
 
+def print_error(header, text):
+    print(INVALID_TEMPLATE.format(header, text))
+    sys.exit(0)
+
+def get_args(form):
+    params = set(form.keys())
+
+    params = params - IGNORE
+    invalid = params - VALID
+    valid = params - invalid
+    if invalid:
+        print_error("Invalid parameters:", invalid)
+
+    return {key: form.getfirst(key) for key in valid}
+
 def edit_url(dish):
     """ Return link to edit for dish """
 
     label = ellipse_truncate(dish.description, default="No Description Yet")
-    return '<a href="./edit.py?id={id}">{label}</a>'.format(
+    return '<a href="run.py?cmd=edit&id={id}">{label}</a>'.format(
         label=label, id=dish.id
     )
 
-class FullTextSearch(object):
-    def __init__(self):
-        self.form = cgi.FieldStorage()
-        self.status = None
+class FullTextSearch:
+    def __init__(self, form, user):
 
-    def run(self):
+        if not DB_FILE or ";" in DB_FILE:
+            print_error("PROBLEM WITH DATABASE", DB_FILE)
+
         self.status = None
-        if self.form.keys():
-            self.form_entry()
+        args = get_args(form)
+
+        self.run(args.get('searchstring'), user)
+
+    def run(self, searchstring, user):
+        self.status = None
+        if searchstring:
+            self.form_entry(searchstring, user)
             if not self.status:
                 return
         self.create_search_form()
@@ -92,30 +117,27 @@ class FullTextSearch(object):
 
         return answer
 
-    def search(self):
-        searchstring = self.form['searchstring'].value
+    def search(self, searchstring):
         try:
             return TextSearchEngine(DB_FILE, searchstring).results()
         except OperationalError as e:
             self.status = e
             return list()
 
-    def form_entry(self):
+    def form_entry(self, searchstring, user):
         """ Print a form with courses from search results """
 
         page_content = []
-        searchstring = self.form['searchstring'].value
 
         page_content.append(SEARCH_HEAD_TEMPLATE.format(
             TITLE="Search for Courses",
-            MENU_URL=MENU_URL,
             EDIT_CSS=WITH_EDIT_CSS,
             h1="Full Text Search: {}".format(searchstring))
         )
 
         course = None
 
-        for course, score in self.search()[:19]:
+        for course, score in self.search(searchstring)[:19]:
             substitutions = self.course_dict(course, score)
             page_content.append(
                 SEARCH_COURSE_TEMPLATE.format(**substitutions)
@@ -127,14 +149,13 @@ class FullTextSearch(object):
             self.status = "No Results for search %s" % searchstring
             return
         else:
-            page_content.append(TABLE_TAIL_TEMPLATE.format(MENU_URL=MENU_URL))
+            page_content.append(TABLE_TAIL_TEMPLATE)
             for chunk in page_content:
                 print(chunk)
             return
 
     def create_search_form(self):
         print(SEARCH_TEMPLATE.format(
-            MENU_URL=MENU_URL,
             TITLE="Search for Courses",
             h1="Full Text Search",
             status=(self.status or "Ready For Search"),
@@ -142,5 +163,3 @@ class FullTextSearch(object):
             EDIT_CSS=WITH_EDIT_CSS
             ))
 
-if __name__ == '__main__':
-    FullTextSearch().run()

@@ -9,38 +9,62 @@ with the values from the template.
 
 """
 import cgi
-import cgitb; cgitb.enable()
-import os, sys
+import cgitb; cgitb.enable() # pylint: disable=C0321
+import os
+import sys
 import sqlite3
-from my_info import config_path
-from entry_form import EntryForm
-from templates import HEAD_TEMPLATE, ROW_TEMPLATE, FORM_TAIL_TEMPLATE
+from foodlog.my_info import config_path
+from foodlog.entry_form import EntryForm
+from foodlog.templates import (HEAD_TEMPLATE, ROW_TEMPLATE,
+    FORM_TAIL_TEMPLATE, INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
-SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
+#SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
+#SCRIPT_NAME = "form.py"
 
-config = config_path()
+config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
-MENU_URL = config.dir('MENU_URL')
 
-class CopyTemplate(object):
-    def __init__(self):
-        self.form = cgi.FieldStorage()
+IGNORE = frozenset('template cmd'.split())
+VALID = frozenset('id'.split())
 
-    def run(self):
-        if self.form.keys():
-            status = self.form_entry()
+def print_error(header, text):
+    print(INVALID_TEMPLATE.format(header, text))
+    sys.exit(0)
+
+def get_args(form):
+    params = set(form.keys())
+    params = params - IGNORE
+    invalid = params - VALID
+    valid = params - invalid
+    if invalid:
+        print_error("Invalid parameters:", invalid)
+
+    return {key: form.getfirst(key) for key in valid}
+
+
+class CopyTemplate:
+    def __init__(self, form, user):
+        if not DB_FILE or ";" in DB_FILE:
+            print_error("PROBLEM WITH DATABASE", DB_FILE)
+
+        args = get_args(form)
+
+        self.run(args.get('id'))
+
+    def run(self, template_id):
+        if template_id:
+            status = self.form_entry(template_id)
             if not status:
                 return
             print("""<p3>%s</p3>""" % status)
         self.create_selection()
 
     def emit_button(self, row):
-        print(ROW_TEMPLATE % (row['id'], row['description']))
+        print(ROW_TEMPLATE.format(row['id'], row['description']))
 
-    def form_entry(self):
+    def form_entry(self, template_id):
         """ Print an entry form with default values from template """
-        template_id = self.form['choice'].value
 
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
@@ -59,7 +83,6 @@ class CopyTemplate(object):
 
     def create_selection(self):
         print(HEAD_TEMPLATE.format(
-            MENU_URL=MENU_URL,
             TITLE="Create Course From Template",
             h1="Choose Template"
             ))
@@ -70,5 +93,3 @@ class CopyTemplate(object):
                 self.emit_button(row)
         print(FORM_TAIL_TEMPLATE)
 
-if __name__ == '__main__':
-    CopyTemplate().run()

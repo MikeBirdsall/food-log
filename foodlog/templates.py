@@ -20,12 +20,20 @@ WITH_EDIT_CSS = """\
       }
 """
 
+DEL_BUTTON_BAR2 = """\
+ <br> <br> <br> <br>
+ <button formaction=run.py>Delete</button>
+ <input type="hidden" name="cmd" value="delete">
+"""
+
 DEL_BUTTON_BAR = """\
       <br> <br> <br> <br>
       <input type="submit" value="Delete" name="action">
+      <input type="hidden" name="cmd" value="edit">
 """
 
 CMD_BUTTON_BAR = """\
+      <input type="hidden" name="cmd" value="edit">
       <input type="submit" value="Update" name="action">
       <input type="submit" value="Copy" style="margin-left: 5em" name="action">
       <input type="submit" value="Make Template" name="action" style="float: right;"><br>
@@ -98,12 +106,15 @@ Content-Type: text/html
   <body>
     <h1>{h1}</h1>
     <form method="get">
-      <button formaction="report.py">List all meals</button>
-      <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+      <button formaction="run.py">List all Meals</button>
+      <input type="hidden" name="template" value="PAGE_TEMPLATE">
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
+      <button formaction="index.html" style="float: right;">Food Menu</button>
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
+      <input type="hidden" name="cmd" value="enter">
       <br>
       <input type="submit">
       <br>
@@ -192,10 +203,12 @@ Content-Type: text/html
     </form>
 
     <form method="get">
-      <button formaction="report.py">List all meals</button>
-      <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+      <button formaction="run.py">List all Meals</button>
+      <input type="hidden" name="template" value="PAGE_TEMPLATE">
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
+      <button formaction="index.html" style="float: right;">Food Menu</button>
     </form>
 
     <p>{STATUS}</p>
@@ -235,6 +248,17 @@ Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <style>
+      table {{
+        background:#fff7db;
+      }}
+      table, th, td {{
+        border: 1px solid black;
+        border-collapse: collapse;
+      }}
+      th, td {{
+        padding: 5px;
+        white-space: nowrap;
+      }}
       button {{
         max-width: 540px;
         width: 100%;
@@ -245,23 +269,25 @@ Content-Type: text/html
   <body>
     <h1>{h1}</h1>
     <form method="get">
-      <button formaction="{MENU_URL}/">Back to Food Menu</button><br/><br/>\
+      <button formaction="index.html">Back to Food Menu</button><br/><br/>
+      <table>
 """
 
 # Used in copy_template
 # Needs for interpolation:
 
 ROW_TEMPLATE = """\
-      <button name="choice" type="submit" value=%s>%s</button><br/><br/>\
+      <tr><td><a href="run.py?cmd=template&id={}">{}</a><br></td></tr>
 """
 
 # Used in copy_template
 # Needs for interpolation:
 
-FORM_TAIL_TEMPLATE = """\
-    </form>\
+FORM_TAIL_TEMPLATE = """
+      </table>
+    </form>
   </body>
-</html>\
+</html>
 """
 
 
@@ -350,8 +376,12 @@ SEARCH_HEAD_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
-      <button formaction="./report.py">List all meals</button>
-      <button formaction="{MENU_URL}" style="float: right;">Food Menu</button>
+      <button formaction="run.py">List all Meals</button>
+      <input type="hidden" name="template" value="SEARCH_HEAD_TEMPLATE">
+      <input type="hidden" name="cmd" value="report">
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
+      <button formaction="index.html" style="float: right;">Food Menu</button>
     </form>
     <table>
       <tr>
@@ -373,7 +403,12 @@ SEARCH_HEAD_TEMPLATE = HEAD2_TEMPLATE + """\
 TABLE_TAIL_TEMPLATE = """\
     </table>
     <form method="get">
-        <button formaction="{MENU_URL}">Food Menu</button>
+      <button formaction="run.py">List all Meals</button>
+      <input type="hidden" name="template" value="TABLE_TAIL_TEMPLATE">
+      <input type="hidden" name="cmd" value="report">
+      <input type="hidden" name="edit" value="1">
+      <input type="hidden" name="reverse" value="1">
+      <button formaction="index.html" style="float: right;">Food Menu</button>
     </form>
   </body>
 </html>
@@ -399,7 +434,7 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
     <h2>{status}</h2>
     <form method="get">
       <br>
-      <button formaction="{MENU_URL}">Back to Food Menu</button>
+      <button formaction="index.html">Back to Food Menu</button>
     </form>
     {cheatsheet}
   </body>
@@ -412,10 +447,11 @@ TOP_TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
-        <button formaction="{MENU_URL}/">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
         <br>
     </form>
     <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
+      <input type="hidden" name="template" value="TOP_TEMPLATE">
       <br>
       {BUTTON_BAR}
       <input type="hidden" name="id" value={id}>
@@ -522,12 +558,15 @@ TEMPLATE = HEAD2_TEMPLATE + """\
   <body>
     <h1>{h1}</h1>
     <form method="get">
-      <button formaction="./report.py">List all meals</button>
+      <button formaction="run.py">List all meals</button>
+      <input type="hidden" name="template" value="TEMPLATE">
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
-      <button formaction="{MENU_URL}" style="float: right">Food Menu</button>
+      <button formaction="index.html" style="float: right">Food Menu</button>
     </form>
     <form method="post" enctype="multipart/form-data" action="{script}">
+      <input type="hidden" name="cmd" value="enter">
       <br>
       <input type="submit">
       <br>
@@ -605,10 +644,11 @@ TEMPLATE = HEAD2_TEMPLATE + """\
 
     <form method="get">
       <br>
-      <button formaction="./report.py">List all Meals</button>
+      <button formaction="run.py">List all meals</button>
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
-      <button formaction="{MENU_URL}" style="float: right">Food Menu</button>
+      <button formaction="index.html" style="float: right">Food Menu</button>
     </form>
     <p>{status}</p>
   </body>\n</html>
@@ -668,7 +708,7 @@ Content-Type: text/html
     <h1>{title}</h1>
     <h2>{start} - {end}</h2>
     <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     <table>"""
 
@@ -678,7 +718,7 @@ Content-Type: text/html
 AFTERWARD_TEMPLATE = """
     </table>
     <form method="get">
-        <button formaction="{foodmenu}">Food Menu</button>
+        <button formaction="index.html">Food Menu</button>
     </form>
     recomputed on {now}
   </body>
