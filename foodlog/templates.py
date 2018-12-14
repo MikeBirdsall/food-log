@@ -391,7 +391,7 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
       <br> <br>
       <fieldset style='max-width:360px'>
         Search String:<br>
-        <input type="text" name="searchstring" size="50" required/>
+        <input type="text" name="searchstring" size="50" autofocus required/>
       </fieldset>
       <br>
       <input type="submit">
