@@ -46,13 +46,6 @@ def Dispatch():
         print(INVALID_CMD_ERROR.format(cmd, user, EDIT_VALID))
         return
 
-    #print(TEMP_TEMPLATE1)
-    #print("<h3>Command = {}; User = {}<h3>".format(cmd, user))
-    #cgi.print_environ()
-    #cgi.print_form(form)
-    #print("<h3>import path:</h3>")
-    #print(sys.path)
-
     if cmd == 'report':
         from foodlog.report import Report
         Report(form, user)
@@ -86,37 +79,17 @@ TEMPLATE_A = """content-type: text/html
   <body>
 
 """
-TEMP_TEMPLATE2 = """\
+TEMPLATE_B = """\
 
   </body>
 </html>
 """
 
-NO_CMD_ERROR = "No command in {}" + TEMP_TEMPLATE2
-MULTIPLE_CMDS_ERROR = TEMPLATE_A + "Multiple commands in {}" + TEMP_TEMPLATE2
+NO_CMD_ERROR = "No command in {}" + TEMPLATE_B
+MULTIPLE_CMDS_ERROR = TEMPLATE_A + "Multiple commands in {}" + TEMPLATE_B
 INVALID_CMD_ERROR = (TEMPLATE_A +
-    "Invalid command {} for user {}. Valid commands are:{}" + TEMP_TEMPLATE2)
+    "Invalid command {} for user {}. Valid commands are:{}" + TEMPLATE_B)
 NOT_IMPLEMENTED = TEMPLATE_A + """
     Unimplemented command {}
-"""
-
-TEMP_TEMPLATE1 = TEMPLATE_A
-
-GET_FILE = TEMPLATE_A + """
-    <form method="post" enctype="multipart/form-data" action="{script}">
-      <br>
-      <input type="submit">
-      <br>
-      <fieldset style="max-width:360px">
-        <legend>Image Entry:</legend>
-        <input type="file" name="pic" accept="image/*"/><br>
-        <input type="hidden" name="cmd" value="edit">
-      </fieldset>
-      <br>
-      <input type="submit">
-      <br>
-    </form>
-  </body>
-</html>
 """
 

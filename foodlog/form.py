@@ -182,6 +182,7 @@ class EntryForm:
         answer['image_file'] = fileitem.filename
 
         image_filename = self.bname + ".image"
+        # TODO: move from os.path to pathlib
         image_path = os.path.join(ARCHIVE_DIR, image_filename)
         # We don't know what kind of image file it is but we don't need to
         with open(image_path, 'wb') as fout:
@@ -202,6 +203,7 @@ class EntryForm:
             answer['time'] = exif_daytime[1]
 
         thumbid = self.bname + ".jpg"
+        # TODO: move from os.path to pathlib
         thumbfile_name = os.path.join(THUMB_DIR, thumbid)
 
         # Check that file names don't have some sort of space in them

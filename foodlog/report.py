@@ -20,8 +20,8 @@ from datetime import date, datetime, timedelta
 import sqlite3
 from foodlog.my_info import config_path
 from foodlog.templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
-    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, NUTRITION_TEMPLATE,
-    OTHERS_IN_MEAL_TEMPLATE, FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
+    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, OTHERS_IN_MEAL_TEMPLATE,
+    FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
 
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')

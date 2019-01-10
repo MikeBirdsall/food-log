@@ -6,7 +6,7 @@
     can authorize appropriate operations (viewing and/or editing) the dieters
     data. This is used particularly to allow a dietitian to view the data, but
     not changes it.
-    
+
     A copy (or a link to a copy) is placed in one directory which is protected
     and one that is not.
 

@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 from configparser import ConfigParser
-hack=False
 
 import os
-import sys
 from appdirs import user_data_dir
 
 class config_path:

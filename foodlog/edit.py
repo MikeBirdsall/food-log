@@ -174,12 +174,10 @@ class Edit:
             datetime.now().time().strftime("%I:%M:%S %p"))
 
     def copy(self):
-        global SCRIPT_NAME
         # pull defaults from self
         copied = {key:self.data.get(key, '') for key in
             'description comment size calories carbs fat protein'.split()}
         form = EntryForm()
-        #SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
         form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
         if form.status:
             return form.status

@@ -19,8 +19,6 @@ from foodlog.templates import (HEAD_TEMPLATE, ROW_TEMPLATE,
     FORM_TAIL_TEMPLATE, INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
-#SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
-#SCRIPT_NAME = "form.py"
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
