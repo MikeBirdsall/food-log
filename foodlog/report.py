@@ -172,9 +172,9 @@ class TotalNutrition:
 
 class ConstructWebPage:
 
-    def __init__(self, database, readonly):
+    def __init__(self, database):
         self.database = database
-        self.readonly = bool(int(readonly))
+        self.readonly = True # default
         self.start_date = None
         self.end_date = None
         self.page_content = []
@@ -192,8 +192,10 @@ class ConstructWebPage:
         self.dieter = dieter
         if self.user:
             foodmenu = MENU_URL
+            self.readonly = False
         else:
             foodmenu = VIEW_MENU_URL
+            self.readonly = True
 
         self.page_content.append(REPORT_HEAD_TEMPLATE.format(
             start=start_date,
@@ -218,23 +220,29 @@ class ConstructWebPage:
                 calories, fat, protein, carbs, day, time, meal, size, ini_id,
                 thumb_id
                 from course
-                where dieter = ? and
-                day between ? and ? order by day, time'''
+                where
+                  dieter = ? and
+                  day between ? and ?
+                order by day, time'''
             fields = (self.user, self.start_date, self.end_date)
         elif self.dieter:
             line = '''select id, description, comment, servings,
                 calories, fat, protein, carbs, day, time, meal, size, ini_id,
                 thumb_id
                 from course
-                where dieter = ? and
-                day between ? and ? order by day, time'''
+                where
+                  dieter = ? and
+                  day between ? and ?
+                order by day, time'''
             fields = (self.dieter, self.start_date, self.end_date)
         else:
             line = '''select id, description, comment, servings,
                 calories, fat, protein, carbs, day, time, meal, size, ini_id,
                 thumb_id
                 from course
-                day between ? and ? order by day, time'''
+                where
+                  day between ? and ?
+                order by day, time'''
             fields = (self.start_date, self.end_date)
 
         with sqlite3.connect(self.database) as conn:
@@ -339,7 +347,6 @@ class Report:
 
         ConstructWebPage(
             DB_FILE,
-            not args.get('edit', 0),
         ).output(
             user,
             start_date,

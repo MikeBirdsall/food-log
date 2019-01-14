@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Food Log Editor</title>
+    <title>Food Log Menu</title>
     <style>
       button {
-        max-width: 300px;
+        max-width: 360px;
         width:75%;
         background:#db8c47;
         color: white;
@@ -20,22 +19,32 @@
   <body>
     <h1>Food Menu</h1>
     <form method="get">
-      <button formaction="<execs>/form.py">Enter Dish</button><br/><br/>
-      <button formaction="<execs>/copy_template.py">Copy Dish</button>
-      <button formaction="<execs>/full_search.py">Search</button>
+      <button formaction="run.py">Enter Dish</button>
+      <input type="hidden" name="cmd" value="enter">
     </form>
     <form method="get">
-      <button formaction="<execs>/report.py">This Week</button>
+      <button formaction="run.py">Copy Dish</button>
+      <input type="hidden" name="cmd" value="template">
+    </form>
+    <form method="get">
+      <button formaction="run.py">Search</button>
+      <input type="hidden" name="cmd" value="search">
+    </form>
+    <form method="get">
+      <button formaction="run.py">This Week</button>
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="range" value="thisweek">
       <input type="hidden" name="edit" value="1">
     </form>
     <form method="get">
-      <button formaction="<execs>/report.py">Last Week</button>
+      <button formaction="run.py">Last Week</button>
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="range" value="lastweek">
       <input type="hidden" name="edit" value="1">
     </form>
     <form method="get">
-      <button formaction="<execs>/report.py">Full List</button>
+      <button formaction="run.py">Full List</button>
+      <input type="hidden" name="cmd" value="report">
       <input type="hidden" name="edit" value="1">
       <input type="hidden" name="reverse" value="1">
     </form>
