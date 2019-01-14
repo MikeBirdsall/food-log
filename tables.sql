@@ -2,6 +2,7 @@
 
 create table course(
     id                 integer primary key autoincrement not null,
+    dieter             text,
     orig_description   text,
     orig_comment       text,
     orig_servings      decimal,

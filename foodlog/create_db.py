@@ -11,7 +11,7 @@
 import os
 import argparse
 import sqlite3
-from my_info import config_path
+from foodlog.my_info import config_path
 
 class ConstructDatabase:
 

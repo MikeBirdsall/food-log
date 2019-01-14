@@ -181,7 +181,8 @@ class ConstructWebPage:
         self.reverse = False
         self.title = ""
 
-    def output(self, start_date, end_date, reverse, title):
+    def output(self, user, start_date, end_date, reverse, title):
+        self.user = user
         self.start_date = start_date
         self.end_date = end_date
         self.reverse = bool(int(reverse))
@@ -216,8 +217,9 @@ class ConstructWebPage:
                 calories, fat, protein, carbs, day, time, meal, size, ini_id,
                 thumb_id
                 from course
-                where day between ? and ? order by day, time''',
-                (self.start_date, self.end_date))
+                where dieter = ? and
+                day between ? and ? order by day, time''',
+                (self.user, self.start_date, self.end_date))
 
             for course in cursor.fetchall():
                 fitem = ITEM(**course)
@@ -318,6 +320,7 @@ class Report:
             DB_FILE,
             not args.get('edit', 0),
         ).output(
+            user,
             start_date,
             stop_date,
             args.get('reverse', 0),

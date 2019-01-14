@@ -61,7 +61,7 @@ import argparse
 from collections import namedtuple
 from datetime import date, datetime, timedelta
 import sqlite3
-from my_info import config_path
+from foodlog.my_info import config_path
 
 INVALID_TEMPLATE = """ {} {} """
 
@@ -338,6 +338,7 @@ class Summary:
             conn.row_factory = namedtuple_factory
             cursor = conn.cursor()
 
+            # TODO: add user to the selection
             cursor.execute("""select
                 servings, calories, fat, protein, carbs, day
                 from course

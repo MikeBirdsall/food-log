@@ -25,8 +25,8 @@ from foodlog.my_info import config_path
 from foodlog.templates import INVALID_TEMPLATE, PAGE_TEMPLATE, WITH_EDIT_CSS
 
 THUMB_SIZE = 400, 300
-ORIG_KEYS = """description comment size calories carbs protein fat servings
-    time day meal""".split()
+ORIG_KEYS = """description comment size calories carbs protein fat
+    servings time day meal""".split()
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -72,6 +72,7 @@ class EntryForm:
         self.bname = self.outfile_name()
         self.log_file = None
 
+        self.user = user
         self.data = get_args(form)
 
     def process(self):
@@ -262,25 +263,22 @@ class EntryForm:
     def insert_in_db(self, dict_):
         """ Insert record(s) defined by dict_
 
-
         """
 
         # Insert a course record with columns and values defined by dict_
         fields = [x for x in dict_ if dict_[x] != ""]
         vals = [dict_[x] for x in fields]
+        fields.append('dieter')
+        vals.append(self.user)
+
 
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            if not fields:
-                line = "insert into course default values"
-                cursor.execute(line)
-                print(dict(command=line), file=self.log_file)
-            else:
-                line = "INSERT INTO course (%s) VALUES (%s)" % (
-                    ", ".join(fields), ", ".join("?" for x in vals))
-                cursor.execute(line, vals)
-                print(dict(command=line, args=vals), file=self.log_file)
+            line = "INSERT INTO course (%s) VALUES (%s)" % (
+                ", ".join(fields), ", ".join("?" for x in vals))
+            cursor.execute(line, vals)
+            print(dict(command=line, args=vals), file=self.log_file)
 
 def read_exif_data(img):
     """ Read out pertinent image exif data - in this case datetime
