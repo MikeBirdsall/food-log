@@ -13,7 +13,7 @@ import argparse
 import sqlite3
 from my_info import config_path
 
-class ConstructDatabase(object):
+class ConstructDatabase:
 
     def __init__(self, args):
         config = config_path()

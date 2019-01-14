@@ -131,7 +131,7 @@ def get_args(form):
 
     return args
 
-class Nutrient():
+class Nutrient:
 
     def __init__(self):
         self.missing_values = False
@@ -156,7 +156,7 @@ class Nutrient():
 
 NUTRIENTS = 'calories carbs fat protein'.split()
 
-class TotalNutrition():
+class TotalNutrition:
 
     def __init__(self):
         self.which = {}
@@ -170,7 +170,7 @@ class TotalNutrition():
     def totals(self):
         return [self.which[n].notated_value() for n in NUTRIENTS]
 
-class ConstructWebPage():
+class ConstructWebPage:
 
     def __init__(self, database, readonly):
         self.database = database

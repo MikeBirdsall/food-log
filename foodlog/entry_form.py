@@ -8,7 +8,7 @@ from foodlog.templates import TEMPLATE, WITH_EDIT_CSS
 
 FIELDS = 'description comment size calories carbs fat protein'.split()
 
-class EntryForm(object):
+class EntryForm:
     """ Create an entry form HTML page with possible defaults values """
 
     def __init__(self):
