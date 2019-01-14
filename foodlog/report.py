@@ -33,7 +33,7 @@ VIEW_MENU_URL = config.dir('VIEW_MENU_URL')
 
 
 IGNORE = set('template cmd'.split())
-VALID = set('start end range title reverse edit'.split())
+VALID = set('start end range title reverse edit dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def print_error(header, text):
@@ -180,17 +180,20 @@ class ConstructWebPage:
         self.page_content = []
         self.reverse = False
         self.title = ""
+        self.user = None
+        self.dieter = None
 
-    def output(self, user, start_date, end_date, reverse, title):
+    def output(self, user, start_date, end_date, reverse, title, dieter):
         self.user = user
         self.start_date = start_date
         self.end_date = end_date
         self.reverse = bool(int(reverse))
         self.title = title
-        if self.readonly:
-            foodmenu = VIEW_MENU_URL
-        else:
+        self.dieter = dieter
+        if self.user:
             foodmenu = MENU_URL
+        else:
+            foodmenu = VIEW_MENU_URL
 
         self.page_content.append(REPORT_HEAD_TEMPLATE.format(
             start=start_date,
@@ -210,16 +213,34 @@ class ConstructWebPage:
     def print_rows(self):
         items = dict()
         days = defaultdict(list)
-        with sqlite3.connect(self.database) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute('''select id, description, comment, servings,
+        if self.user:
+            line = '''select id, description, comment, servings,
                 calories, fat, protein, carbs, day, time, meal, size, ini_id,
                 thumb_id
                 from course
                 where dieter = ? and
-                day between ? and ? order by day, time''',
-                (self.user, self.start_date, self.end_date))
+                day between ? and ? order by day, time'''
+            fields = (self.user, self.start_date, self.end_date)
+        elif self.dieter:
+            line = '''select id, description, comment, servings,
+                calories, fat, protein, carbs, day, time, meal, size, ini_id,
+                thumb_id
+                from course
+                where dieter = ? and
+                day between ? and ? order by day, time'''
+            fields = (self.dieter, self.start_date, self.end_date)
+        else:
+            line = '''select id, description, comment, servings,
+                calories, fat, protein, carbs, day, time, meal, size, ini_id,
+                thumb_id
+                from course
+                day between ? and ? order by day, time'''
+            fields = (self.start_date, self.end_date)
+
+        with sqlite3.connect(self.database) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(line, fields)
 
             for course in cursor.fetchall():
                 fitem = ITEM(**course)
@@ -324,6 +345,7 @@ class Report:
             start_date,
             stop_date,
             args.get('reverse', 0),
-            args.get('title') or "Food Log")
+            args.get('title') or "Food Log",
+            args.get('dieter') or "")
 
 
