@@ -40,10 +40,14 @@ class ConstructDatabase:
 
 def main():
     """ Commandline program to create food diary database from ini files """
-    parser = argparse.ArgumentParser(description="create sqlite file from ini files")
-    parser.add_argument("input_paths", type=str, nargs="*", help="path to ini files")
-    parser.add_argument("--sqlite_file", '-d', type=str, help="output database file")
-    parser.add_argument("--log_file", '-l', type=str, help="output sql log file")
+    parser = argparse.ArgumentParser(
+        description="create sqlite file from ini files")
+    parser.add_argument("input_paths", type=str, nargs="*",
+        help="path to ini files")
+    parser.add_argument("--sqlite_file", '-d', type=str,
+        help="output database file")
+    parser.add_argument("--log_file", '-l', type=str,
+        help="output sql log file")
     args = parser.parse_args()
     ConstructDatabase(args).process()
 

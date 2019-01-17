@@ -9,7 +9,6 @@ of results from a full text search as a clickable row of its values,
 which will allow editing it.
 
 """
-import cgi
 import cgitb
 cgitb.enable()
 import os

@@ -10,7 +10,6 @@ Other programs will input new data, prepare output web pages, and to managed
 the date in valious ways.
 
 """
-import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sys

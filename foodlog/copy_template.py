@@ -8,7 +8,6 @@ of every template as a button, which will create an entry form pre-populated
 with the values from the template.
 
 """
-import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sys

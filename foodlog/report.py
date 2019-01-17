@@ -11,7 +11,6 @@
     ...
 
 """
-import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
 from collections import defaultdict, namedtuple

@@ -12,7 +12,6 @@ detailing what I ate. There will be other cgi-bin programs to edit and manage
 the data in various forms.
 
 """
-import cgi
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sys
