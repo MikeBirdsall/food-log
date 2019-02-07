@@ -1,0 +1,60 @@
+  form {
+      width:360px;
+  }
+
+  label {
+      display: inline-block;
+      text-align:left;
+  }
+
+  label.nutrit {
+      width:70px;
+      text-align:right;
+  }
+
+  input.nutrit {
+      display:inline-block;
+      width:45px;
+  }
+
+  label.inst {
+      width:70px;
+      text-align:right;
+  }
+
+  input.inst {
+    text-align:left;
+  }
+
+  input {
+    display:inline-block;
+    text-align:left;
+  }
+
+  fieldset {
+    background:#fff7db;
+  }
+
+  input[type=submit] {
+    background: #db8c47;
+  }
+
+  button {
+      background: #db8c47;
+  }
+  button.copytemplate {
+    max-width: 540px;
+    width: 100%;
+  }
+
+  table {
+    background:#fff7db;
+  }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 5px;
+    white-space: nowrap;
+  }

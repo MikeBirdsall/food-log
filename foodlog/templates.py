@@ -54,53 +54,9 @@ Content-Type: text/html
     <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
     <style>
-      form {{
-          width:360px;
-      }}
-
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-
-      label.nutrit {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.nutrit {{
-          display:inline-block;
-          width:45px;
-      }}
-
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.inst {{
-        text-align:left;
-      }}
-
       {EDIT_CSS}
-
-      input {{
-        display:inline-block;
-        text-align:left;
-      }}
-
-      fieldset {{
-        background:#fff7db;
-      }}
-
-      input[type=submit] {{
-        background: #db8c47;
-      }}
-
-      button {{
-          background: #db8c47;
-      }}
     </style>
   </head>
   <body>
@@ -247,29 +203,13 @@ Content-Type: text/html
     <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
-    <style>
-      table {{
-        background:#fff7db;
-      }}
-      table, th, td {{
-        border: 1px solid black;
-        border-collapse: collapse;
-      }}
-      th, td {{
-        padding: 5px;
-        white-space: nowrap;
-      }}
-      button {{
-        max-width: 540px;
-        width: 100%;
-        background: #db8c47;
-      }}
+    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
     </style>
   </head>
   <body>
     <h1>{h1}</h1>
     <form method="get">
-      <button formaction="index.html">Back to Food Menu</button><br/><br/>
+      <button class="copytemplate" formaction="index.html">Back to Food Menu</button><br/><br/>
       <table>
 """
 
@@ -303,68 +243,9 @@ Content-Type: text/html
     <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
     <style>
-      form {{
-          width:360px;
-      }}
-
-      label {{
-          display: inline-block;
-          text-align:left;
-      }}
-
-      label.nutrit {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.nutrit {{
-          display:inline-block;
-          width:45px;
-      }}
-
-      label.inst {{
-          width:70px;
-          text-align:right;
-      }}
-
-      input.inst {{
-        text-align:left;
-      }}
-
       {EDIT_CSS}
-
-      input {{
-        display:inline-block;
-        text-align:left;
-      }}
-
-      fieldset {{
-        background:#fff7db;
-      }}
-
-      input[type=submit] {{
-        background: #db8c47;
-      }}
-
-      button {{
-          background: #db8c47;
-      }}
-
-      table {{
-          background:#fff7db;
-      }}
-
-      table, th, td {{
-          border: 1px solid black;
-          border-collapse: collapse;
-      }}
-
-      th, td {{
-          padding: 5px;
-          white-space: nowrap;
-      }}
-
     </style>
   </head>
 """
@@ -687,22 +568,7 @@ Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <title>Food Record {start} - {end}</title>
-    <style>
-      table {{
-        background:#fff7db;
-      }}
-      table, th, td {{
-        border: 1px solid black;
-        border-collapse: collapse;
-      }}
-      th, td {{
-        padding: 5px;
-        white-space: nowrap;
-      }}
-      button {{
-          background: #db8c47;
-      }}
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
   </head>
   <body>
     <h1>{title}</h1>
