@@ -22,6 +22,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 from foodlog.my_info import config_path
 from foodlog.templates import INVALID_TEMPLATE, PAGE_TEMPLATE, WITH_EDIT_CSS
+from jinga2 import Environment, FileSystemLoader
 
 THUMB_SIZE = 400, 300
 ORIG_KEYS = """description comment size calories carbs protein fat
@@ -81,13 +82,16 @@ class EntryForm:
             else:
                 status = "Unsubmitted Form"
 
-        print(PAGE_TEMPLATE.format(
-            SCRIPT_NAME=SCRIPT_NAME,
-            STATUS=status,
-            EDIT_CSS=WITH_EDIT_CSS,
-            TITLE="Input Course Information",
-            h1="Food Entry")
-        )
+
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        template = env.get_template('foodentry.html')
+
+        output= template.render(
+            title="Import Course Information",
+            STATUS=status)
+
+        print(output)
 
     def handle_filled_form(self):
         """ Create image, thumbnail, database, and database log entries
