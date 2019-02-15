@@ -22,7 +22,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 from foodlog.my_info import config_path
 from foodlog.templates import INVALID_TEMPLATE, PAGE_TEMPLATE, WITH_EDIT_CSS
-from jinga2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 
 THUMB_SIZE = 400, 300
 ORIG_KEYS = """description comment size calories carbs protein fat
@@ -87,7 +87,7 @@ class EntryForm:
         env = Environment(loader=file_loader)
         template = env.get_template('foodentry.html')
 
-        output= template.render(
+        output = template.render(
             title="Import Course Information",
             STATUS=status)
 
