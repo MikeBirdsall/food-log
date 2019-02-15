@@ -21,7 +21,7 @@ from datetime import datetime, time
 from PIL import Image
 from PIL.ExifTags import TAGS
 from foodlog.my_info import config_path
-from foodlog.templates import INVALID_TEMPLATE, PAGE_TEMPLATE, WITH_EDIT_CSS
+from foodlog.templates import INVALID_TEMPLATE, WITH_EDIT_CSS
 from jinja2 import Environment, FileSystemLoader
 
 THUMB_SIZE = 400, 300
