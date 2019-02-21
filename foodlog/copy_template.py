@@ -8,14 +8,16 @@ of every template as a button, which will create an entry form pre-populated
 with the values from the template.
 
 """
-import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sys
 import sqlite3
 from foodlog.my_info import config_path
+from jinja2 import Environment, FileSystemLoader
 from foodlog.entry_form import EntryForm
-from foodlog.templates import (HEAD_TEMPLATE, ROW_TEMPLATE,
+from foodlog.templates import (
+    HEAD_TEMPLATE, ROW_TEMPLATE,
     FORM_TAIL_TEMPLATE, INVALID_TEMPLATE)
+import cgitb; cgitb.enable() # pylint: disable=C0321
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -66,7 +68,8 @@ class CopyTemplate:
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            cursor.execute('select * from template where id = ?',
+            cursor.execute(
+                'select * from template where id = ?',
                 (template_id, ))
             row = cursor.fetchone()
 
@@ -79,14 +82,28 @@ class CopyTemplate:
         print(form.page)
 
     def create_selection(self):
-        print(HEAD_TEMPLATE.format(
-            TITLE="Create Course From Template",
-            h1="Choose Template"
-            ))
+        #print(HEAD_TEMPLATE.format(
+        #    TITLE="Create Course From Template",
+        #    h1="Choose Template"
+        #    ))
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            for row in cursor.execute('select * from template'):
-                self.emit_button(row)
-        print(FORM_TAIL_TEMPLATE)
 
+            rows = cursor.execute('select * from template').fetchall()
+            rows = [dict(id=x['id'], description=x['description']) for x in rows]
+
+        #print(FORM_TAIL_TEMPLATE)
+
+        input_ = dict(
+            title="Create Course From Template",
+            h1="Choose Template",
+            templates=rows)
+                
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        template = env.get_template('picktemplate.html')
+
+        output = template.render(input_)
+
+        print(output)
