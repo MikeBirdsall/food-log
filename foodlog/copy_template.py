@@ -10,7 +10,7 @@ with the values from the template.
 """
 import os
 import sys
-import cgitb; # cgitb.enable() # pylint: disable=C0321
+import cgitb; cgitb.enable() # pylint: disable=multiple-statements
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
@@ -87,7 +87,9 @@ class CopyTemplate:
             cursor = conn.cursor()
 
             rows = cursor.execute('select * from template').fetchall()
-            rows = [dict(id=x['id'], description=x['description']) for x in rows]
+            rows = [
+                dict(id=x['id'], description=x['description']) for x in rows
+            ]
 
         input_ = dict(
             title="Create Course From Template",

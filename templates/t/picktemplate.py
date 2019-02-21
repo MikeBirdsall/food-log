@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 templates = [
     dict(id=1, description="Cereal"),
     dict(id=2, description="HMR 800"),
+    dict(id=3, description="Steak and Shake Spicy Chicken and Salad"),
     ]
 input_ = dict(
     title="Create Course From Template",

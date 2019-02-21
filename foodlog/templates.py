@@ -60,47 +60,6 @@ SEARCH_COURSE_TEMPLATE = """\
     </tr>
 """
 
-# Used in copy_template
-# Needs for interpolation:
-# TITLE, MENU_URL, h1
-
-HEAD_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>{TITLE}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
-    </style>
-  </head>
-  <body>
-    <h1>{h1}</h1>
-    <form method="get">
-      <button class="copytemplate" formaction="index.html">Back to Food Menu</button><br/><br/>
-      <table>
-"""
-
-# Used in copy_template
-# Needs for interpolation:
-
-ROW_TEMPLATE = """\
-      <tr><td><a href="run.py?cmd=template&id={}">{}</a><br></td></tr>
-"""
-
-# Used in copy_template
-# Needs for interpolation:
-
-FORM_TAIL_TEMPLATE = """
-      </table>
-    </form>
-  </body>
-</html>
-"""
-
-
 # Needs for interpolation:
 #   TITLE, EDIT_CSS
 
