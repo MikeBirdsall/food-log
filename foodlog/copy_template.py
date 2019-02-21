@@ -10,14 +10,12 @@ with the values from the template.
 """
 import os
 import sys
+import cgitb; # cgitb.enable() # pylint: disable=C0321
 import sqlite3
-from foodlog.my_info import config_path
 from jinja2 import Environment, FileSystemLoader
+from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
-from foodlog.templates import (
-    HEAD_TEMPLATE, ROW_TEMPLATE,
-    FORM_TAIL_TEMPLATE, INVALID_TEMPLATE)
-import cgitb; cgitb.enable() # pylint: disable=C0321
+from foodlog.templates import (INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -32,6 +30,7 @@ def print_error(header, text):
     sys.exit(0)
 
 def get_args(form):
+    """ Check and report invalid form input, return dict of valid parameters """
     params = set(form.keys())
     params = params - IGNORE
     invalid = params - VALID
@@ -43,6 +42,8 @@ def get_args(form):
 
 
 class CopyTemplate:
+    """ Manage form for creating defaulted entry from template """
+
     def __init__(self, form, user):
         if not DB_FILE or ";" in DB_FILE:
             print_error("PROBLEM WITH DATABASE", DB_FILE)
@@ -58,9 +59,6 @@ class CopyTemplate:
                 return
             print("""<p3>%s</p3>""" % status)
         self.create_selection()
-
-    def emit_button(self, row):
-        print(ROW_TEMPLATE.format(row['id'], row['description']))
 
     def form_entry(self, template_id):
         """ Print an entry form with default values from template """
@@ -81,11 +79,9 @@ class CopyTemplate:
             return form.status
         print(form.page)
 
+        return None
+
     def create_selection(self):
-        #print(HEAD_TEMPLATE.format(
-        #    TITLE="Create Course From Template",
-        #    h1="Choose Template"
-        #    ))
         with sqlite3.connect(DB_FILE) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
@@ -93,13 +89,11 @@ class CopyTemplate:
             rows = cursor.execute('select * from template').fetchall()
             rows = [dict(id=x['id'], description=x['description']) for x in rows]
 
-        #print(FORM_TAIL_TEMPLATE)
-
         input_ = dict(
             title="Create Course From Template",
             h1="Choose Template",
             templates=rows)
-                
+
         file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)
         template = env.get_template('picktemplate.html')
