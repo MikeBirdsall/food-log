@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{h1}}</h1>
+  <form method="get">
+    <button class="copytemplate" formaction="index.html">Back to Food Menu</button><br/><br/>
+    <table>
+    {% for row in templates %}
+      <tr><td><a href="run.py?cmd=template&id={{row.id}}">{{row.description}}</a><br></td></tr>
+    {% endfor %}
+
+
+    </table>
+  </form>
+
+{% endblock %}
