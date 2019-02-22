@@ -14,6 +14,7 @@ import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
 import os
 import sqlite3
+from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
@@ -119,6 +120,14 @@ class Edit:
                                                   thumb_id + ".jpg")
         else:
             image = ''
+
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        template = env.get_template('mealdetail.html')
+
+        output = template.render(input_)
+
+        print(output)
 
         print(TOP_TEMPLATE.format(
                 SCRIPT_NAME=SCRIPT_NAME,
