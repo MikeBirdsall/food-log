@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Food Entry</h1>
   <form method="get">
     <button formaction="run.py">List all Meals</button>
     <input type="hidden" name="cmd" value="report">
@@ -8,7 +7,7 @@
     <input type="hidden" name="reverse" value="1">
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
-  <form method="post" action="/foodlog/edit/run.py" enctype="multipart/form-data">
+  <form method="post" action="run.py" enctype="multipart/form-data">
     <input type="hidden" name="cmd" value="enter">
     <br>
     <input type="submit">
@@ -103,7 +102,7 @@
       <button formaction="index.html" style="float: right;">Food Menu</button>
     </form>
 
-    <p>{STATUS}</p>
+    <p>{{STATUS}}</p>
 
 
 {% endblock %}

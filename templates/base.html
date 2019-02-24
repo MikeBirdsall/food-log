@@ -1,7 +1,12 @@
+Content-Type: text/html
+
 <!DOCTYPE html>
 <HTML lang="en">
-  {% include 'header.html' %}
+  <HEAD>
+    {% include 'header.html' %}
+  </head>
   <BODY>
+    <h1>{{h1}}</h1>
     {% block content %}{% endblock %}
   </BODY>
 </HTML>

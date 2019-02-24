@@ -1,0 +1,20 @@
+{% extends 'mealdetail.html' %}
+{% block button_bar %}
+    <input type="hidden" name="cmd" value="edit">
+    <input type="submit" value="Update" name="action">
+    <input type="submit" value="Copy" style="margin-left: 5em" name="action">
+    <input type="submit" value="Make Template" name="action" style="float: right;">
+    <br>
+{% endblock button_bar %}
+
+{% block image_band %}
+    {% if image %}
+        <img src={{ image }} alt="Food">
+    {% endif %}
+{% endblock image_band %}
+
+{% block delete_bar %}
+  <br> <br> <br> <br>
+  <input type="submit" name="action" value="Delete">
+  <input type="hidden" name="cmd" value="edit">
+{% endblock delete_bar %}

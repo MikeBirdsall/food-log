@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+{%block button_bar %}
+<form method="get">
+  <button formaction="run.py">List all Meals</button>
+  <input type="hidden" value="report" name="cmd">
+  <input type="hidden" value="1" name="edit">
+  <input type="hidden" value="1"  name="reverse">
+  <button formaction="index.html" style="float: right;">Food Menu</button>
+</form>
+{%endblock button_bar %}
+    <table>
+      <tr>
+        <th>Description</th>
+        <th>Comment</th>
+        <th>Size</th>
+        <th>Cals</th>
+        <th>Carbs</th>
+        <th>Fat</th>
+        <th>Protein</th>
+        <th>Score</th>
+      </tr>
+
+    {% for row in results %}
+      <tr>
+        <td><a href="run.py?cmd=edit&id={{row.id}}">{{row.description}}</a></td>
+        <td>{{row.comment}}</td>
+        <td>{{row.size}}</td>
+        <td>{{row.cals}}</td>
+        <td>{{row.carbs}}</td>
+        <td>{{row.fat}}</td>
+        <td>{{row.protein}}</td>
+        <td>{{row.score}}</td>
+      </tr>
+    {% endfor %}
+    </table>
+
+    {{self.button_bar()}}
+
+
+{% endblock %}
+

@@ -85,6 +85,9 @@ class Edit:
 
     def process_data(self):
 
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+
         if 'action' not in self.data:
             status = "Ready to Edit"
         elif self.data['action'] == 'Update':
@@ -96,18 +99,17 @@ class Edit:
             status = self.make_template()
         elif self.data['action'] == 'Delete':
             status = self.delete()
-            print(TOP_TEMPLATE.format(
+            template = env.get_template('mealdetail.html')
+            input_ = dict(
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
-                IMAGE='',
-                TITLE="Deleted Course Display",
+                title="Deleted Course Display",
                 h1="Deleted Food Entry",
-                BUTTON_BAR=NO_BUTTON_BAR,
-                DELETE_BAR=NO_BUTTON_BAR,
                 EDIT_CSS=WITHOUT_EDIT_CSS,
                 disabled="disabled",
                 **self.old_data)
-            )
+            output = template.render(input_)
+            print(output)
             return
 
         else:
@@ -121,14 +123,23 @@ class Edit:
         else:
             image = ''
 
-        file_loader = FileSystemLoader('templates')
-        env = Environment(loader=file_loader)
-        template = env.get_template('mealdetail.html')
+        template = env.get_template('editdetail.html')
 
+        input_ = dict(
+            SCRIPT_NAME=SCRIPT_NAME,
+            STATUS=status,
+            IMAGE=image,
+            title="Edit Course Detail",
+            h1="Edit Food Entry",
+            DELETE_BAR=DEL_BUTTON_BAR,
+            EDIT_CSS=WITH_EDIT_CSS,
+            disabled="",
+            **self.old_data)
         output = template.render(input_)
 
         print(output)
 
+        """
         print(TOP_TEMPLATE.format(
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
@@ -141,6 +152,7 @@ class Edit:
                 disabled="",
                 **self.old_data)
         )
+        """
 
     def make_template(self):
         """ Create a template database entry """

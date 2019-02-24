@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <form method="post">
+    <input type="submit">
+    <br> <br>
+    <fieldset style='max-width:360px'>
+      Search String:<br>
+      <input type="text" name="searchstring" size="50" autofocus required/>
+    </fieldset>
+    <br>
+    <input type="submit">
+  </form>
+  <h2>{{status}}</h2>
+  <form method="get">
+    <br>
+    <button formaction="index.html">Back to Food Menu</button>
+  </form>
+<p>Examples:</p>
+<ul>
+  <li>salad</li>
+  <li>egg*</li>
+  <li>egg* sand*</li>
+  <li>ste* NEAR/3 ric*</li>
+  <li>steak OR roast</li>
+  <li>steak NOT shake</li>
+  <li>ste* NOT shake</li>
+</ul>
+{% endblock content %}}

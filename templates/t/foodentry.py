@@ -7,6 +7,8 @@ template = env.get_template('foodentry.html')
 
 output = template.render(
     title='Page Title',
-    body='Stuff'
+    h1="Food Entry",
+    body='Stuff',
+    STATUS="Unsubmitted Form",
     )
 print(output)
