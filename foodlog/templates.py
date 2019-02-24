@@ -41,8 +41,6 @@ CMD_BUTTON_BAR = """\
 
 NO_BUTTON_BAR = ""
 
-"""
-
 # Used in full_search.py
 
 # Needs for interpolation:

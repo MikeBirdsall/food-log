@@ -14,6 +14,7 @@ import cgitb; cgitb.enable() # pylint: disable=C0321
 import os
 import sys
 import sqlite3
+from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.templates import (TOP_TEMPLATE, IMAGE_TEMPLATE, NO_BUTTON_BAR,
     WITHOUT_EDIT_CSS, INVALID_TEMPLATE)
@@ -75,6 +76,9 @@ class ViewCourse:
 
     def process_data(self):
 
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+
         if 'action' not in self.data:
             status = "------------"
         else:
@@ -88,6 +92,23 @@ class ViewCourse:
         else:
             image = ''
 
+        template = env.get_template('mealdetail.html')
+
+        input_ = dict(
+            SCRIPT_NAME=SCRIPT_NAME,
+            STATUS=status,
+            IMAGE=image,
+            title="View Course Detail",
+            h1="View Food Entry",
+            EDIT_CSS=WITHOUT_EDIT_CSS,
+            disabled="disabled",
+            **self.old_data)
+        output = template.render(input_)
+
+        print(output)
+
+
+        """
         print(TOP_TEMPLATE.format(
                 SCRIPT_NAME=SCRIPT_NAME,
                 STATUS=status,
@@ -100,6 +121,7 @@ class ViewCourse:
                 disabled="disabled",
                 **self.old_data)
         )
+        """
 
 
     def load_record(self, record_id):
