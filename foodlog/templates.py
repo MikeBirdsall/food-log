@@ -20,27 +20,6 @@ WITH_EDIT_CSS = """\
       }
 """
 
-DEL_BUTTON_BAR2 = """\
- <br> <br> <br> <br>
- <button formaction=run.py>Delete</button>
- <input type="hidden" name="cmd" value="delete">
-"""
-
-DEL_BUTTON_BAR = """\
-      <br> <br> <br> <br>
-      <input type="submit" value="Delete" name="action">
-      <input type="hidden" name="cmd" value="edit">
-"""
-
-CMD_BUTTON_BAR = """\
-      <input type="hidden" name="cmd" value="edit">
-      <input type="submit" value="Update" name="action">
-      <input type="submit" value="Copy" style="margin-left: 5em" name="action">
-      <input type="submit" value="Make Template" name="action" style="float: right;"><br>
-"""
-
-NO_BUTTON_BAR = ""
-
 # Used in full_search.py
 
 # Needs for interpolation:
@@ -70,7 +49,7 @@ Content-Type: text/html
     <title>{TITLE}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
+    <link rel="stylesheet" type="text/css" href="./css/foodlog.css" />
     <style>
       {EDIT_CSS}
     </style>
@@ -145,109 +124,6 @@ SEARCH_TEMPLATE = HEAD2_TEMPLATE + """\
       <button formaction="index.html">Back to Food Menu</button>
     </form>
     {cheatsheet}
-  </body>
-</html>
-"""
-
-# Used in detail.py, edit.py
-# Needs for interpolation:
-TOP_TEMPLATE = HEAD2_TEMPLATE + """\
-  <body>
-    <h1>{h1}</h1>
-    <form method="get">
-        <button formaction="index.html">Food Menu</button>
-        <br>
-    </form>
-    <form method="post" action="{SCRIPT_NAME}" enctype="multipart/form-data">
-      <input type="hidden" name="template" value="TOP_TEMPLATE">
-      <br>
-      {BUTTON_BAR}
-      <input type="hidden" name="id" value={id}>
-      <br>
-      <fieldset style="max-width:360px" {disabled}>
-        <legend>Identifying Information:</legend>
-        Description:<br>
-        <input type="text" name="description" placeholder="Title"
-            value="{description}"
-        />
-        <br>Comment:<br>
-        <input type="text" name="comment" placeholder="Comment"
-            value="{comment}"
-        />
-        <br>Amount:<br>
-        <input type="text" name="size" placeholder="Like 2 cups or large bowl"
-            value="{size}"
-        />
-      </fieldset>
-
-      <fieldset style="max-width:360px" {disabled}><legend>Nutrition:</legend>
-        <label class="nutrit" for="calories">Calories:</label>
-        <input class="nutrit" type="number" name="calories" id="calories" max="3000" step ="5"
-            value="{calories}"
-        />
-        <button type="button" class="ifedit" onclick="document.getElementById('calories').value =
-            eval(document.getElementById('calccal').value || 0)">=</button>
-        <input class="calc" type="text" id="calccal" />
-        <br>
-
-        <label class="nutrit" for="carbs">Carbs(g):</label>
-        <input class="nutrit" type="number" name="carbs" id="carbs" size="2" max="300" value="{carbs}" step="1">
-        <button type="button" class="ifedit" onclick="document.getElementById('carbs').value =
-            eval(document.getElementById('calccarbs').value || 0)">=</button>
-        <input class="calc" type="text" id="calccarbs" />
-        <br>
-
-        <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" id="prot" size="2" max="300" step="1"
-           value="{protein}">
-        <button type="button" class="ifedit" onclick="document.getElementById('prot').value =
-            eval(document.getElementById('calcprot').value || 0)">=</button>
-        <input class="calc" type="text" id="calcprot" />
-        <br>
-
-        <label class="nutrit" for="fat">Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" id="fat" size="2" max="300" value="{fat}" step="0.5">
-        <button type="button" class="ifedit" onclick="document.getElementById('fat').value =
-            eval(document.getElementById('calcfat').value) || 0">=</button>
-        <input class="calc" type="text" id="calcfat"/>
-        <br>
-
-      </fieldset>
-
-      <fieldset style="max-width:360px" {disabled}>
-        <legend>Instance Information:</legend>
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" min="0.1" max="9" step="0.1"
-            value="{servings}"
-        /><br>
-
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day"
-            value="{day}"
-        /><br>
-
-        <label class="inst" for="time">Time:</label>
-        <input type="time" name="time" id="time" value="{time}"><br>
-
-        <label class="inst" for="meal">Meal:</label>
-        <input class="inst" list="meals" id="meal" name="meal"
-            value="{meal}"
-        />
-        <datalist id="meals">
-          <option value="Breakfast">
-          <option value="Lunch">
-          <option value="Supper">
-          <option value="Snack">
-          <option value="Exercise">
-        </datalist>
-      </fieldset>
-      {BUTTON_BAR}
-      {DELETE_BAR}
-      <br>
-    </form>
-
-    <p>{STATUS}</p>
-    {IMAGE}
   </body>
 </html>
 """
@@ -395,7 +271,7 @@ Content-Type: text/html
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8">
     <title>Food Record {start} - {end}</title>
-    <link rel="stylesheet" type="text/css" href="../css/foodlog.css" />
+    <link rel="stylesheet" type="text/css" href="./css/foodlog.css" />
   </head>
   <body>
     <h1>{title}</h1>

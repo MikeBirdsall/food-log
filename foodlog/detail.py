@@ -16,8 +16,8 @@ import sys
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
-from foodlog.templates import (TOP_TEMPLATE, IMAGE_TEMPLATE, NO_BUTTON_BAR,
-    WITHOUT_EDIT_CSS, INVALID_TEMPLATE)
+from foodlog.templates import (IMAGE_TEMPLATE, WITHOUT_EDIT_CSS,
+    INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -106,23 +106,6 @@ class ViewCourse:
         output = template.render(input_)
 
         print(output)
-
-
-        """
-        print(TOP_TEMPLATE.format(
-                SCRIPT_NAME=SCRIPT_NAME,
-                STATUS=status,
-                IMAGE=image,
-                TITLE="View Course Info",
-                h1="Food Entry",
-                BUTTON_BAR=NO_BUTTON_BAR,
-                DELETE_BAR=NO_BUTTON_BAR,
-                EDIT_CSS=WITHOUT_EDIT_CSS,
-                disabled="disabled",
-                **self.old_data)
-        )
-        """
-
 
     def load_record(self, record_id):
         self.cursor.execute('SELECT * from course where id = ?', (record_id,))

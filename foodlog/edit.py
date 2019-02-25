@@ -18,8 +18,7 @@ from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
-from foodlog.templates import (IMAGE_TEMPLATE, TOP_TEMPLATE, CMD_BUTTON_BAR,
-    DEL_BUTTON_BAR, NO_BUTTON_BAR, WITHOUT_EDIT_CSS, WITH_EDIT_CSS,
+from foodlog.templates import (IMAGE_TEMPLATE, WITHOUT_EDIT_CSS, WITH_EDIT_CSS,
     INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
@@ -131,28 +130,12 @@ class Edit:
             IMAGE=image,
             title="Edit Course Detail",
             h1="Edit Food Entry",
-            DELETE_BAR=DEL_BUTTON_BAR,
             EDIT_CSS=WITH_EDIT_CSS,
             disabled="",
             **self.old_data)
         output = template.render(input_)
 
         print(output)
-
-        """
-        print(TOP_TEMPLATE.format(
-                SCRIPT_NAME=SCRIPT_NAME,
-                STATUS=status,
-                IMAGE=image,
-                TITLE="Edit Course Detail",
-                h1="Edit Food Entry",
-                BUTTON_BAR=CMD_BUTTON_BAR,
-                DELETE_BAR=DEL_BUTTON_BAR,
-                EDIT_CSS=WITH_EDIT_CSS,
-                disabled="",
-                **self.old_data)
-        )
-        """
 
     def make_template(self):
         """ Create a template database entry """
