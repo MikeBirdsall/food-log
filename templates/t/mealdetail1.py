@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" Tests the view used by dietician looking at a course """
 
 from jinja2 import Environment, FileSystemLoader
 

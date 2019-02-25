@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{start} - {end}</h2>
+<form method="get">
+    <button formaction="index.html">Food Menu</button>
+</form>
+<table>
+
+{% for day in days%}
+
+  <tr>
+    <th colspan="7">{date}</th>
+  </tr>
+    <tr>
+      <th>Meal</th>
+      <th>Item</th>
+      <th>Servings</th>
+      <th>Cals</th>
+      <th>Carbs</th>
+      <th>Fat</th>
+      <th>Protein</th>
+    </tr>"""
+    {% for 1 time? %}
+  <tr>
+    <th rowspan="{courses}">{meal}</th>
+     <td>{dish}</td>
+     <td>{servings}</td>
+     <td>{calories}</td>
+     <td>{carbs}</td>
+     <td>{fat}</td>
+     <td>{protein}</td>
+  </tr>
+  {% for others in row %}
+  <tr>
+    <td>{dish}</td>
+    <td>{servings}</td>
+    <td>{calories}</td>
+    <td>{carbs}</td>
+    <td>{fat}</td>
+    <td>{protein}</td>
+  </tr>
+  {% endfor others in row %}
+  <tr>
+    <th colspan="3">Total</th>
+    <td>%s</td>
+    <td>%s</td>
+    <td>%s</td>
+    <td>%s</td>
+  </tr>
+  {% endfor day }
+</table>
+<form method="get">
+    <button formaction="index.html">Food Menu</button>
+</form>
+recomputed on {now}
