@@ -13,10 +13,11 @@
 """
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
-from collections import defaultdict, namedtuple
+from collections import defaultdict, namedtuple, OrderedDict
 from operator import attrgetter
 from datetime import date, datetime, timedelta
 import sqlite3
+from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
     AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, OTHERS_IN_MEAL_TEMPLATE,
@@ -38,6 +39,14 @@ VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 def print_error(header, text):
     print(INVALID_TEMPLATE.format(header, text))
     sys.exit(0)
+
+def datespan(d1, d2):
+    """ Return sequence of dates from d1 to d2 inclusive """
+    if d1 < d2:
+        return (d1 + timedelta(n) for n in range((d2-d1).days+1))
+    else:
+        return (d1 + timedelta(n) for n in range(0, (d2-d1).days+1, -1))
+# try (a + timedelta(n) for n in range(0, (b-a).days+1, 1 if a < b else -1))
 
 def week_range(num_weeks, firstweekday=3):
     """ Return the range num_weeks ago
@@ -196,20 +205,82 @@ class ConstructWebPage:
             foodmenu = VIEW_MENU_URL
             self.readonly = True
 
-        self.page_content.append(REPORT_HEAD_TEMPLATE.format(
+        days = []
+
+        days = self.fill_rows()
+
+        input_ = dict(
             start=start_date,
             end=end_date,
-            foodmenu=foodmenu,
-            title=title))
-
-        self.print_rows()
-        self.page_content.append(
-            AFTERWARD_TEMPLATE.format(
             now=datetime.now().date(),
-            foodmenu=foodmenu))
+            edit_view="edit" if self.readonly else "view",
+            foodmenu=foodmenu,
+            title=title,
+            days=days,
+        )
 
-        for chunk in self.page_content:
-            print(chunk)
+        file_loader = FileSystemLoader('..')
+        env = Environment(loader=file_loader)
+        template = env.get_template('report.html')
+        output = template.render(input_)
+        print(output)
+
+    def fill_rows(self):
+        mealsinorder = OrderedDict() # date, meal in first course order
+        answer = list(dict(date=x, total={}, meals=[])
+            for x in datespan(self.start_date, self.end_date))
+        answer_index = {x.date:x for x in answer}
+        running_totals = {x.date:TotalNutrition() for x in answer}
+
+        target_user = self.user | self.dieter
+        line = '''select id, description, comment, servings,
+            calories, fat, protein, carbs, day, time, meal, size, ini_id,
+            thumb_id
+            from course
+            where
+              dieter = ? and
+              day between ? and ?
+            order by day, time'''
+        fields = (target_user, self.start_date, self.end_date)
+
+        with sqlite3.connect(self.database) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(line, fields)
+
+            # Organize ordered day/meal list of items
+            for course in cursor.fetchall():
+                fitem = ITEM(**course)
+                index = (fitem.day, fitem.meal)
+                if index not in mealsinorder:
+                    mealsinorder[index] = []
+                mealsinorder[index].append(fitem)
+
+        # Fill in answer
+        for meal in mealsinorder:
+            courselist = []
+            answer_index[meal.day]['meals'].append(
+                (meal.description, courselist))
+            for course in meal:
+                running_totals.add_nutrition(course)
+                courselist.append(dict(
+                    dish=course.description,
+                    servings=course.servings,
+                    calories=course.calories,
+                    carbs=course.carbs,
+                    fat=course.fat,
+                    protein=course.protein)
+                )
+
+        # fill in totals
+        for day, entry in answer_index.items:
+            entry[day].total = dict(
+                calories=running_totals[day].which['calories'].notated_value(),
+                carbs=running_totals[day].which['carbs'].notated_value(),
+                fat=running_totals[day].which['fat'].notated_value(),
+                protein=running_totals[day].which['protein'].notated_value(),
+            )
+        return answer
 
     def print_rows(self):
         items = dict()
