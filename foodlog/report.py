@@ -13,15 +13,12 @@
 """
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
-from collections import defaultdict, namedtuple, OrderedDict
-from operator import attrgetter
+from collections import namedtuple, OrderedDict
 from datetime import date, datetime, timedelta
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
-from foodlog.templates import (INVALID_TEMPLATE, REPORT_HEAD_TEMPLATE,
-    AFTERWARD_TEMPLATE, DAY_HEADER_TEMPLATE, OTHERS_IN_MEAL_TEMPLATE,
-    FIRST_IN_MEAL_TEMPLATE, TOTAL_TEMPLATE)
+from foodlog.templates import INVALID_TEMPLATE
 
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')
@@ -40,13 +37,10 @@ def print_error(header, text):
     print(INVALID_TEMPLATE.format(header, text))
     sys.exit(0)
 
-def datespan(d1, d2):
-    """ Return sequence of dates from d1 to d2 inclusive """
-    if d1 < d2:
-        return (d1 + timedelta(n) for n in range((d2-d1).days+1))
-    else:
-        return (d1 + timedelta(n) for n in range(0, (d2-d1).days+1, -1))
-# try (a + timedelta(n) for n in range(0, (b-a).days+1, 1 if a < b else -1))
+def datespan(first, last):
+    """ Return sequence of dates from first to last inclusive """
+    return (first + timedelta(n)
+        for n in range(0, (last-first).days+1, 1 if first < last else -1))
 
 def week_range(num_weeks, firstweekday=3):
     """ Return the range num_weeks ago
@@ -87,23 +81,6 @@ def get_dates(args):
                 date.today().replace(day=1) - timedelta(days=1)
                 ).replace(day=1),
             args.get('end') or date.today())
-
-def add_with_none(now, new, servings):
-    if new in (None, ''):
-        return (now[0], "+?")
-    elif new == '':
-        print_error("----", "Bad value: new:%s" % new)
-        return (now[0], "+?")
-    else:
-        try:
-            return (now[0] + (float(new) * float(servings)), now[1])
-        except ValueError:
-            print_error(
-                "add_with_none",
-                "Bad value: total:%s, new:%s, servings:%s" %
-                (now[0], new, servings))
-            return (now[0], "??%s" % (new))
-
 
 def get_args(form):
 
@@ -176,7 +153,7 @@ class TotalNutrition:
             self.which[nutrient].addin(getattr(dish, nutrient), dish.servings)
 
     def totals(self):
-        return [self.which[n].notated_value() for n in NUTRIENTS]
+        return {n:self.which[n].notated_value() for n in NUTRIENTS}
 
 class ConstructWebPage:
 
@@ -221,15 +198,14 @@ class ConstructWebPage:
 
         file_loader = FileSystemLoader('..')
         env = Environment(loader=file_loader)
-        template = env.get_template('report.html')
-        output = template.render(input_)
+        output = env.get_template('report.html').render(input_)
         print(output)
 
     def fill_rows(self):
         mealsinorder = OrderedDict() # date, meal in first course order
         answer = list(dict(date=x, total={}, meals=[])
             for x in datespan(self.start_date, self.end_date))
-        answer_index = {x.date:x for x in answer}
+        answer_index = {x['date']:x for x in answer}
         running_totals = {x.date:TotalNutrition() for x in answer}
 
         target_user = self.user | self.dieter
@@ -281,130 +257,6 @@ class ConstructWebPage:
                 protein=running_totals[day].which['protein'].notated_value(),
             )
         return answer
-
-    def print_rows(self):
-        items = dict()
-        days = defaultdict(list)
-        if self.user:
-            line = '''select id, description, comment, servings,
-                calories, fat, protein, carbs, day, time, meal, size, ini_id,
-                thumb_id
-                from course
-                where
-                  dieter = ? and
-                  day between ? and ?
-                order by day, time'''
-            fields = (self.user, self.start_date, self.end_date)
-        elif self.dieter:
-            line = '''select id, description, comment, servings,
-                calories, fat, protein, carbs, day, time, meal, size, ini_id,
-                thumb_id
-                from course
-                where
-                  dieter = ? and
-                  day between ? and ?
-                order by day, time'''
-            fields = (self.dieter, self.start_date, self.end_date)
-        else:
-            line = '''select id, description, comment, servings,
-                calories, fat, protein, carbs, day, time, meal, size, ini_id,
-                thumb_id
-                from course
-                where
-                  day between ? and ?
-                order by day, time'''
-            fields = (self.start_date, self.end_date)
-
-        with sqlite3.connect(self.database) as conn:
-            conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute(line, fields)
-
-            for course in cursor.fetchall():
-                fitem = ITEM(**course)
-                items[fitem.id] = fitem
-                days[fitem.day].append(fitem.id)
-
-            for day, item_id_list in sorted(
-                    days.items(), reverse=self.reverse):
-                meal_date = datetime.strptime(day, "%Y-%m-%d").strftime(
-                    "%A %Y-%m-%d")
-                self.page_content.append(DAY_HEADER_TEMPLATE.format(
-                    date=meal_date))
-                self.print_item_rows([value for key, value in items.items()
-                    if key in item_id_list])
-
-    def print_item_rows(self, item_rows):
-
-        meals = self.sorted_items_by_meal(item_rows)
-        for meal in meals:
-            self.print_meal(meal)
-        self.print_total(meals)
-
-    def detail_or_edit_url(self, dish, bold=False):
-        """ Return Link to detail or edit page for item """
-
-        label = ellipse_truncate(dish.description)
-        if bold:
-            label = "<strong>{}</strong>".format(label)
-        cmd = "detail" if self.readonly else "edit"
-        return '<a href="run.py?cmd={cmd}&id={id}">{label}</a>'.format(
-            cmd=cmd, label=label, id=dish.id)
-
-    def course_dict(self, dish, **kwargs):
-        answer = dict()
-        for key, value in kwargs.items():
-            answer[key] = value
-        bold = dish.thumb_id is not None
-        answer['dish'] = self.detail_or_edit_url(dish, bold=bold)
-        for field in "calories carbs fat protein".split():
-            answer[field] = safe_by_servings(getattr(dish, field, None),
-                dish.servings)
-        answer['servings'] = safe_by_servings(dish.servings)
-
-        return answer
-
-    def sorted_items_by_meal(self, item_rows):
-        """ Returns all items in the same meal, sorted by time """
-        meals = defaultdict(list)
-        for item in item_rows:
-            meals[item.meal].append(item)
-
-        for meal in meals.values():
-            meal.sort(key=attrgetter('time'))
-
-        return sorted(meals.values(), key=lambda x: x[0].time)
-
-    def print_meal(self, meal):
-        dish = meal[0]
-        self.page_content.append(FIRST_IN_MEAL_TEMPLATE.format(
-            **self.course_dict(dish, meal=dish.meal, courses=len(meal))))
-        for dish in meal[1:]:
-            self.page_content.append(
-                OTHERS_IN_MEAL_TEMPLATE.format(**self.course_dict(dish))
-            )
-
-    def print_total(self, meals):
-        """ Print total row for entire day"""
-
-        total = TotalNutrition()
-
-        for meal in meals:
-            for dish in meal:
-                total.add_nutrition(dish)
-
-        self.page_content.append(TOTAL_TEMPLATE % tuple(total.totals()))
-
-def safe_by_servings(val, servings=1):
-    if val is None or val == '':
-        return ""
-    return "{:.1f}".format(val * servings).rstrip('0').rstrip('.')
-
-def ellipse_truncate(text, length=40):
-    """ Return canonical form of description to fit in length """
-    result = text or "No Description Yet"
-    return (result[:length-1] + "&hellip;") if len(result) > length else result
-
 
 class Report:
 

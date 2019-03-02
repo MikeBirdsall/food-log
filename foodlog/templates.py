@@ -262,56 +262,6 @@ Content-Type: text/html
 # Used in report.py
 # Needs for interpolation:
 
-REPORT_HEAD_TEMPLATE = """\
-Content-Type: text/html
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8">
-    <title>Food Record {start} - {end}</title>
-    <link rel="stylesheet" type="text/css" href="./css/foodlog.css" />
-  </head>
-  <body>
-    <h1>{title}</h1>
-    <h2>{start} - {end}</h2>
-    <form method="get">
-        <button formaction="index.html">Food Menu</button>
-    </form>
-    <table>"""
-
-# Used in report.py
-# Needs for interpolation:
-
-AFTERWARD_TEMPLATE = """
-    </table>
-    <form method="get">
-        <button formaction="index.html">Food Menu</button>
-    </form>
-    recomputed on {now}
-  </body>
-</html>"""
-
-# Used in report.py
-# Needs for interpolation:
-
-DAY_HEADER_TEMPLATE = """<tr>
-        <th colspan="7">{date}</th>
-      </tr>
-      <tr>
-        <th>Meal</th>
-        <th>Item</th>
-        <th>Servings</th>
-        <th>Cals</th>
-        <th>Carbs</th>
-        <th>Fat</th>
-        <th>Protein</th>
-      </tr>"""
-
-# Used in report.py
-# Needs for interpolation:
-
 NUTRITION_TEMPLATE = """<td>{dish}</td>
         <td>{servings}</td>
         <td>{calories}</td>
