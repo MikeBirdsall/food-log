@@ -33,6 +33,9 @@ IGNORE = set('template cmd'.split())
 VALID = set('start end range title reverse edit dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
+def dateformat(value, format="%A %Y-%m-%d"):
+        return value.strftime(format)
+
 def print_error(header, text):
     print(INVALID_TEMPLATE.format(header, text))
     sys.exit(0)
@@ -196,9 +199,11 @@ class ConstructWebPage:
             days=days,
         )
 
-        file_loader = FileSystemLoader('..')
+        file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)
-        output = env.get_template('report.html').render(input_)
+        env.filters['dateformat'] = dateformat
+        template = env.get_template('report.html')
+        output = template.render(input_)
         print(output)
 
     def fill_rows(self):
@@ -206,9 +211,9 @@ class ConstructWebPage:
         answer = list(dict(date=x, total={}, meals=[])
             for x in datespan(self.start_date, self.end_date))
         answer_index = {x['date']:x for x in answer}
-        running_totals = {x.date:TotalNutrition() for x in answer}
+        running_totals = {x['date']:TotalNutrition() for x in answer}
 
-        target_user = self.user | self.dieter
+        target_user = self.user or self.dieter
         line = '''select id, description, comment, servings,
             calories, fat, protein, carbs, day, time, meal, size, ini_id,
             thumb_id
@@ -219,7 +224,7 @@ class ConstructWebPage:
             order by day, time'''
         fields = (target_user, self.start_date, self.end_date)
 
-        with sqlite3.connect(self.database) as conn:
+        with sqlite3.connect(self.database, detect_types=sqlite3.PARSE_DECLTYPES) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(line, fields)
@@ -233,12 +238,16 @@ class ConstructWebPage:
                 mealsinorder[index].append(fitem)
 
         # Fill in answer
-        for meal in mealsinorder:
+        for meal, courses in mealsinorder.items():
             courselist = []
-            answer_index[meal.day]['meals'].append(
-                (meal.description, courselist))
-            for course in meal:
-                running_totals.add_nutrition(course)
+            m0 = meal[0]                  # daystring from database
+            m1 = meal[1]                  # mealstring from database
+            temp1 = answer_index[m0]      # dict with date, total, and meals for day m0
+            temp2 = temp1['meals']        # meals for day m0
+            temp2.append((m1, courselist)) # add tuple with mealname and empty list of courses
+            # answer_index[meal[0]]['meals'].append((meal[1], courselist))
+            for course in courses:       # named tuple ITEM for each course
+                running_totals[meal[0]].add_nutrition(course)
                 courselist.append(dict(
                     dish=course.description,
                     servings=course.servings,
@@ -249,13 +258,15 @@ class ConstructWebPage:
                 )
 
         # fill in totals
-        for day, entry in answer_index.items:
-            entry[day].total = dict(
-                calories=running_totals[day].which['calories'].notated_value(),
-                carbs=running_totals[day].which['carbs'].notated_value(),
-                fat=running_totals[day].which['fat'].notated_value(),
-                protein=running_totals[day].which['protein'].notated_value(),
+        for day, entry in answer_index.items():
+            rtd = running_totals[day]
+            z = dict(
+                calories=rtd.which['calories'].notated_value(),
+                carbs=rtd.which['carbs'].notated_value(),
+                fat=rtd.which['fat'].notated_value(),
+                protein=rtd.which['protein'].notated_value(),
             )
+            entry['total'] = z
         return answer
 
 class Report:
