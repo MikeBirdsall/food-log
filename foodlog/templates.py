@@ -20,23 +20,6 @@ WITH_EDIT_CSS = """\
       }
 """
 
-# Used in full_search.py
-
-# Needs for interpolation:
-# description
-SEARCH_COURSE_TEMPLATE = """\
-    <tr>
-    <td>{description}</td>
-    <td>{comment}</td>
-    <td>{size}</td>
-    <td>{calories}</td>
-    <td>{carbs}</td>
-    <td>{fat}</td>
-    <td>{protein}</td>
-    <td>{score}</td>
-    </tr>
-"""
-
 # Needs for interpolation:
 #   TITLE, EDIT_CSS
 
@@ -56,50 +39,6 @@ Content-Type: text/html
   </head>
 """
 
-# Needs for interpolation:
-#  h1, MENU_URL, TITLE, EDIT_CSS
-
-SEARCH_HEAD_TEMPLATE = HEAD2_TEMPLATE + """\
-  <body>
-    <h1>{h1}</h1>
-    <form method="get">
-      <button formaction="run.py">List all Meals</button>
-      <input type="hidden" name="template" value="SEARCH_HEAD_TEMPLATE">
-      <input type="hidden" name="cmd" value="report">
-      <input type="hidden" name="edit" value="1">
-      <input type="hidden" name="reverse" value="1">
-      <button formaction="index.html" style="float: right;">Food Menu</button>
-    </form>
-    <table>
-      <tr>
-        <th>Description</th>
-        <th>Comment</th>
-        <th>Size</th>
-        <th>Cals</th>
-        <th>Carbs</th>
-        <th>Fat</th>
-        <th>Protein</th>
-        <th>Score</th>
-      </tr>
-"""
-
-
-
-# Needs for interpolation:
-#    foodmenu
-TABLE_TAIL_TEMPLATE = """\
-    </table>
-    <form method="get">
-      <button formaction="run.py">List all Meals</button>
-      <input type="hidden" name="template" value="TABLE_TAIL_TEMPLATE">
-      <input type="hidden" name="cmd" value="report">
-      <input type="hidden" name="edit" value="1">
-      <input type="hidden" name="reverse" value="1">
-      <button formaction="index.html" style="float: right;">Food Menu</button>
-    </form>
-  </body>
-</html>
-"""
 
 # Used in full_search.py
 # Needs for interpolation:

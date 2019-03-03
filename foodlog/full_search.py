@@ -17,8 +17,7 @@ from sqlite3 import OperationalError
 from jinja2 import Environment, FileSystemLoader
 
 from foodlog.my_info import config_path
-from foodlog.templates import (SEARCH_TEMPLATE, SEARCH_COURSE_TEMPLATE,
-    WITH_EDIT_CSS, SEARCH_HEAD_TEMPLATE, TABLE_TAIL_TEMPLATE, INVALID_TEMPLATE)
+from foodlog.templates import WITH_EDIT_CSS, INVALID_TEMPLATE
 from foodlog.search_engine import TextSearchEngine
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
@@ -132,11 +131,17 @@ class FullTextSearch:
         """ Print a form with courses from search results """
 
         results = []
+        course = None
         for course, score in self.search(searchstring)[:19]:
             substitutions = self.course_dict(course, score)
             results.append(substitutions)
+        if self.status:
+            return
+        if not course:
+            self.status = "No Results for search %s" % searchstring
+            return
 
-        input_ = dir(
+        input_ = dict(
             title="Search for Courses",
             h1="Full Text Search: {}".format(searchstring),
             results=results
@@ -150,39 +155,19 @@ class FullTextSearch:
         print(output)
         return
 
-        page_content = []
-
-        page_content.append(SEARCH_HEAD_TEMPLATE.format(
-            TITLE="Search for Courses",
-            EDIT_CSS=WITH_EDIT_CSS,
-            h1="Full Text Search: {}".format(searchstring))
-        )
-
-        course = None
-
-        for course, score in self.search(searchstring)[:19]:
-            substitutions = self.course_dict(course, score)
-            page_content.append(
-                SEARCH_COURSE_TEMPLATE.format(**substitutions)
-            )
-
-        if self.status:
-            return
-        if not course:
-            self.status = "No Results for search %s" % searchstring
-            return
-        else:
-            page_content.append(TABLE_TAIL_TEMPLATE)
-            for chunk in page_content:
-                print(chunk)
-            return
-
     def create_search_form(self):
-        print(SEARCH_TEMPLATE.format(
+        input_ = dict(
             TITLE="Search for Courses",
             h1="Full Text Search",
             status=(self.status or "Ready For Search"),
             cheatsheet=CHEATSHEET,
             EDIT_CSS=WITH_EDIT_CSS
-            ))
+        )
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        env.filters['spacenone'] = spacenone
+        template = env.get_template('search.html')
+        output = template.render(input_)
+        print(output)
+        return
 
