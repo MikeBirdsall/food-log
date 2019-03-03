@@ -2,6 +2,9 @@
 
 from jinja2 import Environment, FileSystemLoader
 
+def spacenone(value):
+    return "" if value is None else str(value)
+
 results = [
     dict(
         description="Noodles and Company steak Stromboli",
@@ -48,6 +51,7 @@ input_ = dict(
     )
 
 env = Environment(loader=FileSystemLoader(".."))
+env.filters['spacenone'] = spacenone
 template = env.get_template("searchresult.html")
 
 

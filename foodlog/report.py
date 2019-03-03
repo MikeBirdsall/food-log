@@ -33,6 +33,9 @@ IGNORE = set('template cmd'.split())
 VALID = set('start end range title reverse edit dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
+def spacenone(value):
+    return "" if value is None else str(value)
+
 def dateformat(value, format="%A %Y-%m-%d"):
         return value.strftime(format)
 
@@ -204,6 +207,7 @@ class ConstructWebPage:
         file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)
         env.filters['dateformat'] = dateformat
+        env.filters['spacenone'] = spacenone
         template = env.get_template('report.html')
         output = template.render(input_)
         print(output)

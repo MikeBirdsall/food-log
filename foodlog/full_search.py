@@ -14,6 +14,7 @@ cgitb.enable()
 import os
 import sys
 from sqlite3 import OperationalError
+from jinja2 import Environment, FileSystemLoader
 
 from foodlog.my_info import config_path
 from foodlog.templates import (SEARCH_TEMPLATE, SEARCH_COURSE_TEMPLATE,
@@ -41,6 +42,10 @@ CHEATSHEET = """
   <li>ste* NOT shake</li>
 </ul>
 """
+
+def spacenone(value):
+    return "" if value is None else str(value)
+
 def safe_int(val):
     if val is None or val == '':
         return ''
@@ -125,6 +130,25 @@ class FullTextSearch:
 
     def form_entry(self, searchstring, user):
         """ Print a form with courses from search results """
+
+        results = []
+        for course, score in self.search(searchstring)[:19]:
+            substitutions = self.course_dict(course, score)
+            results.append(substitutions)
+
+        input_ = dir(
+            title="Search for Courses",
+            h1="Full Text Search: {}".format(searchstring),
+            results=results
+        )
+
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        env.filters['spacenone'] = spacenone
+        template = env.get_template('searchresult.html')
+        output = template.render(input_)
+        print(output)
+        return
 
         page_content = []
 
