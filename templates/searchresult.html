@@ -24,13 +24,13 @@
     {% for row in results %}
       <tr>
         <td><a href="run.py?cmd=edit&id={{row.id}}">{{row.description}}</a></td>
-        <td>{{row.comment}}</td>
-        <td>{{row.size}}</td>
-        <td>{{row.cals}}</td>
-        <td>{{row.carbs}}</td>
-        <td>{{row.fat}}</td>
-        <td>{{row.protein}}</td>
-        <td>{{row.score}}</td>
+        <td>{{row.comment|spacenone}}</td>
+        <td>{{row.size|spacenone}}</td>
+        <td>{{row.cals|spacenone}}</td>
+        <td>{{row.carbs|spacenone}}</td>
+        <td>{{row.fat|spacenone}}</td>
+        <td>{{row.protein|spacenone}}</td>
+        <td>{{row.score|spacenone}}</td>
       </tr>
     {% endfor %}
     </table>
