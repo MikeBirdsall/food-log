@@ -7,7 +7,7 @@
 </form>
 <table>
 
-{% for day in days %}
+{% for day in days|sort(reverse, attribute='date') %}
   {% if not day.meals|length %}
     <tr><th colspan=7>{{day.date|dateformat}} was not recorded</th></tr>
   {% else %}
@@ -24,10 +24,16 @@
       <th>Protein</th>
     </tr>
     {% for meal in day.meals %} {# meal[1] is list of courses #}
-      {% set course = meal[1][0] %}
-      <tr>
-        <th rowspan="{{meal[1]|length}}">{{meal[0]}}</th>
-          <td>{{course.dish|truncate(40, False)}}</td>
+      {% for course in meal[1] %}
+        <tr>
+            {% if loop.first %}
+                <th rowspan="{{meal[1]|length}}">{{meal[0]}}</th>
+            {% endif %}
+            {% set description = course.dish|default("Not Yet Named", true)|truncate(40, False) %}
+            {% if course.bold %}
+            {% set description %}<strong>{{description}}</strong>{% endset %}
+            {% endif %}
+            <td><a href="run.py?cmd={{cmd}}&id={{course.id}}">{{description}}<a></td>
           <td>{{course.servings}}</td>
           <td>{{course.calories}}</td>
           <td>{{course.carbs}}</td>
@@ -35,15 +41,6 @@
           <td>{{course.protein}}</td>
         </th>
       </tr>
-      {% for course in meal[1][1:] %}
-        <tr>
-          <td>{{course.dish|truncate(40, False)}}</td>
-          <td>{{course.servings}}</td>
-          <td>{{course.calories}}</td>
-          <td>{{course.carbs}}</td>
-          <td>{{course.fat}}</td>
-          <td>{{course.protein}}</td>
-        </tr>
       {% endfor %}
     {% endfor %}
   <tr>

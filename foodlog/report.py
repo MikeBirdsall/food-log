@@ -179,11 +179,11 @@ class ConstructWebPage:
         self.title = title
         self.dieter = dieter
         if self.user:
-            foodmenu = MENU_URL
             self.readonly = False
+            cmd="edit"
         else:
-            foodmenu = VIEW_MENU_URL
             self.readonly = True
+            cmd="detail"
 
         days = []
 
@@ -192,10 +192,12 @@ class ConstructWebPage:
         input_ = dict(
             start=start_date,
             end=end_date,
+            cmd=cmd,
             now=datetime.now().date(),
             edit_view="edit" if self.readonly else "view",
-            foodmenu=foodmenu,
+            reverse=self.reverse,
             title=title,
+            h1=title,
             days=days,
         )
 
@@ -254,7 +256,9 @@ class ConstructWebPage:
                     calories=course.calories,
                     carbs=course.carbs,
                     fat=course.fat,
-                    protein=course.protein)
+                    protein=course.protein,
+                    bold=bool(course.thumb_id),
+                    id=course.id)
                 )
 
         # fill in totals
