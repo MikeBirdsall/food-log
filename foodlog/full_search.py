@@ -59,11 +59,6 @@ def safe_int(val):
         return "{:.1f}".format(val).rstrip('0').rstrip('.')
     return val
 
-def ellipse_truncate(text, length=30, default=""):
-    "Return canonical form of description to fit in length """
-    result = text or default
-    return (result[:length-1] + "&hellip;") if len(result) > length else result
-
 def print_error(header, text):
     print(INVALID_TEMPLATE.format(header, text))
     sys.exit(0)
@@ -78,14 +73,6 @@ def get_args(form):
         print_error("Invalid parameters:", invalid)
 
     return {key: form.getfirst(key) for key in valid}
-
-def edit_url(dish):
-    """ Return link to edit for dish """
-
-    label = ellipse_truncate(dish.description, default="No Description Yet")
-    return '<a href="run.py?cmd=edit&id={id}">{label}</a>'.format(
-        label=label, id=dish.id
-    )
 
 class FullTextSearch:
     def __init__(self, form, user):
@@ -109,14 +96,13 @@ class FullTextSearch:
 
     def course_dict(self, dish, score):
         answer = dict()
-        answer['description'] = edit_url(dish)
+        answer['description'] = dish.description
         for field in "calories carbs fat protein".split():
             answer[field] = safe_int(getattr(dish, field, None))
         for field in "comment size".split():
-            answer[field] = ellipse_truncate(
-                getattr(dish, field, ""),
-                length=20)
+            answer[field] = getattr(dish, field, "")
         answer['score'] = score
+        answer['id'] = dish.id
 
         return answer
 
