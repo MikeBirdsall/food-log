@@ -75,8 +75,6 @@ class CopyTemplate:
             return "No Template for id %s" % template_id
         form = EntryForm()
         form.create_form(row, script=SCRIPT_NAME)
-        if form.status:
-            return form.status
         print(form.page)
 
         return None

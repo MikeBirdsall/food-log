@@ -1,7 +1,8 @@
-""" Module for handling Food Log entry form
+""" Module for handling Food Log entry form created by copy or copy_template
 
 """
 
+from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.templates import TEMPLATE, WITH_EDIT_CSS
 
@@ -22,13 +23,18 @@ class EntryForm:
                 values[field] = """value="%s" """ % defaults[field]
             else:
                 values[field] = ""
-        values['status'] = status
-        values['script'] = script
-        values['TITLE'] = "Enter Course"
+        values['STATUS'] = status
+        # values['script'] = script
+        values['title'] = "Enter Course"
         values['h1'] = "Food Entry"
-        values['MENU_URL'] = config_path().dir('MENU_URL')
+        # values['MENU_URL'] = config_path().dir('MENU_URL')
         values['EDIT_CSS'] = WITH_EDIT_CSS
-        self.page = TEMPLATE.format(**values)
+        # self.page = TEMPLATE.format(**values)
+
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader)
+        template = env.get_template('foodentry.html')
+        self.page=template.render(values)
 
 
 

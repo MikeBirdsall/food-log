@@ -182,8 +182,6 @@ class Edit:
             'description comment size calories carbs fat protein'.split()}
         form = EntryForm()
         form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
-        if form.status:
-            return form.status
         print(form.page)
 
 
