@@ -28,7 +28,7 @@ THUMB_DIR = config.dir('THUMB_DIR')
 THUMB_URL = config.dir('THUMB_URL')
 DB_FILE = config.dir('DB_FILE')
 
-IGNORE = set('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 
 def print_error(header, text):
     env = Environment(loader=FileSystemLoader('templates'))

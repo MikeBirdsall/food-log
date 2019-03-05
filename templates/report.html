@@ -5,6 +5,7 @@
 <form method="get">
     <button formaction="index.html">Food Menu</button>
 </form>
+<input type="hidden" name="jinjatemplate" value="report.html">
 <table>
 
 {% for day in days|sort(reverse, attribute='date') %}

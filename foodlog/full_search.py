@@ -25,7 +25,7 @@ SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
 
-IGNORE = set('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 VALID = frozenset('searchstring'.split())
 
 CHEATSHEET = """

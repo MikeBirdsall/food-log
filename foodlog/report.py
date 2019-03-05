@@ -28,7 +28,7 @@ MENU_URL = config.dir('MENU_URL')
 VIEW_MENU_URL = config.dir('VIEW_MENU_URL')
 
 
-IGNORE = set('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 VALID = set('start end range title reverse edit dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 

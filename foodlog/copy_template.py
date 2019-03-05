@@ -21,7 +21,7 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
 
-IGNORE = frozenset('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 VALID = frozenset('id'.split())
 
 def print_error(header, text):
