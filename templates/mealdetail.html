@@ -17,44 +17,6 @@
     {% include "description.html" %}
     {% include "nutrition.html" %}
 
-    <fieldset style="max-width:360px" {{disabled}}><legend>Nutrition:</legend>
-
-{% macro nutricalc(for, prompt, value, name, calcid, max=300, step=1) -%}
-    <label class="nutrit" for="{{for}}">{{prompt}}:</label>
-    <input class="nutrit"
-           type="number"
-           name="{{ name }}"
-           id="{{ for }}"
-           max="{{ max }}"
-           step ="{{ step }}"
-           value="{{ value }}"
-    />
-    <button
-        type="button"
-        class="ifedit"
-        onclick="document.getElementById('{{ for }}').value =
-        eval(document.getElementById('{{ calcid }}').value || 0)">=</button>
-    <input
-      class="calc"
-      type="text"
-      placeholder="Formula"
-      id="{{ calcid }}" />
-    <br>
-
-{% endmacro -%}
-
-      {{ nutricalc(for='calories', prompt='Calories', value=calories,   name='calories', calcid='calccal', max=3000, step=5) }}
-
-      {{ nutricalc(for='carbs',    prompt='Carbs(g)', value=carbs,   name='carbs',    calcid='calccarbs'                ) }}
-
-      {{ nutricalc(for='prot',     prompt='Protein(g)', value=protein, name='protein',  calcid='calcprot'                 ) }}
-
-      {{ nutricalc(for='fat',      prompt='Fat(g)', value=fat,     name='fat',      calcid='calcfat', step=0.5        ) }}
-
-
-
-    </fieldset>
-
     <fieldset style="max-width:360px" {{disabled}}>
       <legend>Instance Information:</legend>
       <label class="inst" for="servings">Servings:</label>
