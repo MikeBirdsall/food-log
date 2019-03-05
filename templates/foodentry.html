@@ -52,41 +52,16 @@
     <br>
 
 {% endmacro -%}
-      <label class="nutrit" for="calories">Calories:</label>
-      <input class="nutrit" type="number" name="calories" value="{{calories}}" id="calories" 
-        max="3000" step="5" />
-        <button type="button" class="ifedit" 
-          onclick="document.getElementById('calories').value =
-          eval(document.getElementById('calccal').value || 0)">=</button>
-        <input class="calc" type="text" id="calccal" />
-      <br>
 
-      <label class="nutrit" for="carbs">Carbs(g):</label>
-      <input class="nutrit" type="number" name="carbs" value="{{carbs}}" id="carbs" size="2" 
-          max="300" step="1" />
-        <button type="button" class="ifedit" 
-          onclick="document.getElementById('carbs').value =
-          eval(document.getElementById('calccarbs').value || 0)">=</button>
-        <input class="calc" type="text" id="calccarbs" />
-        <br>
+      {{ nutricalc(for='calories', prompt='Calories', value=calories,   name='calories', calcid='calccal', max=3000, step=5) }}
 
-        <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" value="{{protein}}" id="prot" size="2" 
-            max="300" step="1">
-          <button type="button" class="ifedit" 
-            onclick="document.getElementById('prot').value =
-            eval(document.getElementById('calcprot').value || 0)">=</button>
-          <input class="calc" type="text" id="calcprot" />
-        <br>
+      {{ nutricalc(for='carbs',    prompt='Carbs(g)', value=carbs,   name='carbs',    calcid='calccarbs'                ) }}
 
-        <label class="nutrit" for="fat" >Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" value="{{fat}}" id="fat" size="2" 
-              max="300" step="0.5">
-            <button type="button" class="ifedit" 
-              onclick="document.getElementById('fat').value =
-              eval(document.getElementById('calcfat').value) || 0">=</button>
-            <input class="calc" type="text" id="calcfat"/>
-        <br>
+      {{ nutricalc(for='prot',     prompt='Protein(g)', value=protein, name='protein',  calcid='calcprot'                 ) }}
+
+      {{ nutricalc(for='fat',      prompt='Fat(g)', value=fat,     name='fat',      calcid='calcfat', step=0.5        ) }}
+
+
 
       </fieldset>
 

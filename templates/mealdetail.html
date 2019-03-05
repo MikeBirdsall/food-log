@@ -99,7 +99,9 @@
 
   <p>{{STATUS}}</p>
   {% block image_band %}
-    {{IMAGE}}
+    {% if IMAGE %}
+        <img src={{ IMAGE }} alt="Food">
+    {% endif %}
   {% endblock image_band %}
 
 {% endblock %}

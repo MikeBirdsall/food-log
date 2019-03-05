@@ -117,8 +117,7 @@ class Edit:
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
         if thumb_id:
-            image = IMAGE_TEMPLATE % os.path.join(THUMB_URL,
-                                                  thumb_id + ".jpg")
+            image = os.path.join(THUMB_URL, thumb_id + ".jpg")
         else:
             image = ''
 
