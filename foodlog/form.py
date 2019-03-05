@@ -39,7 +39,7 @@ LOG_FILENAME = config.dir("DB_LOG")
 THUMB_DIR = config.dir("THUMB_DIR")
 ARCHIVE_DIR = config.dir("ARCHIVE_DIR")
 
-IGNORE = frozenset('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 VALID = frozenset(ORIG_KEYS).union((IMAGE_FILE_FIELD,))
 
 

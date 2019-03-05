@@ -9,6 +9,7 @@
   <button formaction="index.html" style="float: right;">Food Menu</button>
 </form>
 {%endblock button_bar %}
+    <input type="hidden" name="jinjatemplate" value="searchresult.html">
     <table>
       <tr>
         <th>Description</th>
@@ -26,7 +27,7 @@
         <td><a href="run.py?cmd=edit&id={{row.id}}">{{row.description|default("Not Yet Named", true)|truncate(30)}}</a></td>
         <td>{{row.comment|spacenone|truncate(20)}}</td>
         <td>{{row.size|spacenone|truncate(20)}}</td>
-        <td>{{row.cals|spacenone}}</td>
+        <td>{{row.calories|spacenone}}</td>
         <td>{{row.carbs|spacenone}}</td>
         <td>{{row.fat|spacenone}}</td>
         <td>{{row.protein|spacenone}}</td>

@@ -32,7 +32,7 @@ DB_FILE = config.dir('DB_FILE')
 THUMB_URL = config.dir('THUMB_URL')
 LOG_FILENAME = config.dir('DB_LOG')
 
-IGNORE = frozenset('template cmd'.split())
+IGNORE = frozenset('template cmd jinjatemplate'.split())
 
 def print_error(header, text):
     print(INVALID_TEMPLATE.format(header, text))
