@@ -6,6 +6,7 @@
     <input type="hidden" name="cmd" value="report">
     <input type="hidden" name="edit" value="1">
     <input type="hidden" name="reverse" value="1">
+    <input type="hidden" name="jinjatemplate" value="mealdetail.html">
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
   <form method="post" action="{{SCRIPT_NAME}}" enctype="multipart/form-data">
@@ -13,21 +14,8 @@
     {% block button_bar %} {% endblock button_bar%}
     <input type="hidden" name="id" value={{id}}>
     <br>
-    <fieldset style="max-width:360px" {{disabled}}>
-      <legend>Identifying Information:</legend>
-      Description:<br>
-      <input type="text" name="description" placeholder="Title"
-        value="{{description}}"
-      />
-      <br>Comment:<br>
-      <input type="text" name="comment" placeholder="Comment"
-        value="{{comment}}"
-      />
-      <br>Amount:<br>
-      <input type="text" name="size" placeholder="Like 2 cups or large bowl"
-        value="{{size}}"
-      />
-    </fieldset>
+    {% include "description.html" %}
+    {% include "nutrition.html" %}
 
     <fieldset style="max-width:360px" {{disabled}}><legend>Nutrition:</legend>
 

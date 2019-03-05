@@ -6,6 +6,7 @@
     <input type="hidden" name="cmd" value="report">
     <input type="hidden" name="edit" value="1">
     <input type="hidden" name="reverse" value="1">
+    <input type="hidden" name="jinjatemplate" value="foodentry.html">
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
   <form method="post" action="run.py" enctype="multipart/form-data">
@@ -63,36 +64,37 @@
 
 
 
-      </fieldset>
+    </fieldset>
 
-      <fieldset style="max-width:360px">
-        <legend>Instance Information:</legend>
+    <fieldset style="max-width:360px">
+      <legend>Instance Information:</legend>
+      <label class="inst" for="servings">Servings:</label>
+      <input class="inst" type="number" name="servings" id="servings" 
+        min="0.1" max="9" step="0.1" value="1" /><br>
 
-        <label class="inst" for="servings">Servings:</label>
-        <input class="inst" type="number" name="servings" id="servings" 
-          min="0.1" max="9" step="0.1" value="1" /><br>
+      <label class="inst" for="day">Day:</label>
+      <input class="inst" type="date" name="day" id="day" 
 
-        <label class="inst" for="day">Day:</label>
-        <input class="inst" type="date" name="day" id="day" /><br>
+      /><br>
 
-        <label class="inst" for="time">Time: </label>
-        <input type="time" name="time" id="time" /><br>
+      <label class="inst" for="time">Time: </label>
+      <input type="time" name="time" id="time" /><br>
 
-        <label class="inst" for="meal">Meal: </label>
-        <input class="inst" list="meals" name="meal" id="meal" />
+      <label class="inst" for="meal">Meal: </label>
+      <input class="inst" list="meals" name="meal" id="meal" />
 
-        <datalist id="meals">
-          <option value="Breakfast">
-          <option value="Lunch">
-          <option value="Supper">
-          <option value="Snack">
-          <option value="Exercise">
-        </datalist>
-      </fieldset>
-      <br>
-      <input type="submit">
-      <br>
-    </form>
+      <datalist id="meals">
+        <option value="Breakfast">
+        <option value="Lunch">
+        <option value="Supper">
+        <option value="Snack">
+        <option value="Exercise">
+      </datalist>
+    </fieldset>
+    <br>
+    <input type="submit">
+    <br>
+  </form>
 
     <form method="get">
       <button formaction="run.py">List all Meals</button>
