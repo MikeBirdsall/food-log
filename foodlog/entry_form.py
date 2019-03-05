@@ -20,9 +20,7 @@ class EntryForm:
         values = dict()
         for field in FIELDS:
             if field in defaults.keys() and defaults[field] is not None:
-                values[field] = """value="%s" """ % defaults[field]
-            else:
-                values[field] = ""
+                values[field] = "%s" % defaults[field]
         values['STATUS'] = status
         # values['script'] = script
         values['title'] = "Enter Course"

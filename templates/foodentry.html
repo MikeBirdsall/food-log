@@ -1,5 +1,6 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
+
   <form method="get">
     <button formaction="run.py">List all Meals</button>
     <input type="hidden" name="cmd" value="report">
@@ -19,16 +20,40 @@
     <fieldset style="max-width:360px">
       <legend>Identifying Information:</legend>
       Description:<br>
-      <input type="text" name="description" {{description}} placeholder="Title" />
+      <input type="text" name="description" value="{{description}}" placeholder="Title" />
       <br>Comment:<br>
-      <input type="text" name="comment" {{comment}}placeholder="Comment/Context/Excuse" />
+      <input type="text" name="comment" value="{{comment}}" placeholder="Comment/Context/Excuse" />
       <br>Amount:<br>
-      <input type="text" name="size" {{size}} placeholder="Like 2 cups or large bowl" />
+      <input type="text" name="size" value="{{size}}" placeholder="Like 2 cups or large bowl" />
     </fieldset>
 
-    <fieldset style="max-width:360px"> <legend>Nutrition:</legend>
+    <fieldset style="max-width:360px"><legend>Nutrition:</legend>
+
+{% macro nutricalc(for, prompt, value, name, calcid, max=300, step=1) -%}
+    <label class="nutrit" for="{{for}}">{{prompt}}:</label>
+    <input class="nutrit"
+           type="number"
+           name="{{ name }}"
+           id="{{ for }}"
+           max="{{ max }}"
+           step ="{{ step }}"
+           value="{{ value }}"
+    />
+    <button
+        type="button"
+        class="ifedit"
+        onclick="document.getElementById('{{ for }}').value =
+        eval(document.getElementById('{{ calcid }}').value || 0)">=</button>
+    <input
+      class="calc"
+      type="text"
+      placeholder="Formula"
+      id="{{ calcid }}" />
+    <br>
+
+{% endmacro -%}
       <label class="nutrit" for="calories">Calories:</label>
-      <input class="nutrit" type="number" name="calories" {{calories}} id="calories" 
+      <input class="nutrit" type="number" name="calories" value="{{calories}}" id="calories" 
         max="3000" step="5" />
         <button type="button" class="ifedit" 
           onclick="document.getElementById('calories').value =
@@ -37,7 +62,7 @@
       <br>
 
       <label class="nutrit" for="carbs">Carbs(g):</label>
-      <input class="nutrit" type="number" name="carbs" {{carbs}} id="carbs" size="2" 
+      <input class="nutrit" type="number" name="carbs" value="{{carbs}}" id="carbs" size="2" 
           max="300" step="1" />
         <button type="button" class="ifedit" 
           onclick="document.getElementById('carbs').value =
@@ -46,7 +71,7 @@
         <br>
 
         <label class="nutrit" for="prot">Protein(g):</label>
-        <input class="nutrit" type="number" name="protein" {{protein}} id="prot" size="2" 
+        <input class="nutrit" type="number" name="protein" value="{{protein}}" id="prot" size="2" 
             max="300" step="1">
           <button type="button" class="ifedit" 
             onclick="document.getElementById('prot').value =
@@ -55,7 +80,7 @@
         <br>
 
         <label class="nutrit" for="fat" >Fat(g):</label>
-        <input class="nutrit" type="number" name="fat" {{fat}} id="fat" size="2" 
+        <input class="nutrit" type="number" name="fat" value="{{fat}}" id="fat" size="2" 
               max="300" step="0.5">
             <button type="button" class="ifedit" 
               onclick="document.getElementById('fat').value =

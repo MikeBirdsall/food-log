@@ -2,11 +2,13 @@
 {% block content %}
 
   <form method="get">
-    <button formaction="index.html">Food Menu</button>
-    <br>
+    <button formaction="run.py">List all Meals</button>
+    <input type="hidden" name="cmd" value="report">
+    <input type="hidden" name="edit" value="1">
+    <input type="hidden" name="reverse" value="1">
+    <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
   <form method="post" action="{{SCRIPT_NAME}}" enctype="multipart/form-data">
-    <input type="hidden" name="template" value="TOP_TEMPLATE">
     <br>
     {% block button_bar %} {% endblock button_bar%}
     <input type="hidden" name="id" value={{id}}>
@@ -97,7 +99,7 @@
 
   <p>{{STATUS}}</p>
   {% block image_band %}
+    {{IMAGE}}
   {% endblock image_band %}
-  {{IMAGE}}
 
 {% endblock %}
