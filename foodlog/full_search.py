@@ -17,7 +17,6 @@ from sqlite3 import OperationalError
 from jinja2 import Environment, FileSystemLoader
 
 from foodlog.my_info import config_path
-from foodlog.templates import WITH_EDIT_CSS, INVALID_TEMPLATE
 from foodlog.search_engine import TextSearchEngine
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
@@ -60,7 +59,9 @@ def safe_int(val):
     return val
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def get_args(form):
@@ -147,7 +148,7 @@ class FullTextSearch:
             h1="Full Text Search",
             status=(self.status or "Ready For Search"),
             cheatsheet=CHEATSHEET,
-            EDIT_CSS=WITH_EDIT_CSS
+            EDIT_CSS=True
         )
         file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)

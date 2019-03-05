@@ -3,5 +3,18 @@
   <TITLE>{{ title }}</TITLE>
   <link rel="stylesheet" type="text/css" href="./css/foodlog.css" />
   <style>
-      {{EDIT_CSS}}
+    {% if EDIT_CSS %}
+      input.calc {
+        width:130px;
+      }
+    {% else %}
+      input.calc {
+        width:130px;
+        visibility:hidden;
+      }
+
+      button.ifedit {
+          visibility:hidden;
+      }
+    {% endif %}
   </style>

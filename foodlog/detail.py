@@ -16,8 +16,6 @@ import sys
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
-from foodlog.templates import (IMAGE_TEMPLATE, WITHOUT_EDIT_CSS,
-    INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -33,7 +31,9 @@ DB_FILE = config.dir('DB_FILE')
 IGNORE = set('template cmd'.split())
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def get_args(form):
@@ -99,7 +99,7 @@ class ViewCourse:
             IMAGE=image,
             title="View Course Detail",
             h1="View Food Entry",
-            EDIT_CSS=WITHOUT_EDIT_CSS,
+            EDIT_CSS=False,
             disabled="disabled",
             **self.old_data)
         output = template.render(input_)

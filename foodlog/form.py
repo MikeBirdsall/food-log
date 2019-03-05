@@ -21,7 +21,6 @@ from datetime import datetime, time
 from PIL import Image
 from PIL.ExifTags import TAGS
 from foodlog.my_info import config_path
-from foodlog.templates import INVALID_TEMPLATE
 from jinja2 import Environment, FileSystemLoader
 
 THUMB_SIZE = 400, 300
@@ -44,7 +43,9 @@ VALID = frozenset(ORIG_KEYS).union((IMAGE_FILE_FIELD,))
 
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def get_args(form):

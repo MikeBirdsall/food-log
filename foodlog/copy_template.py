@@ -15,7 +15,6 @@ import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
-from foodlog.templates import (INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -26,7 +25,9 @@ IGNORE = frozenset('template cmd'.split())
 VALID = frozenset('id'.split())
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def get_args(form):

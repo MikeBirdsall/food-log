@@ -18,7 +18,6 @@ from datetime import date, datetime, timedelta
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
-from foodlog.templates import INVALID_TEMPLATE
 
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')
@@ -37,10 +36,12 @@ def spacenone(value):
     return "" if value is None else str(value)
 
 def dateformat(value, format="%A %Y-%m-%d"):
-        return value.strftime(format)
+    return value.strftime(format)
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def datespan(first, last):
@@ -183,10 +184,10 @@ class ConstructWebPage:
         self.dieter = dieter
         if self.user:
             self.readonly = False
-            cmd="edit"
+            cmd = "edit"
         else:
             self.readonly = True
-            cmd="detail"
+            cmd = "detail"
 
         days = []
 

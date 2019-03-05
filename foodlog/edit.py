@@ -18,8 +18,6 @@ from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
-from foodlog.templates import (IMAGE_TEMPLATE, WITHOUT_EDIT_CSS, WITH_EDIT_CSS,
-    INVALID_TEMPLATE)
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
@@ -35,7 +33,9 @@ LOG_FILENAME = config.dir('DB_LOG')
 IGNORE = frozenset('template cmd'.split())
 
 def print_error(header, text):
-    print(INVALID_TEMPLATE.format(header, text))
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('invalid.html')
+    print(template.render(dict(h1=header, text=text)))
     sys.exit(0)
 
 def get_args(form):
@@ -104,7 +104,7 @@ class Edit:
                 STATUS=status,
                 title="Deleted Course Display",
                 h1="Deleted Food Entry",
-                EDIT_CSS=WITHOUT_EDIT_CSS,
+                EDIT_CSS=False,
                 disabled="disabled",
                 **self.old_data)
             output = template.render(input_)
@@ -129,7 +129,7 @@ class Edit:
             IMAGE=image,
             title="Edit Course Detail",
             h1="Edit Food Entry",
-            EDIT_CSS=WITH_EDIT_CSS,
+            EDIT_CSS=True,
             disabled="",
             **self.old_data)
         output = template.render(input_)
