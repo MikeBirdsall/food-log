@@ -24,9 +24,9 @@
 
     {% for row in results %}
       <tr>
-        <td><a href="run.py?cmd=edit&id={{row.id}}">{{row.description|default("Not Yet Named", true)|truncate(30)}}</a></td>
-        <td>{{row.comment|spacenone|truncate(20)}}</td>
-        <td>{{row.size|spacenone|truncate(20)}}</td>
+        <td><a href="run.py?cmd=edit&id={{row.id}}">{{row.description|default("Not Yet Named", true)|truncate(30)|e}}</a></td>
+        <td>{{row.comment|spacenone|truncate(20)|e}}</td>
+        <td>{{row.size|spacenone|truncate(20)|e}}</td>
         <td>{{row.calories|spacenone}}</td>
         <td>{{row.carbs|spacenone}}</td>
         <td>{{row.fat|spacenone}}</td>

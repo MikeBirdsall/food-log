@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{start}} - {{end}}</h2>
+<h2>{{start}} <=> {{end}}</h2>
 <form method="get">
     <button formaction="index.html">Food Menu</button>
 </form>
@@ -28,9 +28,9 @@
       {% for course in meal[1] %}
         <tr>
             {% if loop.first %}
-                <th rowspan="{{meal[1]|length}}">{{meal[0]}}</th>
+                <th rowspan="{{meal[1]|length}}">{{meal[0]|e}}</th>
             {% endif %}
-            {% set description = course.dish|default("Not Yet Named", true)|truncate(40, False) %}
+            {% set description = course.dish|default("Not Yet Named", true)|truncate(40, False)|e %}
             {% if course.bold %}
             {% set description %}<strong>{{description}}</strong>{% endset %}
             {% endif %}
