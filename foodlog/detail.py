@@ -21,7 +21,7 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 UPDATE_FIELDS = frozenset('description comment size calories number carbs '
     'protein fat servings day time meal'.split())
-VALID = frozenset('id action'.split())
+VALID = frozenset('id action dieter'.split())
 
 config = config_path() # pylint: disable=invalid-name
 THUMB_DIR = config.dir('THUMB_DIR')

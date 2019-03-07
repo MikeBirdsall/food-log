@@ -24,12 +24,10 @@ ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
-MENU_URL = config.dir('MENU_URL')
-VIEW_MENU_URL = config.dir('VIEW_MENU_URL')
 
 
 IGNORE = frozenset('template cmd jinjatemplate'.split())
-VALID = set('start end range title reverse edit dieter'.split())
+VALID = set('start end range title reverse dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def spacenone(value):
@@ -166,7 +164,6 @@ class ConstructWebPage:
 
     def __init__(self, database):
         self.database = database
-        self.readonly = True # default
         self.start_date = None
         self.end_date = None
         self.page_content = []
@@ -183,10 +180,8 @@ class ConstructWebPage:
         self.title = title
         self.dieter = dieter
         if self.user:
-            self.readonly = False
             cmd = "edit"
         else:
-            self.readonly = True
             cmd = "detail"
 
         days = []
@@ -198,7 +193,7 @@ class ConstructWebPage:
             end=end_date,
             cmd=cmd,
             now=datetime.now().date(),
-            edit_view="edit" if self.readonly else "view",
+            edit_view=cmd,
             reverse=self.reverse,
             title=title,
             h1=title,

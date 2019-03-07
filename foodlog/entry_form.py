@@ -21,10 +21,8 @@ class EntryForm:
             if field in defaults.keys() and defaults[field] is not None:
                 values[field] = "%s" % defaults[field]
         values['STATUS'] = status
-        # values['script'] = script
         values['title'] = "Enter Course"
         values['h1'] = "Food Entry"
-        # values['MENU_URL'] = config_path().dir('MENU_URL')
         values['EDIT_CSS'] = True
 
         file_loader = FileSystemLoader('templates')

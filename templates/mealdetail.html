@@ -4,8 +4,8 @@
   <form method="get">
     <button formaction="run.py">List all Meals</button>
     <input type="hidden" name="cmd" value="report">
-    <input type="hidden" name="edit" value="1">
     <input type="hidden" name="reverse" value="1">
+    <input type="hidden" name="dieter" value="{{dieter}}">
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
   <input type="hidden" name="jinjatemplate" value="mealdetail.html">
