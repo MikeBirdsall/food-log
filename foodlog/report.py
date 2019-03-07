@@ -31,7 +31,15 @@ VALID = set('start end range title reverse dieter'.split())
 VALID_RANGES = set('today yesterday lastweek thisweek'.split())
 
 def spacenone(value):
-    return "" if value is None else str(value)
+    if value is None:
+        return ""
+    if value == '':
+        return ""
+    try:
+        return "{:.1f}".format(value).rstrip('0').rstrip('.')
+    except (ValueError, TypeError):
+        return "???? {}".format(value)
+    return "Shouldn't get here"
 
 def dateformat(value, format="%A %Y-%m-%d"):
     return value.strftime(format)
@@ -62,6 +70,11 @@ def week_range(num_weeks, firstweekday=3):
     first_day_of_week = weekstart - timedelta(days=num_weeks*7)
     last_day_of_week = min(today, first_day_of_week + timedelta(days=6))
     return first_day_of_week, last_day_of_week
+
+def safe_by_servings(val, servings):
+    if val is None or val == '':
+        return ''
+    return val * servings
 
 def get_dates(args):
     if 'range' in args:
@@ -253,10 +266,10 @@ class ConstructWebPage:
                 courselist.append(dict(
                     dish=course.description,
                     servings=course.servings,
-                    calories=course.calories,
-                    carbs=course.carbs,
-                    fat=course.fat,
-                    protein=course.protein,
+                    calories=safe_by_servings(course.calories, course.servings),
+                    carbs=safe_by_servings(course.carbs, course.servings),
+                    fat=safe_by_servings(course.fat, course.servings),
+                    protein=safe_by_servings(course.protein, course.servings),
                     bold=bool(course.thumb_id),
                     id=course.id)
                 )
