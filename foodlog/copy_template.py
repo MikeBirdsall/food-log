@@ -10,11 +10,13 @@ with the values from the template.
 """
 import sys
 import cgitb; cgitb.enable() # pylint: disable=multiple-statements
+import os
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
 
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
 
@@ -88,6 +90,7 @@ class CopyTemplate:
             ]
 
         input_ = dict(
+            SCRIPT_NAME=SCRIPT_NAME,
             title="Create Course From Template",
             h1="Choose Template",
             templates=rows)

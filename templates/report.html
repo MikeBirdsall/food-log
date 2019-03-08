@@ -34,7 +34,7 @@
             {% if course.bold %}
             {% set description %}<strong>{{description}}</strong>{% endset %}
             {% endif %}
-            <td><a href="run.py?cmd={{cmd}}&id={{course.id}}">{{description}}<a></td>
+            <td><a href="{{SCRIPT_NAME}}?cmd={{cmd}}&id={{course.id}}">{{description}}<a></td>
           <td>{{course.servings|spacenone}}</td>
           <td>{{course.calories|spacenone}}</td>
           <td>{{course.carbs|spacenone}}</td>

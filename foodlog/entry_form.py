@@ -2,8 +2,10 @@
 
 """
 
+import os
 from jinja2 import Environment, FileSystemLoader
 
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 FIELDS = 'description comment size calories carbs fat protein'.split()
 
 class EntryForm:
@@ -22,6 +24,7 @@ class EntryForm:
         values['title'] = "Enter Course"
         values['h1'] = "Food Entry"
         values['EDIT_CSS'] = True
+        values['SCRIPT_NAME'] = SCRIPT_NAME
 
         file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)

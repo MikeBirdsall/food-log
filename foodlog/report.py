@@ -13,12 +13,14 @@
 """
 import cgitb; cgitb.enable() # pylint: disable=C0321
 import sys
+import os
 from collections import namedtuple, OrderedDict
 from datetime import date, datetime, timedelta
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 ITEM = namedtuple('item', 'id comment carbs description servings calories fat '
     'day time protein meal size ini_id thumb_id')
 
@@ -203,6 +205,7 @@ class ConstructWebPage:
         days = self.fill_rows()
 
         input_ = dict(
+            SCRIPT_NAME=SCRIPT_NAME,
             start=start_date,
             end=end_date,
             cmd=cmd,

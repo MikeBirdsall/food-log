@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
+  {% block listmealsbutton %}
   <form method="get">
-    <button formaction="run.py">List all Meals</button>
+    <button formaction="{{SCRIPT_NAME}}">List all Meals</button>
     <input type="hidden" name="cmd" value="report">
     <input type="hidden" name="reverse" value="1">
     <input type="hidden" name="jinjatemplate" value="foodentry.html">
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
-  <form method="post" action="run.py" enctype="multipart/form-data">
+  {% endblock %}
+  <form method="post" action="{{SCRIPT_NAME}}" enctype="multipart/form-data">
     <input type="hidden" name="cmd" value="enter">
     <br>
     <input type="submit">
@@ -95,14 +97,9 @@
     <br>
   </form>
 
-    <form method="get">
-      <button formaction="run.py">List all Meals</button>
-      <input type="hidden" name="cmd" value="report">
-      <input type="hidden" name="reverse" value="1">
-      <button formaction="index.html" style="float: right;">Food Menu</button>
-    </form>
+  {% self.listmealsbutton() %}
 
-    <p>{{STATUS}}</p>
+  <p>{{STATUS}}</p>
 
 
 {% endblock %}

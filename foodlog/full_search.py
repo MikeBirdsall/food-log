@@ -11,12 +11,15 @@ which will allow editing it.
 """
 import cgitb
 cgitb.enable()
+import os
 import sys
 from sqlite3 import OperationalError
 from jinja2 import Environment, FileSystemLoader
 
 from foodlog.my_info import config_path
 from foodlog.search_engine import TextSearchEngine
+
+SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
