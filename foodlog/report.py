@@ -41,8 +41,9 @@ def spacenone(value):
         return "???? {}".format(value)
     return "Shouldn't get here"
 
-def dateformat(value, format="%A %Y-%m-%d"):
-    return value.strftime(format)
+def dateformat(value, fmt="%A %Y-%m-%d"):
+    """ Filter for jinja to consistently format dates printed """
+    return value.strftime(fmt)
 
 def print_error(header, text):
     env = Environment(loader=FileSystemLoader('templates'))
@@ -222,9 +223,32 @@ class ConstructWebPage:
         print(output)
 
     def fill_rows(self):
+        """ Creates the whole structure that the presentation (jinja template)
+            uses to create the table with all the meals given
+        """
+        # TODO: Make this whole structure an object to simplify
         mealsinorder = OrderedDict() # date, meal in first course order
+
+        # [
+        #   {'date':date(2019,3,4),
+        #       'total':{'calories':1200, ...},
+        #       'meals':[<meal1>,<meal2>,<meal3>]
+        #   },
+        #   {'date':date(2019,3,5),
+        #       'total':{'calories':1200, ...},
+        #       'meals':[<meal1>,<meal2>,<meal3>]
+        #   },
+        #   {'date':date(2019,3,6),
+        #       'total':{'calories':1200, ...},
+        #       'meals':[<meal1>,<meal2>,<meal3>]
+        #   },
+        #
+        # where <mealx> is
+        #
+        #
         answer = list(dict(date=x, total={}, meals=[])
             for x in datespan(self.start_date, self.end_date))
+        # answer index
         answer_index = {x['date']:x for x in answer}
         running_totals = {x['date']:TotalNutrition() for x in answer}
 
@@ -239,7 +263,9 @@ class ConstructWebPage:
             order by day, time'''
         fields = (target_user, self.start_date, self.end_date)
 
-        with sqlite3.connect(self.database, detect_types=sqlite3.PARSE_DECLTYPES) as conn:
+        with sqlite3.connect(
+                self.database,
+                detect_types=sqlite3.PARSE_DECLTYPES) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(line, fields)
@@ -255,12 +281,13 @@ class ConstructWebPage:
         # Fill in answer
         for meal, courses in mealsinorder.items():
             courselist = []
-            m0 = meal[0]                  # daystring from database
-            m1 = meal[1]                  # mealstring from database
-            temp1 = answer_index[m0]      # dict with date, total, and meals for day m0
-            temp2 = temp1['meals']        # meals for day m0
-            temp2.append((m1, courselist)) # add tuple with mealname and empty list of courses
-            # answer_index[meal[0]]['meals'].append((meal[1], courselist))
+            daystring = meal[0]
+            mealstring = meal[1]            # e.g. "Breakfast"
+            temp1 = answer_index[daystring]      # dict with date, total, and meals for day daystring
+            temp2 = temp1['meals']        # meals for day daystring
+            temp2.append((mealstring, courselist)) # (mealname, empty list of courses)
+            # append tuple entry of meal name and emptylist to add in courses
+            answer_index[daystring]['meals'].append((meal[1], courselist))
             for course in courses:       # named tuple ITEM for each course
                 running_totals[meal[0]].add_nutrition(course)
                 courselist.append(dict(
@@ -277,15 +304,16 @@ class ConstructWebPage:
         # fill in totals
         for day, entry in answer_index.items():
             rtd = running_totals[day]
-            z = dict(
+            entry['total'] = dict(
                 calories=rtd.which['calories'].notated_value(),
                 carbs=rtd.which['carbs'].notated_value(),
                 fat=rtd.which['fat'].notated_value(),
                 protein=rtd.which['protein'].notated_value(),
             )
-            entry['total'] = z
+
         return answer
 
+# TODO: Demote to function?
 class Report:
 
     def __init__(self, form, user):

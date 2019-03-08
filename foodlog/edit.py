@@ -116,10 +116,7 @@ class Edit:
 
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
-        if thumb_id:
-            image = os.path.join(THUMB_URL, thumb_id + ".jpg")
-        else:
-            image = ''
+        image = os.path.join(THUMB_URL, thumb_id + ".jpg") if thumb_id else ''
 
         template = env.get_template('editdetail.html')
 
@@ -180,7 +177,7 @@ class Edit:
         copied = {key:self.data.get(key, '') for key in
             'description comment size calories carbs fat protein'.split()}
         form = EntryForm()
-        form.create_form(copied, script=SCRIPT_NAME, status="Unsubmitted Form")
+        form.create_form(copied, status="Unsubmitted Form")
         print(form.page)
 
 

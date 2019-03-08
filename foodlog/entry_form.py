@@ -3,8 +3,6 @@
 """
 
 from jinja2 import Environment, FileSystemLoader
-from foodlog.my_info import config_path
-
 
 FIELDS = 'description comment size calories carbs fat protein'.split()
 
@@ -15,7 +13,7 @@ class EntryForm:
         self.status = ""  # String containing error message if needed
         self.page = ""    # String with the HTML page
 
-    def create_form(self, defaults, script, status=""):
+    def create_form(self, defaults, status=""):
         values = dict()
         for field in FIELDS:
             if field in defaults.keys() and defaults[field] is not None:
@@ -28,7 +26,7 @@ class EntryForm:
         file_loader = FileSystemLoader('templates')
         env = Environment(loader=file_loader)
         template = env.get_template('foodentry.html')
-        self.page=template.render(values)
+        self.page = template.render(values)
 
 
 

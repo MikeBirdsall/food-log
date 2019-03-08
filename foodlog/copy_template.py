@@ -8,15 +8,12 @@ of every template as a button, which will create an entry form pre-populated
 with the values from the template.
 
 """
-import os
 import sys
 import cgitb; cgitb.enable() # pylint: disable=multiple-statements
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
-
-SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
@@ -75,7 +72,7 @@ class CopyTemplate:
         if not row:
             return "No Template for id %s" % template_id
         form = EntryForm()
-        form.create_form(row, script=SCRIPT_NAME)
+        form.create_form(row)
         print(form.page)
 
         return None

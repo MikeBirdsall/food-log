@@ -287,12 +287,12 @@ def date_str(str_or_val):
     else:
         return str_or_val
 
-def day_range(start_date, end_date):
-    s = datetime.strptime(start_date, ISODATE).date()
-    e = datetime.strptime(end_date, ISODATE).date()
-    delta = e - s
+def day_range(start_date_string, end_date_string):
+    start_date = datetime.strptime(start_date_string, ISODATE).date()
+    end_date = datetime.strptime(end_date_string, ISODATE).date()
+    delta = end_date - start_date
     for i in range(delta.days + 1):
-        yield (s + timedelta(i)).isoformat()
+        yield (start_date + timedelta(i)).isoformat()
 
 class Summary:
     """ Summary of nutrition intake over time range

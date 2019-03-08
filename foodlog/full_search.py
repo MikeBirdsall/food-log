@@ -11,16 +11,12 @@ which will allow editing it.
 """
 import cgitb
 cgitb.enable()
-import os
 import sys
 from sqlite3 import OperationalError
 from jinja2 import Environment, FileSystemLoader
 
 from foodlog.my_info import config_path
 from foodlog.search_engine import TextSearchEngine
-
-SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
-SCRIPT_NAME = os.path.join(os.path.dirname(SCRIPT_NAME), "form.py")
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
@@ -110,8 +106,8 @@ class FullTextSearch:
     def search(self, searchstring):
         try:
             return TextSearchEngine(DB_FILE, searchstring).results()
-        except OperationalError as e:
-            self.status = e
+        except OperationalError as x:
+            self.status = x
             return list()
 
     def form_entry(self, searchstring, user):

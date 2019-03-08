@@ -302,8 +302,8 @@ def read_exif_data(img):
     for tag, value in exif.items():
         decoded = TAGS.get(tag, hex(tag))
         if decoded.startswith('DateTime'):
-            dt = datetime.strptime(value, "%Y:%m:%d %H:%M:%S")
-            return dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
+            dt_object = datetime.strptime(value, "%Y:%m:%d %H:%M:%S")
+            return dt_object.strftime("%Y-%m-%d"), dt_object.strftime("%H:%M")
 
 def meal_at_this_time(when):
     """ Return string for default meal eaten at this time

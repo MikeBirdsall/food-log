@@ -86,10 +86,7 @@ class ViewCourse:
 
         # If a picture, display
         thumb_id = self.old_data['thumb_id']
-        if thumb_id:
-            image = os.path.join(THUMB_URL, thumb_id + ".jpg")
-        else:
-            image = ''
+        image = os.path.join(THUMB_URL, thumb_id + ".jpg") if thumb_id else ''
 
         template = env.get_template('mealdetail.html')
 
