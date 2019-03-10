@@ -4,7 +4,6 @@
 <form method="get">
   <button formaction="{{SCRIPT_NAME}}">List all Meals</button>
   <input type="hidden" value="report" name="cmd">
-  <input type="hidden" value="1" name="edit">
   <input type="hidden" value="1"  name="reverse">
   <button formaction="index.html" style="float: right;">Food Menu</button>
 </form>
@@ -24,7 +23,7 @@
 
     {% for row in results %}
       <tr>
-        <td><a href="{{SCRIPT_NAME}}">{{row.description|default("Not Yet Named", true)|truncate(30)|e}}</a></td>
+          <td><a href="{{SCRIPT_NAME}}?cmd=edit&id={{row.id}}">{{row.description|default("Not Yet Named", true)|truncate(30)|e}}</a></td>
         <td>{{row.comment|spacenone|truncate(20)|e}}</td>
         <td>{{row.size|spacenone|truncate(20)|e}}</td>
         <td>{{row.calories|spacenone}}</td>

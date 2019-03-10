@@ -10,6 +10,7 @@
     <button formaction="index.html" style="float: right;">Food Menu</button>
   </form>
   {% endblock %}
+
   <form method="post" action="{{SCRIPT_NAME}}" enctype="multipart/form-data">
     <input type="hidden" name="cmd" value="enter">
     <br>
@@ -97,7 +98,7 @@
     <br>
   </form>
 
-  {% self.listmealsbutton() %}
+  {{ self.listmealsbutton() }}
 
   <p>{{STATUS}}</p>
 

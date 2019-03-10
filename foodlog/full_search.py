@@ -130,6 +130,7 @@ class FullTextSearch:
         input_ = dict(
             title="Search for Courses",
             h1="Full Text Search: {}".format(searchstring),
+            SCRIPT_NAME=SCRIPT_NAME,
             results=results
         )
 

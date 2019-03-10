@@ -286,9 +286,9 @@ class ConstructWebPage:
             courselist = []
             daystring = meal[0]
             mealstring = meal[1]            # e.g. "Breakfast"
-            temp1 = answer_index[daystring]      # dict with date, total, and meals for day daystring
-            temp2 = temp1['meals']        # meals for day daystring
-            temp2.append((mealstring, courselist)) # (mealname, empty list of courses)
+            #temp1 = answer_index[daystring]      # dict with date, total, and meals for day daystring
+            #temp2 = temp1['meals']        # meals for day daystring
+            #temp2.append((mealstring, courselist)) # (mealname, empty list of courses)
             # append tuple entry of meal name and emptylist to add in courses
             answer_index[daystring]['meals'].append((meal[1], courselist))
             for course in courses:       # named tuple ITEM for each course
