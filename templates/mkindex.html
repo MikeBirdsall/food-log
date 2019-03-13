@@ -1,0 +1,43 @@
+{# Needs parameters title, h1, dieter, reports(reverse,(range|(start, end))) #}
+<!DOCTYPE html>
+<HTML lang="en">
+  <HEAD>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <TITLE>{{ title|default("Invalid Parameter") }}</TITLE>
+    <link rel="stylesheet" type="text/css" href="./css/foodlog.css" />
+    <style>
+      button {
+        max-width: 300px;
+        width:80%;
+        background-color:#db8c47;
+        color: white;
+        font-size: 25px;
+      }
+      form {
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <BODY>
+    <h1>{{h1}}</h1>
+    {% for report in reports %}
+    <form method="get">
+      <button formaction="run.py">{{report.prompt}}</button>
+      <input type="hidden" name="cmd" value="report">
+      <input type="hidden" name="dieter" value="{{dieter}}">
+      {% if report.range -%}
+          <input type="hidden" name="range" value="{{report.range}}">
+      {%- elif report.start and report.end -%}
+          <input type="hidden" name="start" value="{{report.start}}">
+          <input type="hidden" name="end" value="{{report.end}}">
+      {%- endif -%}
+
+      {%- if report.reverse -%}
+          <input type="hidden" name="reverse" value="1">
+      {% endif -%}
+</form>
+    {% endfor %}
+  </BODY>
+</HTML>
+
