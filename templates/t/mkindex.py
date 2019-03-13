@@ -34,27 +34,17 @@ def main():
 
     parser = argparse.ArgumentParser(
         description="Create dietitian index.html file")
-    parser.add_argument("--dieter", '-d', type=str,
+    parser.add_argument("--dieter", '-d', type=str, required=True,
         help="id of dieter")
     parser.add_argument("--name", '-n', type=str,
         help="Long name for dieter")
     # Don't have dateutil on my hosting service, so we'll stick with datetime
-    parser.add_argument("--last", '-l', type=valid_date,
+    parser.add_argument("--last", '-l', type=valid_date, required=True,
         help="Last day included in weeks")
-    parser.add_argument("--first", '-f', type=valid_date,
+    parser.add_argument("--first", '-f', type=valid_date, required=True,
         help="First day included in weeks")
 
     args = parser.parse_args()
-
-    if not args.first:
-        print("missing --first.", file=sys.stderr)
-        parser.print_help()
-        return
-
-    if not args.last:
-        print("missing --last.", file=sys.stderr)
-        parser.print_help()
-        return
 
     reports = []
 
