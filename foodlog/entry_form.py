@@ -4,9 +4,9 @@
 
 import os
 from jinja2 import Environment, FileSystemLoader
+from foodlog import COPY_FIELDS
 
 SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
-FIELDS = 'description comment size calories carbs fat protein'.split()
 
 class EntryForm:
     """ Create an entry form HTML page with possible defaults values """
@@ -17,9 +17,12 @@ class EntryForm:
 
     def create_form(self, defaults, status=""):
         values = dict()
-        for field in FIELDS:
+        for field in COPY_FIELDS:
             if field in defaults.keys() and defaults[field] is not None:
                 values[field] = "%s" % defaults[field]
+        if "IMAGE" in defaults:
+            values['IMAGE'] = defaults['IMAGE']
+
         values['STATUS'] = status
         values['title'] = "Enter Course"
         values['h1'] = "Food Entry"

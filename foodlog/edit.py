@@ -16,6 +16,7 @@ import os
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
+from foodlog import COPY_FIELDS
 from foodlog.my_info import config_path
 from foodlog.entry_form import EntryForm
 
@@ -174,9 +175,13 @@ class Edit:
 
     def copy(self):
         # pull defaults from self
-        copied = {key:self.data.get(key, '') for key in
-            'description comment size calories carbs fat protein'.split()}
+        copied = {key:self.data.get(key, '') for key in COPY_FIELDS}
+        # but thumb_id must come from the old data, edit doesn't have a field for it
+        thumb_id = self.old_data['thumb_id']
+        image = os.path.join(THUMB_URL, thumb_id + ".jpg") if thumb_id else ''
         form = EntryForm()
+        copied['thumb_id'] = thumb_id
+        copied['IMAGE'] = image
         form.create_form(copied, status="Unsubmitted Form")
         print(form.page)
 

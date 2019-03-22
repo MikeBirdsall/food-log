@@ -16,3 +16,6 @@ __version__ = '0.1'
 
 
 from foodlog.dispatch import Dispatch
+
+COPY_FIELDS = '''description comment size calories carbs fat
+                 protein thumb_id'''.split()

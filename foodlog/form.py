@@ -31,6 +31,7 @@ SCRIPT_NAME = os.environ.get('SCRIPT_NAME', '')
 
 UPLOAD_SECTION = "upload"
 IMAGE_FILE_FIELD = "pic"
+COPY_MEAL_FIELD = "thumb_id"
 
 config = config_path() # pylint: disable=invalid-name
 DB_FILE = config.dir('DB_FILE')
@@ -39,7 +40,7 @@ THUMB_DIR = config.dir("THUMB_DIR")
 ARCHIVE_DIR = config.dir("ARCHIVE_DIR")
 
 IGNORE = frozenset('template cmd jinjatemplate'.split())
-VALID = frozenset(ORIG_KEYS).union((IMAGE_FILE_FIELD,))
+VALID = frozenset(ORIG_KEYS).union((IMAGE_FILE_FIELD, COPY_MEAL_FIELD))
 
 
 def print_error(header, text):
@@ -131,6 +132,7 @@ class EntryForm:
             return text_fields['error']
 
         merged = self.merge_fields(image_fields, text_fields)
+
         # Create multiple records if semicolons in orig_description/description
         # and no cals/carbs/prot/fat
         if 'description' in merged and ';' in merged['description']:
@@ -246,6 +248,10 @@ class EntryForm:
                 if value != '':
                     answer["orig_%s" % key] = answer[key] = value
 
+        # thumb_id needs to be copied, but doesn't have "orig_thumb_id" field
+        if COPY_MEAL_FIELD in self.data:
+            answer[COPY_MEAL_FIELD] = self.data[COPY_MEAL_FIELD]
+
         return answer
 
     def merge_fields(self, image_fields, text_fields):
@@ -256,8 +262,9 @@ class EntryForm:
             ini_id=self.bname
         )
 
-        answer.update(image_fields)
+        # Do image fields last so new image_id replaces old
         answer.update(text_fields)
+        answer.update(image_fields)
 
         if 'meal' not in answer:
             if 'time' in answer:

@@ -96,12 +96,19 @@
     <br>
     <input type="submit">
     <br>
+    {% if thumb_id %}
+      <input type="hidden" name="thumb_id" value="{{thumb_id}}">
+    {% endif %}
   </form>
 
   {{ self.listmealsbutton() }}
 
   <p>{{STATUS}}</p>
-
+  {% block image_band %}
+    {% if IMAGE %}
+        <img src={{ IMAGE }} alt="Food">
+    {% endif %}
+  {% endblock image_band %}
 
 {% endblock %}
 
