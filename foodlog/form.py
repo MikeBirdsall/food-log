@@ -92,6 +92,7 @@ class EntryForm:
         output = template.render(
             title="Import Course Information",
             h1="Enter New Item",
+            EDIT_CSS=True,
             STATUS=status)
 
         print(output)
